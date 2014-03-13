@@ -21,13 +21,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class StartGameMenu extends Activity {
+public class ImageSelectorMenu extends Activity {
 	
 	/**
 	 * Button views
 	 */
 	Button take_picture;
 	Button import_picture;
+	Button play_game;
 	
 	private Bitmap bitmap;
 	private ImageView preview;
@@ -52,6 +53,7 @@ public class StartGameMenu extends Activity {
 		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);
 		import_picture = (Button)findViewById(R.id.import_picture_button);
+		play_game = (Button)findViewById(R.id.play_game_button);
 		preview = (ImageView)findViewById(R.id.img_preview);
 	}
 	
@@ -200,5 +202,15 @@ public class StartGameMenu extends Activity {
 
 	    return mediaFile;
 	}
+	
+	
+	
+	
+	
+	
+	public void playGame(View view){
+	
+	}
+	
 	
 }

@@ -10,9 +10,9 @@ import android.widget.Button;
 public class MainMenuActivity extends Activity {
 	
 	/**
-	 * Play Game button
+	 * Start Game button
 	 */
-	Button play_game;
+	Button start_game;
 	
 	/**
 	 * Options button
@@ -23,7 +23,7 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		play_game = (Button)findViewById(R.id.play_game_button);
+		start_game = (Button)findViewById(R.id.start_button);
 		options = (Button)findViewById(R.id.options_button);
 		setContentView(R.layout.main_menu);
 	}
@@ -34,8 +34,8 @@ public class MainMenuActivity extends Activity {
 	 * Launches StartGameMenu activity.
 	 * @param view
 	 */
-	public void toStartGameActivity(View view) {
-		Intent intent = new Intent(this, StartGameMenu.class);
+	public void toImageSelector(View view) {
+		Intent intent = new Intent(this, ImageSelectorMenu.class);
 		startActivity(intent);
 	}
 	

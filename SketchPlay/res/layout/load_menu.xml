@@ -33,14 +33,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp" >
+        android:paddingBottom="50dp"
+        android:paddingTop="50dp" >
 
         <ImageView
             android:id="@+id/img_preview"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="0.37"
             android:src="@drawable/preview" />
+
+        <Button
+            android:id="@+id/play_game_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="playGame"
+            android:text="@string/play_game" />
     </LinearLayout>
 
 </LinearLayout>
