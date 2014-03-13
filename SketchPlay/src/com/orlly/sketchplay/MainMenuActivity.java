@@ -9,7 +9,14 @@ import android.widget.Button;
 
 public class MainMenuActivity extends Activity {
 	
+	/**
+	 * Play Game button
+	 */
 	Button play_game;
+	
+	/**
+	 * Options button
+	 */
 	Button options;
 	
 	
@@ -20,18 +27,23 @@ public class MainMenuActivity extends Activity {
 		options = (Button)findViewById(R.id.options_button);
 		setContentView(R.layout.main_menu);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		return true;
-	}
 	
+	
+	/**
+	 * Function called when "play game" button is pressed.
+	 * Launches StartGameMenu activity.
+	 * @param view
+	 */
 	public void toStartGameActivity(View view) {
 		Intent intent = new Intent(this, StartGameMenu.class);
 		startActivity(intent);
 	}
+	
+	/**
+	 * Function called when "options" button is pressed.
+	 * Launches OptionsMenu activity.
+	 * @param view
+	 */
 	public void toOptionsActivity(View view) {
 		
 	}
