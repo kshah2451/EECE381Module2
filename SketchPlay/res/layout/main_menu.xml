@@ -22,7 +22,7 @@
         android:src="@drawable/sketch_play_logo" />
 
     <Button
-        android:id="@+id/play_game_button"
+        android:id="@+id/start_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/options_button"
@@ -30,8 +30,8 @@
         android:layout_marginBottom="34dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="50dp"
-        android:onClick="toStartGameActivity"
-        android:text="@string/play_game" />
+        android:onClick="toImageSelector"
+        android:text="@string/start" />
 
     <Button
         android:id="@+id/options_button"

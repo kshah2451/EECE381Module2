@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.orlly.sketchplay.StartGameMenu"
+            android:name="com.orlly.sketchplay.ImageSelectorMenu"
             android:label="@string/app_name"
             android:parentActivityName="com.orrly.sketchplay.MainMenuActivity"
             android:screenOrientation="portrait" >

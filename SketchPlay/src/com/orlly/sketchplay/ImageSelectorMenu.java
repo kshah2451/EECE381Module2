@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class StartGameMenu extends Activity {
+public class ImageSelectorMenu extends Activity {
 	
 	/**
 	 * Button views
@@ -200,5 +200,15 @@ public class StartGameMenu extends Activity {
 
 	    return mediaFile;
 	}
+	
+	
+	
+	
+	
+	
+	public void PlayGame(View view){
+	
+	}
+	
 	
 }
