@@ -193,7 +193,7 @@ public class StartGameMenu extends Activity {
 	    if (type == MEDIA_TYPE_IMAGE){
 	    	// Construct a new file with the specified path
 	        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-	        "IMG_"+ timeStamp + ".jpg");
+	        "IMG_"+ timeStamp + ".bmp");
 	    } else {
 	        return null;
 	    }
