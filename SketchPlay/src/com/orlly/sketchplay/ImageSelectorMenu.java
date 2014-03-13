@@ -209,7 +209,8 @@ public class ImageSelectorMenu extends Activity {
 	
 	
 	public void playGame(View view){
-	
+		Intent intent = new Intent(this, Game.class);
+		startActivity(intent);
 	}
 	
 	
