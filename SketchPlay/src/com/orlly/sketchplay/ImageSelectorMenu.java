@@ -28,6 +28,7 @@ public class ImageSelectorMenu extends Activity {
 	 */
 	Button take_picture;
 	Button import_picture;
+	Button play_game;
 	
 	private Bitmap bitmap;
 	private ImageView preview;
@@ -52,6 +53,7 @@ public class ImageSelectorMenu extends Activity {
 		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);
 		import_picture = (Button)findViewById(R.id.import_picture_button);
+		play_game = (Button)findViewById(R.id.play_game_button);
 		preview = (ImageView)findViewById(R.id.img_preview);
 	}
 	
@@ -206,7 +208,7 @@ public class ImageSelectorMenu extends Activity {
 	
 	
 	
-	public void PlayGame(View view){
+	public void playGame(View view){
 	
 	}
 	
