@@ -1,11 +1,16 @@
 package com.orlly.sketchplay;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +18,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class StartGameMenu extends Activity {
@@ -23,9 +29,13 @@ public class StartGameMenu extends Activity {
 	Button take_picture;
 	Button import_picture;
 	
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private Bitmap bitmap;
+	private ImageView preview;
 	
-	public static final int MEDIA_TYPE_IMAGE = 1;
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final int REQUEST_CODE = 1;
+	
+	private static final int MEDIA_TYPE_IMAGE = 1;
 	
 	/**
 	 * Uniform Resource Identifier - an address that identifies an abstract
@@ -38,8 +48,11 @@ public class StartGameMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.load_menu);
+		
+		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);
 		import_picture = (Button)findViewById(R.id.import_picture_button);
+		preview = (ImageView)findViewById(R.id.img_preview);
 	}
 	
 	
@@ -61,9 +74,7 @@ public class StartGameMenu extends Activity {
 		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 	}
 	
-	/**
-	 * Receives the output/result of camera intent
-	 */
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -71,10 +82,22 @@ public class StartGameMenu extends Activity {
 			if(resultCode == RESULT_OK) {
 			// If image captured and saved to fileUri specified in Intent then...
 				
-				Toast.makeText(this, "Image saved", Toast.LENGTH_LONG).show();
-				
-				// TODO: Add code to do image manipulation / conversion
-			
+				try {
+					// Retrives an image from fileURI
+					if(bitmap != null) {
+						bitmap.recycle();
+					}
+					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
+					
+					// TODO: Add code to do image manipulation / conversion
+					
+					// Sets bitmap as content of image view
+					preview.setImageBitmap(bitmap);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else if(resultCode == RESULT_CANCELED) {
 			// If user cancelled the image capture then...
@@ -91,6 +114,23 @@ public class StartGameMenu extends Activity {
 				// TODO: Add code to do something
 			}
 		}
+		else if(requestCode == REQUEST_CODE) {
+			if(resultCode == RESULT_OK) {
+				try {
+					InputStream stream = getContentResolver().openInputStream(data.getData());
+					Bitmap bitmap = BitmapFactory.decodeStream(stream);
+					stream.close();
+					
+					// TODO: Add code to do image manipulation / conversion
+					
+					preview.setImageBitmap(bitmap);
+				} catch(FileNotFoundException e) {
+					e.printStackTrace();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}	
+			}
+		}
 	}
 
 
@@ -99,7 +139,19 @@ public class StartGameMenu extends Activity {
 	 * @param view
 	 */
 	public void importPicture(View view) {
+		Intent intent = new Intent();
 		
+		// Sets the explicit MIME media type as all image types
+		intent.setType("image/*");
+			
+		// Sets the action of the intent to allow user to select image and return it.
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		
+		// Indicates that intent only wants openable URIs
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		
+		// Start the intent
+		startActivityForResult(intent, REQUEST_CODE);
 	}
 	
 	

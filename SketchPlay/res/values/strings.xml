@@ -10,5 +10,6 @@
     <string name="import_picture">IMPORT PICTURE</string>
     <string name="sound">SOUND</string>
     <string name="info">INFO</string>
+    <string name="start">START</string>
 
 </resources>
