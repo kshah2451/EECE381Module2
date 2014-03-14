@@ -43,6 +43,8 @@ public class ImageSelectorMenu extends Activity {
 	
 	private static final int MEDIA_TYPE_IMAGE = 1;
 	
+	private MapRender rendering;
+	
 	/**
 	 * Uniform Resource Identifier - an address that identifies an abstract
 	 * or physical resource.
@@ -99,7 +101,7 @@ public class ImageSelectorMenu extends Activity {
 					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 					
 					//ADDED IN BY DAVID
-					MapRender rendering = new MapRender(bitmap);
+					rendering = new MapRender(bitmap);
 					// Sets bitmap as content of image view
 					preview.setImageBitmap(rendering.getMapImage());
 				} catch (FileNotFoundException e) {
@@ -127,12 +129,14 @@ public class ImageSelectorMenu extends Activity {
 			if(resultCode == RESULT_OK) {
 				try {
 					InputStream stream = getContentResolver().openInputStream(data.getData());
-					Bitmap bitmap = BitmapFactory.decodeStream(stream);
+					bitmap = BitmapFactory.decodeStream(stream);
 					stream.close();
 					
 					// TODO: Add code to do image manipulation / conversion
+					rendering = new MapRender(bitmap);
+					// Sets bitmap as content of image view
+					preview.setImageBitmap(rendering.getMapImage());
 					
-					preview.setImageBitmap(bitmap);
 				} catch(FileNotFoundException e) {
 					e.printStackTrace();
 				} catch(IOException e) {
@@ -213,6 +217,11 @@ public class ImageSelectorMenu extends Activity {
 	
 	public void playGame(View view){
 		Intent intent = new Intent(this, Game.class);
+		Bundle bundle = new Bundle();
+		bundle.putIntArray("pixel_array", rendering.getPixelArray());
+		bundle.putInt("width",rendering.getWidth());
+		bundle.putInt("height",rendering.getHeight());
+		intent.putExtras(bundle);
 		startActivity(intent);
 	}
 	
