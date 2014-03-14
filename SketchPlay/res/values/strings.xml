@@ -11,5 +11,5 @@
     <string name="sound">SOUND</string>
     <string name="info">INFO</string>
     <string name="start">START</string>
-
+	<string name="how_to_play">HOW TO PLAY</string>
 </resources>

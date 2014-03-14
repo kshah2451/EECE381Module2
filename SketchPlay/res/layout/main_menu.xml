@@ -1,48 +1,82 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_margin="0dp"
     android:layout_gravity="center_horizontal"
+    android:layout_margin="0dp"
     android:orientation="vertical"
     android:padding="0dp"
     android:weightSum="5" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:maxHeight="600dp"
-        android:maxWidth="600dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/sketch_play_logo" />
-
-    <Button
-        android:id="@+id/start_button"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/options_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="34dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
-        android:onClick="toImageSelector"
-        android:text="@string/start" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="0dp"
+        android:orientation="vertical"
+        android:padding="0dp"
+        android:layout_weight="2" >
 
-    <Button
-        android:id="@+id/options_button"
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:maxHeight="600dp"
+            android:maxWidth="600dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/sketch_play_logo" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="78dp"
-        android:onClick="toOptionsActivity"
-        android:text="@string/options" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:orientation="vertical"
+        android:padding="0dp"
+        android:layout_weight="3">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+
+            android:onClick="toImageSelector"
+            android:padding="10dp"
+            android:text="@string/start" />
+
+        <Button
+            android:id="@+id/how_to_play_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+
+            android:onClick="toHowToPlay"
+            android:padding="10dp"
+            android:text="@string/how_to_play" />
+
+        <Button
+            android:id="@+id/options_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+
+            android:onClick="toOptionsActivity"
+            android:padding="10dp"
+            android:text="@string/options" />
+    </LinearLayout>
+
+</LinearLayout>
