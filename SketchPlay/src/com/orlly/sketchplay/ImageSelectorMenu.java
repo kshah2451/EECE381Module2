@@ -7,15 +7,20 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,10 +50,12 @@ public class ImageSelectorMenu extends Activity {
 	private Uri fileUri; 
 	
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.load_menu);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);
@@ -204,13 +211,16 @@ public class ImageSelectorMenu extends Activity {
 	}
 	
 	
-	
-	
-	
-	
 	public void playGame(View view){
 		Intent intent = new Intent(this, Game.class);
 		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu); 
+	    return super.onCreateOptionsMenu(menu);
 	}
 	
 	
