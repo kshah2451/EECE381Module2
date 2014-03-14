@@ -7,11 +7,9 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 public class MapRender {
-	int height=640;
-	int width=384;
-	int i;
-	int j;
-	int[] pixels = new int[width*height];
+	private int height=384;
+	private int width=640;
+	private int[] pixels = new int[width*height];
 	
 	public MapRender(Bitmap pictureToRender){
 /*		CODE TO GET GRAYSCALE
@@ -26,8 +24,8 @@ public class MapRender {
 	}
 	
 	public Bitmap getMapImage(){
-		for(i = 0; i < height; i++){
-			for(j = 0; j < width; j++){
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
 		
 				if((pixels[i*width + j] & 128)==0){
 					pixels[i*width + j] = -16777216;
@@ -41,19 +39,31 @@ public class MapRender {
 		return blackAndWhite;
 	}
 	
-	public int[][] getMapArray(){
+	public static int[][] convertTo2DArray(int[] pixels, int height, int width){
 		//height = pictureToRender.getHeight();
 		//width = pictureToRender.getWidth();
 		int[][] pixels2D = new int[height][width];
-
 		
-		for(i = 0; i < height; i++){
-			for(j = 0; j < width; j++){
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
 				pixels2D[i][j] = pixels[i*height + j];
 			}
 			
 		}
 		return pixels2D;
 	}
+	
+	public int[] getPixelArray(){
+		return pixels;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
 	
 }
