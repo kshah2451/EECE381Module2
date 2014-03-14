@@ -98,10 +98,10 @@ public class ImageSelectorMenu extends Activity {
 					}
 					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 					
-					// TODO: Add code to do image manipulation / conversion
-					
+					//ADDED IN BY DAVID
+					MapRender rendering = new MapRender(bitmap);
 					// Sets bitmap as content of image view
-					preview.setImageBitmap(bitmap);
+					preview.setImageBitmap(rendering.getMapImage());
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
