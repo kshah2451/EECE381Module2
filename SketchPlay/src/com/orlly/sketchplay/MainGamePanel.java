@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,6 +40,19 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 	
 	
+	
+//	
+//	@Override
+//	protected void onDraw(Canvas canvas) {
+//		Rect destination = new Rect(0,0,getWidth(),getHeight());
+//		Rect source = new Rect(0,0,bg.getWidth(),bg.getHeight());
+//		Paint paint = new Paint();
+//		canvas.drawBitmap(bg,source,destination,paint);
+//	}
+
+
+
+
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
@@ -75,11 +90,15 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 	
 	 public void drawImages(Canvas canvas){
-		 canvas.drawColor(Color.GREEN);
-	//	 canvas.drawBitmap(bg, 0, 0, null);
-		 player.draw(canvas, player.getX(), player.getY());
-		 	 
-	 }
+		// canvas.drawColor(Color.GREEN);
+		// canvas.drawBitmap(bg, 0, 0, null);
+		Rect destination = new Rect(0, 0, getWidth(), getHeight());
+		Rect source = new Rect(0, 0, bg.getWidth(), bg.getHeight());
+		Paint paint = new Paint();
+		canvas.drawBitmap(bg, source, destination, paint);
+		player.draw(canvas, player.getX(), player.getY());
+
+	}
 	
 	
 	@Override
