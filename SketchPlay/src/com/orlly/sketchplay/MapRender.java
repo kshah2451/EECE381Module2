@@ -2,6 +2,7 @@ package com.orlly.sketchplay;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
@@ -10,6 +11,7 @@ public class MapRender {
 	private int height=480;
 	private int width=640;
 	private int[] pixels = new int[width*height];
+	private float[] hsv = new float[3];
 	
 	public MapRender(Bitmap pictureToRender){
 /*		CODE TO GET GRAYSCALE
@@ -27,11 +29,12 @@ public class MapRender {
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
 		
-				if((pixels[i*width + j] & 128)==0){
-					pixels[i*width + j] = -16777216;
+				Color.colorToHSV(pixels[i*width + j],hsv);
+				if(hsv[1]>.07){
+					pixels[i*width + j] = Color.BLACK;
 				}
 				else{
-					pixels[i*width + j] = -1;
+					pixels[i*width + j] = Color.WHITE;
 				}
 			}
 		}
