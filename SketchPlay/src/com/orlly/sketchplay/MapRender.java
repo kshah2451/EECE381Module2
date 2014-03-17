@@ -7,7 +7,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 public class MapRender {
-	private int height=384;
+	private int height=480;
 	private int width=640;
 	private int[] pixels = new int[width*height];
 	
