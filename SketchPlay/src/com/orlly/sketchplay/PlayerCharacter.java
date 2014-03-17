@@ -74,5 +74,21 @@ public class PlayerCharacter {
 	}
 	
 	
-	
+
+	public void handleTouch(int x, int y, MainGamePanel panel){
+		
+		
+		if((x > panel.getWidth()/2)){
+			setTouch(true);
+			direction = move_rate;
+		}
+		else if (x <= panel.getWidth()/2){
+			setTouch(true);
+			direction = -(move_rate);
+		}
+		else
+			setTouch(false);
+		
+		
+	}
 }
