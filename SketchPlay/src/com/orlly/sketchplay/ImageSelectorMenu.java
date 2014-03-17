@@ -214,11 +214,13 @@ public class ImageSelectorMenu extends Activity {
 	
 	public void playGame(View view){
 		Intent intent = new Intent(this, Game.class);
-		Bundle bundle = new Bundle();
-		bundle.putIntArray("pixel_array", rendering.getPixelArray());
-		bundle.putInt("width",rendering.getWidth());
-		bundle.putInt("height",rendering.getHeight());
-		intent.putExtras(bundle);
+		
+//background code that i had to temporarily remove
+//		Bundle bundle = new Bundle();
+//		bundle.putIntArray("pixel_array", rendering.getPixelArray());
+//		bundle.putInt("width",rendering.getWidth());
+//		bundle.putInt("height",rendering.getHeight());
+//		intent.putExtras(bundle);
 		startActivity(intent);
 	}
 	

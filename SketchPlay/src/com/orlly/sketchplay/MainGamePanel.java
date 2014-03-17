@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,9 +16,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private GameThread thread;
 	private PlayerCharacter player;
 	private Bitmap bg;
+	private UpKey upkey;
 	int startx = 10;
 	int starty = 50;
-	public MainGamePanel(Context context, Bitmap bitmap) {
+	
+	
+	
+	
+	public MainGamePanel(Context context) {
 		
 		super(context);
 		getHolder().addCallback(this);
@@ -32,13 +35,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		//create new thread
 		thread = new GameThread(getHolder(), this);
 		
-		bg = bitmap;
+		upkey = new UpKey(BitmapFactory.decodeResource(getResources(), R.drawable.right_arrow));
+
+		
 		
 		//set to true so we can interact with surface
 		setFocusable(true);
 		
 	}
 	
+
+
 	
 	
 //	
@@ -68,6 +75,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		thread.start();
 		//allow onDraw method to be called (it's normally set to not draw)
 		//this.setWillNotDraw(false);
+		
+
 	}
 	
 	@Override
@@ -90,25 +99,25 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 	
 	 public void drawImages(Canvas canvas){
-		// canvas.drawColor(Color.GREEN);
+		 canvas.drawColor(Color.GREEN);
 		// canvas.drawBitmap(bg, 0, 0, null);
-		Rect destination = new Rect(0, 0, getWidth(), getHeight());
-		Rect source = new Rect(0, 0, bg.getWidth(), bg.getHeight());
-		Paint paint = new Paint();
-		canvas.drawBitmap(bg, source, destination, paint);
+	//	Rect destination = new Rect(0, 0, getWidth(), getHeight());
+//		Rect source = new Rect(0, 0, bg.getWidth(), bg.getHeight());
+//		Paint paint = new Paint();
+	//	canvas.drawBitmap(bg, source, destination, paint);
 		player.draw(canvas, player.getX(), player.getY());
-
+		 upkey.draw(canvas, getWidth()-upkey.width, this.getHeight()-upkey.height);
+		 upkey.draw(canvas, getWidth()-2*upkey.width, this.getHeight()-upkey.height);
+		
 	}
 	
-	
-	@Override
+@Override
 	public boolean onTouchEvent(MotionEvent event){
-		
 		//when user presses the touchscreen
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			//call action handler to check what has happened
 			//player.handleActionDown((int)event.getX(), (int)event.getY(), this, right_arrow);		
-			player.handleTouch((int)event.getX(), (int)event.getY(), this);
+			handleTouch((int)event.getX(), (int)event.getY());
 		}
 		
 		
@@ -129,7 +138,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		
 		return true;
 	} 
-	
+
 
 	//update player location
 	public void update() {
@@ -145,6 +154,62 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		}
 		
 	}
+
+	public void handleTouch(int x, int y){
+		
+		
+		if((x > getWidth()-upkey.width) && (x <= getWidth())){
+			if((y > getHeight()-upkey.height) && (y < getHeight())){
+				player.setTouch(true);
+				player.setDirection(player.getMoveRate());
+			}
+		}
+		else if ((x > getWidth()-2*upkey.width) && (x <= getWidth()-upkey.width)){
+			if((y > getHeight()-upkey.height) && (y < getHeight())){
+				player.setTouch(true);
+				player.setDirection(-(player.getMoveRate()));
+			}
+		}
+		else
+			player.setTouch(false);
+			
+	}
+	
+	
+	//Class for the up key -- removeable if we decide to use layout buttons
+	class UpKey{
+		
+		Bitmap bitmap;
+		int width;
+		int height;
+		UpKey(Bitmap bitmap){
+			
+			this.bitmap = bitmap;
+			this.width = bitmap.getWidth();
+			this.height = bitmap.getHeight();
+			
+			
+		}
+		
+		
+		void draw(Canvas canvas, int x, int y){
+			
+			canvas.drawBitmap(this.bitmap, x, y , null);
+
+		}
+		
+		
+	}	
+	
+	
+	
+	
+	
+		
+
+	
+	
+	
 
 	
 }

@@ -2,7 +2,8 @@ package com.orlly.sketchplay;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import com.orlly.sketchplay.MainGamePanel;
+import android.view.View;
+import android.widget.Button;
 
 public class PlayerCharacter {
 
@@ -14,6 +15,9 @@ public class PlayerCharacter {
 	private int move_rate;
 	
 	public PlayerCharacter(Bitmap bitmap, int x, int y){
+		
+		
+		
 		
 		this.bitmap = bitmap;
 		this.x = x; this.y = y;
@@ -40,6 +44,10 @@ public class PlayerCharacter {
 		return direction;
 	}
 	
+	public void setDirection(int direction){
+		this.direction = direction;
+	}
+	
 	public int getMoveRate(){
 		return move_rate;
 	}
@@ -64,41 +72,6 @@ public class PlayerCharacter {
 			x += direction;
 		}
 	}
-	
-	
-	public void handleTouch(int x, int y, MainGamePanel panel){
-		
-		
-		if((x > panel.getWidth()/2)){
-			setTouch(true);
-			direction = move_rate;
-		}
-		else if (x <= panel.getWidth()/2){
-			setTouch(true);
-			direction = -(move_rate);
-		}
-		else
-			setTouch(false);
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
