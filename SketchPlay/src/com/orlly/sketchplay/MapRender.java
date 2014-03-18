@@ -8,12 +8,12 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 public class MapRender {
-	private int height=384;
-	private int width=640;
-	private int[] pixels = new int[width*height];
+	private int height;
+	private int width;
+	private int[] pixels;// = new int[width*height];
 	private float[] hsv = new float[3];
 	
-	public MapRender(Bitmap pictureToRender){
+	public MapRender(Bitmap pictureToRender, int width, int height){
 /*		CODE TO GET GRAYSCALE
   		Canvas canvas = new Canvas(imageToRender);
 		Paint paint = new Paint();
@@ -22,6 +22,8 @@ public class MapRender {
 		ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
 		paint.setColorFilter(colorFilter);
 		canvas.drawBitmap(pictureToRender,0,0,paint);*/
+		this.height = height; this.width = width;
+		pixels = new int[width*height];
 		pictureToRender.getPixels(pixels, 0, width, 0, 0, width, height);
 	}
 	

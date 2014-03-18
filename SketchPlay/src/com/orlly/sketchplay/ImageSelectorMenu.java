@@ -94,7 +94,7 @@ public class ImageSelectorMenu extends Activity {
 					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 					
 					//ADDED IN BY DAVID
-					rendering = new MapRender(bitmap);
+//					rendering = new MapRender(bitmap);
 					// Sets bitmap as content of image view
 					preview.setImageBitmap(rendering.getMapImage());
 				} catch (FileNotFoundException e) {
@@ -126,7 +126,7 @@ public class ImageSelectorMenu extends Activity {
 					stream.close();
 					
 					// TODO: Add code to do image manipulation / conversion
-					rendering = new MapRender(bitmap);
+//					rendering = new MapRender(bitmap);
 					// Sets bitmap as content of image view
 					preview.setImageBitmap(rendering.getMapImage());
 					
@@ -216,11 +216,13 @@ public class ImageSelectorMenu extends Activity {
 		Intent intent = new Intent(this, Game.class);
 		
 //background code that i had to temporarily remove
-//		Bundle bundle = new Bundle();
-//		bundle.putIntArray("pixel_array", rendering.getPixelArray());
-//		bundle.putInt("width",rendering.getWidth());
-//		bundle.putInt("height",rendering.getHeight());
-//		intent.putExtras(bundle);
+/*		
+		Bundle bundle = new Bundle();
+		bundle.putIntArray("pixel_array", rendering.getPixelArray());
+		bundle.putInt("width",rendering.getWidth());
+		bundle.putInt("height",rendering.getHeight());
+		intent.putExtras(bundle);
+*/		
 		startActivity(intent);
 	}
 	

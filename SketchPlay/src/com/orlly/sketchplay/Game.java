@@ -1,11 +1,11 @@
 package com.orlly.sketchplay;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class Game extends Activity{
 	
@@ -22,16 +22,19 @@ public class Game extends Activity{
 		super.onCreate(savedInstanceState);
 		
 /*Background code that wasn't compatible with xml-created buttons*/
-//		Bundle bundle = this.getIntent().getExtras();
-//		int height = bundle.getInt("height", 0);
-//		int width = bundle.getInt("width", 0);
-//		pixel_array = MapRender.convertTo2DArray(bundle.getIntArray("pixel_array"), height, width);
-//		Bitmap bitmap = Bitmap.createBitmap(bundle.getIntArray("pixel_array"), width, height, Bitmap.Config.ARGB_8888);
+/*		Bundle bundle = this.getIntent().getExtras();
+		int height = bundle.getInt("height", 0);
+		int width = bundle.getInt("width", 0);
+		pixel_array = MapRender.convertTo2DArray(bundle.getIntArray("pixel_array"), height, width);
+		Bitmap bitmap = Bitmap.createBitmap(bundle.getIntArray("pixel_array"), width, height, Bitmap.Config.ARGB_8888);
+*/
 		
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_bg);
 		
+
 		
-		
-		setContentView(new MainGamePanel(this));
+		gamepanel= new MainGamePanel(this, bitmap);
+		setContentView(gamepanel);
 		
 
 	
