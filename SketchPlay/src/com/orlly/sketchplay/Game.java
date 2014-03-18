@@ -1,30 +1,68 @@
 package com.orlly.sketchplay;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class Game extends Activity{
+public class Game extends Activity {
+
+	private Bitmap background_bmp;
 	
-	private int[][] pixel_array;
-
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle bundle = this.getIntent().getExtras();
-		int height = bundle.getInt("height", 0);
-		int width = bundle.getInt("width", 0);
-		pixel_array = MapRender.convertTo2DArray(bundle.getIntArray("pixel_array"), height, width);
-		Bitmap bitmap = Bitmap.createBitmap(bundle.getIntArray("pixel_array"), width, height, Bitmap.Config.ARGB_8888);
-		setContentView(new MainGamePanel(this,bitmap));
-		//Rect dest = new Rect(0,0,View.getWidth(),getHeight());
-		//Toast.makeText(this, Integer.toString(height),Toast.LENGTH_SHORT).show();
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		Intent intent = new Intent();
+		intent = getIntent();
+		Uri imageUri = Uri.parse(intent.getStringExtra("imageUri"));
+
+		try {
+			background_bmp = MediaStore.Images.Media.getBitmap(
+					this.getContentResolver(), imageUri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			Log.d("debug", "BMP - FileNotFoundException");
+		} catch (IOException e) {
+			Log.d("debug", "BMP - IOException");
+			e.printStackTrace();
+		}
+
+		setContentView(new MainGamePanel(this, background_bmp));
+
+	}
+	
+	/**
+	 * Function called when "How to Play" action bar item is pressed. Launches
+	 * HowToPlay activity.
+	 * @param item
+	 * @return
+	 */
+	public boolean howToPlayActionBar(MenuItem item) {
+		Intent intent = new Intent(this, HowToPlay.class);
+		startActivity(intent);
+		return true;
 	}
 	
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
-	
-	
 }
