@@ -9,8 +9,12 @@ public class GameThread extends Thread {
 	private SurfaceHolder surfaceHolder;
 	private MainGamePanel gamePanel;
 	
-	// flag to hold game state 
+	/**
+	 *  Flag to hold game state 
+	 */
 	private boolean running;
+	
+	
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
@@ -19,13 +23,10 @@ public class GameThread extends Thread {
 		return running;
 	}
 	
-	
-	// thread constructor
 	public GameThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
 		super();
 		this.surfaceHolder = surfaceHolder;
 		this.gamePanel = gamePanel;
-		
 	}
 	
 	@Override
@@ -54,8 +55,6 @@ public class GameThread extends Thread {
 				}
 			}	// end finally
 		}
-		
-		
 	}
 	
 	

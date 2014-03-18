@@ -1,73 +1,69 @@
 package com.orlly.sketchplay;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class Game extends Activity{
+
+public class Game extends Activity {
+
+	private Bitmap background_bmp;
 	
-	private int[][] pixel_array;
-	private Button right_button;
-	private MainGamePanel gamepanel;
-	int startx = 10;
-	int starty = 50;
-	private PlayerCharacter player;
-
-
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-/*Background code that wasn't compatible with xml-created buttons*/
-/*		Bundle bundle = this.getIntent().getExtras();
-		int height = bundle.getInt("height", 0);
-		int width = bundle.getInt("width", 0);
-		pixel_array = MapRender.convertTo2DArray(bundle.getIntArray("pixel_array"), height, width);
-		Bitmap bitmap = Bitmap.createBitmap(bundle.getIntArray("pixel_array"), width, height, Bitmap.Config.ARGB_8888);
-*/
-		
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_bg);
-		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		Intent intent = new Intent();
+		intent = getIntent();
+		Uri imageUri = Uri.parse(intent.getStringExtra("imageUri"));
 
-		
-		gamepanel= new MainGamePanel(this, bitmap);
-		setContentView(gamepanel);
-		
+		try {
+			background_bmp = MediaStore.Images.Media.getBitmap(
+					this.getContentResolver(), imageUri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			Log.d("debug", "BMP - FileNotFoundException");
+		} catch (IOException e) {
+			Log.d("debug", "BMP - IOException");
+			e.printStackTrace();
+		}
 
+		setContentView(new MainGamePanel(this, background_bmp));
+
+	}
 	
-		//content view if we wanted to use xml layout:
-//		setContentView(R.layout.main_game);
-		
-		
-		//Rect dest = new Rect(0,0,View.getWidth(),getHeight());
-		//Toast.makeText(this, Integer.toString(height),Toast.LENGTH_SHORT).show();
-		
-		
-		
-// on click function that i had in mind		
-/*		
-		right_button = (Button)findViewById(R.id.right_button);
-		right_button.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "moves", Toast.LENGTH_LONG).show();
-			//	player.setTouch(true);
-				player.setDirection(player.getMoveRate());
-				player.move();
-
-			}
-		}); */
-		
-		
+	/**
+	 * Function called when "How to Play" action bar item is pressed. Launches
+	 * HowToPlay activity.
+	 * @param item
+	 * @return
+	 */
+	public boolean howToPlayActionBar(MenuItem item) {
+		Intent intent = new Intent(this, HowToPlay.class);
+		startActivity(intent);
+		return true;
 	}
 	
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
-	
-	
 }
