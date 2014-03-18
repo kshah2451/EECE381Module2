@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -71,6 +72,18 @@ public class MainMenuActivity extends Activity {
 	public void toHowToPlay(View view) {
 		Intent intent = new Intent(this, HowToPlay.class);
 		startActivity(intent);
+	}
+	
+	/**
+	 * Function called when "How to Play" action bar item is pressed. Launches
+	 * HowToPlay activity.
+	 * @param item
+	 * @return
+	 */
+	public boolean howToPlayActionBar(MenuItem item) {
+		Intent intent = new Intent(this, HowToPlay.class);
+		startActivity(intent);
+		return true;
 	}
 
 	@Override

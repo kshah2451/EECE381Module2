@@ -50,6 +50,7 @@ public class ImageSelectorMenu extends Activity {
 	 * or physical resource.
 	 */
 	private Uri fileUri; 
+	private Uri returnUri = null;
 	
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -89,21 +90,27 @@ public class ImageSelectorMenu extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
+		// Return from camera application intent
 		if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if(resultCode == RESULT_OK) {
 			// If image captured and saved to fileUri specified in Intent then...
 				
 				try {
-					// Retrives an image from fileURI
 					if(bitmap != null) {
 						bitmap.recycle();
 					}
-					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 					
-					//ADDED IN BY DAVID
-					rendering = new MapRender(bitmap);
-					// Sets bitmap as content of image view
+					returnUri = fileUri;
+					
+					// Retrives an image from fileURI
+					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
+
+					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
+					
+					// Sets bitmap as content of preview image view
 					preview.setImageBitmap(rendering.getMapImage());
+					
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -111,29 +118,24 @@ public class ImageSelectorMenu extends Activity {
 				}
 			}
 			else if(resultCode == RESULT_CANCELED) {
-			// If user cancelled the image capture then...
-				
 				Toast.makeText(this, "Cancelled image capture", Toast.LENGTH_LONG).show();
-				
-				// TODO: Add code to do something		
 			}
 			else {
-			// If image capture failed then...
-				
 				Toast.makeText(this, "Image capture failed", Toast.LENGTH_LONG).show();
-				
-				// TODO: Add code to do something
 			}
 		}
+		
+		// Return from import picture intent
 		else if(requestCode == REQUEST_CODE) {
 			if(resultCode == RESULT_OK) {
 				try {
-					InputStream stream = getContentResolver().openInputStream(data.getData());
+					returnUri = data.getData();
+					InputStream stream = getContentResolver().openInputStream(returnUri);
 					bitmap = BitmapFactory.decodeStream(stream);
 					stream.close();
+
+					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
 					
-					// TODO: Add code to do image manipulation / conversion
-					rendering = new MapRender(bitmap);
 					// Sets bitmap as content of image view
 					preview.setImageBitmap(rendering.getMapImage());
 					
@@ -214,15 +216,32 @@ public class ImageSelectorMenu extends Activity {
 	    return mediaFile;
 	}
 	
-	
+	/**
+	 * Function called when "Play Game" button is pressed. Launches Game.
+	 * @param view
+	 */
 	public void playGame(View view){
-		Intent intent = new Intent(this, Game.class);
-		Bundle bundle = new Bundle();
-		bundle.putIntArray("pixel_array", rendering.getPixelArray());
-		bundle.putInt("width",rendering.getWidth());
-		bundle.putInt("height",rendering.getHeight());
-		intent.putExtras(bundle);
+		if(returnUri == null) {
+			Toast.makeText(this, "No image specified. Please select an image for the background.", Toast.LENGTH_LONG).show();
+		}
+		else {
+			Intent intent = new Intent(this, Game.class);
+			intent.putExtra("imageUri", returnUri.toString());
+			startActivity(intent);
+		}	
+	}
+	
+	
+	/**
+	 * Function called when "How to Play" action bar item is pressed. Launches
+	 * HowToPlay activity.
+	 * @param item
+	 * @return
+	 */
+	public boolean howToPlayActionBar(MenuItem item) {
+		Intent intent = new Intent(this, HowToPlay.class);
 		startActivity(intent);
+		return true;
 	}
 	
 	@Override
@@ -231,6 +250,6 @@ public class ImageSelectorMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu); 
 	    return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	
 }

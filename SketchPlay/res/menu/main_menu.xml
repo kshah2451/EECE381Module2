@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/how_to_play_settings"
+        android:id="@+id/how_to_play_a_bar"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/how_to_play"/>
+        android:title="@string/how_to_play"
+        android:onClick="howToPlayActionBar"/>
 
 </menu>

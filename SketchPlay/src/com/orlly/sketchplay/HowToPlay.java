@@ -11,18 +11,11 @@ public class HowToPlay extends Activity{
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		
+	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.how_to_play);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu); 
-	    return super.onCreateOptionsMenu(menu);
-	}
 
 }
