@@ -11,7 +11,7 @@ import android.util.Log;
 public class MapRender {
 	private int height;
 	private int width;
-
+	
 	/**
 	 * Stores bitmap pixels
 	 */

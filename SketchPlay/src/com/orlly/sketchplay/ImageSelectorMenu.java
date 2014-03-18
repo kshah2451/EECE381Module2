@@ -108,6 +108,7 @@ public class ImageSelectorMenu extends Activity {
 
 					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
 					
+
 					// Sets bitmap as content of preview image view
 					preview.setImageBitmap(rendering.getMapImage());
 					
@@ -136,6 +137,7 @@ public class ImageSelectorMenu extends Activity {
 
 					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
 					
+
 					// Sets bitmap as content of image view
 					preview.setImageBitmap(rendering.getMapImage());
 					
@@ -232,6 +234,7 @@ public class ImageSelectorMenu extends Activity {
 	}
 	
 	
+
 	/**
 	 * Function called when "How to Play" action bar item is pressed. Launches
 	 * HowToPlay activity.

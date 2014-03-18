@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+
 public class Game extends Activity {
 
 	private Bitmap background_bmp;
