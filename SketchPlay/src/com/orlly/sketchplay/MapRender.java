@@ -32,7 +32,7 @@ public class MapRender {
 	 * 
 	 * @return Converted black and white bitmap.
 	 */
-	public Bitmap getMapImage() {
+	public Bitmap getMapImage(int hue, int saturation, int value) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				Color.colorToHSV(pixels[i * width + j], hsv);
