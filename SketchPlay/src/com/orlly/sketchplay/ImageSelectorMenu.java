@@ -33,7 +33,7 @@ public class ImageSelectorMenu extends Activity {
 	 */
 	Button take_picture;
 	Button import_picture;
-	Button play_game;
+	Button choose_picture;
 	
 	private Bitmap bitmap;
 	private ImageView preview;
@@ -63,7 +63,7 @@ public class ImageSelectorMenu extends Activity {
 		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);
 		import_picture = (Button)findViewById(R.id.import_picture_button);
-		play_game = (Button)findViewById(R.id.play_game_button);
+		choose_picture = (Button)findViewById(R.id.choose_picture_button);
 		preview = (ImageView)findViewById(R.id.img_preview);
 	}
 	
@@ -106,11 +106,12 @@ public class ImageSelectorMenu extends Activity {
 					// Retrives an image from fileURI
 					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 
-					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
+					//rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
 					
 
 					// Sets bitmap as content of preview image view
-					preview.setImageBitmap(rendering.getMapImage());
+					//preview.setImageBitmap(rendering.getMapImage());
+					preview.setImageBitmap(bitmap);
 					
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
@@ -135,11 +136,11 @@ public class ImageSelectorMenu extends Activity {
 					bitmap = BitmapFactory.decodeStream(stream);
 					stream.close();
 
-					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
+					//rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
 					
 
 					// Sets bitmap as content of image view
-					preview.setImageBitmap(rendering.getMapImage());
+					preview.setImageBitmap(bitmap);
 					
 				} catch(FileNotFoundException e) {
 					e.printStackTrace();
@@ -222,12 +223,12 @@ public class ImageSelectorMenu extends Activity {
 	 * Function called when "Play Game" button is pressed. Launches Game.
 	 * @param view
 	 */
-	public void playGame(View view){
+	public void toImageAdjustment(View view){
 		if(returnUri == null) {
 			Toast.makeText(this, "No image specified. Please select an image for the background.", Toast.LENGTH_LONG).show();
 		}
 		else {
-			Intent intent = new Intent(this, Game.class);
+			Intent intent = new Intent(this, ImageAdjustmentMenu.class);
 			intent.putExtra("imageUri", returnUri.toString());
 			startActivity(intent);
 		}	

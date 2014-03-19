@@ -63,7 +63,7 @@ public class MainGamePanel extends SurfaceView implements
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 		
 		// Convert bitmap to black and white and return
-		temp_bg = mapRender.getMapImage();
+		temp_bg = mapRender.getMapImage(0,0,0);
 		
 		// Create 2D pixel array. Used for collision detection.
 		map_array = MapRender.convertTo2DArray(mapRender.getPixelArray(),

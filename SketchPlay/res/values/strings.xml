@@ -14,4 +14,8 @@
 	<string name="how_to_play">HOW TO PLAY</string>
 	<string name="left_button">Left</string>
 	<string name="right_button">Right</string>
+	<string name="choose_picture">PRESS HERE TO CONTINUE</string>
+	<string name="render_picture">RENDER PICTURE</string>
+	<string name="saturation">Saturation</string>
+	<string name="value">Value</string>
 </resources>

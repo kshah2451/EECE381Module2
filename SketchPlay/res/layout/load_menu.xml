@@ -44,12 +44,12 @@
             android:src="@drawable/preview" />
 
         <Button
-            android:id="@+id/play_game_button"
+            android:id="@+id/choose_picture_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:onClick="playGame"
-            android:text="@string/play_game" />
+            android:onClick="toImageAdjustment"
+            android:text="@string/choose_picture" />
     </LinearLayout>
 
 </LinearLayout>
