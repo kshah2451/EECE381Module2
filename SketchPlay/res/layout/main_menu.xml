@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/main_menu"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center_horizontal"
@@ -18,7 +18,7 @@
         android:layout_weight="2" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/main_menu_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,7 +53,7 @@
             android:text="@string/start" />
 
         <Button
-            android:id="@+id/how_to_play_button"
+            android:id="@+id/getting_started_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -61,9 +61,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
 
-            android:onClick="toHowToPlay"
+            android:onClick="toGettingStarted"
             android:padding="10dp"
-            android:text="@string/how_to_play" />
+            android:text="@string/getting_started" />
 
         <Button
             android:id="@+id/options_button"

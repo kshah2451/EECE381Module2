@@ -20,13 +20,13 @@ public class OptionsMenu extends Activity {
 	}
 	
 	/**
-	 * Function called when "How to Play" action bar item is pressed. Launches
-	 * HowToPlay activity.
+	 * Function called when "Getting Started" action bar item is pressed. Launches
+	 * GettingStarted activity.
 	 * @param item
 	 * @return
 	 */
-	public boolean howToPlayActionBar(MenuItem item) {
-		Intent intent = new Intent(this, HowToPlay.class);
+	public boolean gettingStartedActionBar(MenuItem item) {
+		Intent intent = new Intent(this, GettingStarted.class);
 		startActivity(intent);
 		return true;
 	}

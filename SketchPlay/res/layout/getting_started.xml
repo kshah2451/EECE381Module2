@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/getting_started"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/getting_started_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/getting_started_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="50sp"
+            android:gravity="center"
+            android:text="@string/getting_started" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/getting_started_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@string/getting_started_text1" >
+        </TextView>
+    </LinearLayout>
+
+</ScrollView>
