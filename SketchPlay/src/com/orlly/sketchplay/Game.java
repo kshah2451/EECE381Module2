@@ -26,7 +26,7 @@ public class Game extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 		Intent intent = new Intent();
 		intent = getIntent();
 		Uri imageUri = Uri.parse(intent.getStringExtra("imageUri"));
