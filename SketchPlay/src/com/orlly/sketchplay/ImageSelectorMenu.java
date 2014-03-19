@@ -58,7 +58,7 @@ public class ImageSelectorMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.load_menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 		
 		// Find views by id attributes identified in XML file
 		take_picture = (Button)findViewById(R.id.take_picture_button);

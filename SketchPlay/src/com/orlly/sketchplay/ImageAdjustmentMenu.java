@@ -43,7 +43,7 @@ public class ImageAdjustmentMenu extends Activity implements SeekBar.OnSeekBarCh
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.adjustment_menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 		
 		Intent intent = new Intent();
 		intent = getIntent();

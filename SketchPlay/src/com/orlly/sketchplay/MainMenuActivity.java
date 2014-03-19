@@ -36,7 +36,7 @@ public class MainMenuActivity extends Activity {
 		options = (Button) findViewById(R.id.options_button);
 		getting_started = (Button) findViewById(R.id.getting_started_button);
 		setContentView(R.layout.main_menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 	
 	
