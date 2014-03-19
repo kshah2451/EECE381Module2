@@ -11,7 +11,14 @@
     <string name="sound">SOUND</string>
     <string name="info">INFO</string>
     <string name="start">START</string>
-	<string name="how_to_play">HOW TO PLAY</string>
+	<string name="getting_started">GETTING STARTED</string>
 	<string name="left_button">Left</string>
 	<string name="right_button">Right</string>
+	
+	
+	<string name="getting_started_text1">\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYo Taunzu-Sama</string>
+	
+	
+	
+	
 </resources>
