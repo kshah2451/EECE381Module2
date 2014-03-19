@@ -20,6 +20,10 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap temp_bg;
 	int startx = 600;
 	int starty = 100;
+	
+	private int saturation;
+	private int value;
+	
 	private int[][] map_array;
 	private MapRender mapRender;
 	int right_button_x0;
@@ -35,9 +39,12 @@ public class MainGamePanel extends SurfaceView implements
 	int up_button_y0;
 	int up_button_y1;
 
-	public MainGamePanel(Context context, Bitmap bitmap) {
+	public MainGamePanel(Context context, Bitmap bitmap, int saturation, int value) {
 		super(context);
 		getHolder().addCallback(this);
+		
+		this.saturation = saturation;
+		this.value = value;
 
 		// Create new player character
 		player = new PlayerCharacter(BitmapFactory.decodeResource(
@@ -80,7 +87,7 @@ public class MainGamePanel extends SurfaceView implements
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
-		temp_bg = mapRender.getMapImage(0,0);
+		temp_bg = mapRender.getMapImage(saturation, value);
 
 		// Create 2D pixel array. Used for collision detection.
 		map_array = MapRender.convertTo2DArray(mapRender.getPixelArray(),

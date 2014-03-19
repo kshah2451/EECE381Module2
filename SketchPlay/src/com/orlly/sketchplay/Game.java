@@ -29,7 +29,9 @@ public class Game extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 		Intent intent = new Intent();
 		intent = getIntent();
-		Uri imageUri = Uri.parse(intent.getStringExtra("imageUri"));
+		Uri imageUri = Uri.parse(intent.getExtras().getString("imageUri"));
+		int saturation = intent.getExtras().getInt("saturation");
+		int value = intent.getExtras().getInt("value");
 
 		try {
 			background_bmp = MediaStore.Images.Media.getBitmap(
@@ -42,7 +44,7 @@ public class Game extends Activity {
 			e.printStackTrace();
 		}
 
-		setContentView(new MainGamePanel(this, background_bmp));
+		setContentView(new MainGamePanel(this, background_bmp, saturation, value));
 
 	}
 	

@@ -28,14 +28,11 @@ import android.widget.Toast;
 
 public class ImageSelectorMenu extends Activity {
 	
-	/**
-	 * Button views
-	 */
-	Button take_picture;
-	Button import_picture;
-	Button choose_picture;
-	
 	private Bitmap bitmap;
+	
+	/**
+	 * ImageView for preview image
+	 */
 	private ImageView preview;
 	
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -61,9 +58,6 @@ public class ImageSelectorMenu extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 		
 		// Find views by id attributes identified in XML file
-		take_picture = (Button)findViewById(R.id.take_picture_button);
-		import_picture = (Button)findViewById(R.id.import_picture_button);
-		choose_picture = (Button)findViewById(R.id.choose_picture_button);
 		preview = (ImageView)findViewById(R.id.img_preview);
 	}
 	
@@ -106,11 +100,6 @@ public class ImageSelectorMenu extends Activity {
 					// Retrives an image from fileURI
 					bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri);
 
-					//rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
-					
-
-					// Sets bitmap as content of preview image view
-					//preview.setImageBitmap(rendering.getMapImage());
 					preview.setImageBitmap(bitmap);
 					
 				} catch (FileNotFoundException e) {
@@ -220,7 +209,7 @@ public class ImageSelectorMenu extends Activity {
 	}
 	
 	/**
-	 * Function called when "Play Game" button is pressed. Launches Game.
+	 * Function called when "Continue" button is pressed. Launches Game.
 	 * @param view
 	 */
 	public void toImageAdjustment(View view){
@@ -233,7 +222,6 @@ public class ImageSelectorMenu extends Activity {
 			startActivity(intent);
 		}	
 	}
-	
 	
 
 	/**
@@ -254,6 +242,4 @@ public class ImageSelectorMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu); 
 	    return super.onCreateOptionsMenu(menu);
 	}
-
-	
 }
