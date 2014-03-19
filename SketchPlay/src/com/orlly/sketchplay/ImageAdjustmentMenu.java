@@ -28,11 +28,14 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
-public class ImageAdjustmentMenu extends Activity implements SeekBar.OnSeekBarChangeListener{
+public class ImageAdjustmentMenu extends Activity{
 	
 	private Button play_game;
+	private Button render_image;
 	private SeekBar saturation;
 	private SeekBar value;
+	private int saturation_tracker=50;
+	private int value_tracker=50;
 	private ImageView rendering_preview;
 	private Uri imageUri;
 	private Bitmap bitmap;
@@ -51,9 +54,9 @@ public class ImageAdjustmentMenu extends Activity implements SeekBar.OnSeekBarCh
 		
 		// Find views by id attributes identified in XML file
 		play_game = (Button)findViewById(R.id.play_game_button);
+		render_image = (Button)findViewById(R.id.render_picture_button);
 		saturation = (SeekBar)findViewById(R.id.saturation);
 		value = (SeekBar)findViewById(R.id.value);
-		saturation.setOnSeekBarChangeListener(this);
 		rendering_preview = (ImageView)findViewById(R.id.img_preview);
 		
 		try {
@@ -64,14 +67,13 @@ public class ImageAdjustmentMenu extends Activity implements SeekBar.OnSeekBarCh
 			e.printStackTrace();
 		}
 		rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
-		rendering_preview.setImageBitmap(rendering.getMapImage(0,0,0));
+		rendering_preview.setImageBitmap(rendering.getMapImage(50,50));
 	}
 	
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		super.onActivityResult(requestCode, resultCode, data);
-		rendering_preview.setImageBitmap(rendering.getMapImage(0,0,0));
-		
+		rendering_preview.setImageBitmap(rendering.getMapImage(saturation_tracker,value_tracker));
 	}
 	
 	/**
@@ -82,23 +84,12 @@ public class ImageAdjustmentMenu extends Activity implements SeekBar.OnSeekBarCh
 		Intent intent = new Intent(this, Game.class);
 		intent.putExtra("imageUri", imageUri.toString());
 		startActivity(intent);
-		rendering_preview.setImageBitmap(rendering.getMapImage(0,0,0));
 	}
 	
-	public void renderPicture(){
-		rendering_preview.setImageBitmap(rendering.getMapImage(0,0,0));
-	}
-
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		
-	}
-
-	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {		
-	}
-
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {		
+	public void renderPicture(View view){
+		saturation_tracker = saturation.getProgress();
+		value_tracker = value.getProgress();
+		rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
+		rendering_preview.setImageBitmap(rendering.getMapImage(saturation_tracker,value_tracker));
 	}
 }
