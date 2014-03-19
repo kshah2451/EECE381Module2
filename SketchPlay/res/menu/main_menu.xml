@@ -4,7 +4,7 @@
         android:id="@+id/getting_started_a_bar"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/getting_started"
+        android:title="@string/getting_started_a_bar"
         android:onClick="gettingStartedActionBar"/>
 
 </menu>
