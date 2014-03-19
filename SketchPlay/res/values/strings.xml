@@ -11,11 +11,31 @@
     <string name="sound">SOUND</string>
     <string name="info">INFO</string>
     <string name="start">START</string>
-	<string name="how_to_play">HOW TO PLAY</string>
+	<string name="getting_started">GETTING STARTED</string>
 	<string name="left_button">Left</string>
 	<string name="right_button">Right</string>
 	<string name="choose_picture">PRESS HERE TO CONTINUE</string>
 	<string name="render_picture">RENDER PICTURE</string>
 	<string name="saturation">Saturation</string>
 	<string name="value">Value</string>
+	<string name="getting_started_text1">
+	    As of sprint 1, you should do the following:
+	    When you choose \"Take a Picture\", for best results you should set the resolution 
+	    to 640x480 and take the picture in landscape\/horizontal mode.\n\n
+	    When you choose \"Import a Picture\", if you are having problems, please insure the 
+	    image is 640x480 and was taken in landscape mode.  We recommend using pictures out
+	    of the \"SketchPlay\" folder that is created when you take a picture with our app.\n\n
+	    When you have the image you want, press the \"Continue\" button.\n\n
+	    Adjust the \"Saturation\" and \"Value\" sliders until the image displays as desired.\n
+	    Saturation affects the intensity of colors.\n
+	    Value affects the brightness of colors.\n\n
+	    
+	    When you\'re ready, click \"Play Game\"\n\n
+	    
+	    The arrow keys in the bottom left control left\/right movement, and the 
+	    key in the bottom right is used to jump.  At present, there is no objective.\n\n
+	    
+	    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+	    Yo Taunzu-Sama
+	</string>
 </resources>

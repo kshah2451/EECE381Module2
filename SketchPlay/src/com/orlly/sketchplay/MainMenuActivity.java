@@ -26,7 +26,7 @@ public class MainMenuActivity extends Activity {
 	/**
 	 * How To Play button
 	 */
-	Button how_to_play;
+	Button getting_started;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -34,7 +34,7 @@ public class MainMenuActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		start_game = (Button) findViewById(R.id.start_button);
 		options = (Button) findViewById(R.id.options_button);
-		how_to_play = (Button) findViewById(R.id.how_to_play_button);
+		getting_started = (Button) findViewById(R.id.getting_started_button);
 		setContentView(R.layout.main_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -64,24 +64,24 @@ public class MainMenuActivity extends Activity {
 	}
 
 	/**
-	 * Function called when "How to Play" button is pressed. Launches
-	 * HowToPlay activity.
+	 * Function called when "Getting Started" button is pressed. Launches
+	 * GettingStarted activity.
 	 * 
 	 * @param view
 	 */
-	public void toHowToPlay(View view) {
-		Intent intent = new Intent(this, HowToPlay.class);
+	public void toGettingStarted(View view) {
+		Intent intent = new Intent(this, GettingStarted.class);
 		startActivity(intent);
 	}
 	
 	/**
-	 * Function called when "How to Play" action bar item is pressed. Launches
-	 * HowToPlay activity.
+	 * Function called when "Getting Started" action bar item is pressed. Launches
+	 * GettingStarted activity.
 	 * @param item
 	 * @return
 	 */
-	public boolean howToPlayActionBar(MenuItem item) {
-		Intent intent = new Intent(this, HowToPlay.class);
+	public boolean gettingStartedActionBar(MenuItem item) {
+		Intent intent = new Intent(this, GettingStarted.class);
 		startActivity(intent);
 		return true;
 	}
