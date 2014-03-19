@@ -11,7 +11,6 @@ public class PlayerCharacter {
 	private int x;
 	private int y;
 	private int direction;
-	private boolean touch;
 	private int move_rate, jump_rate;
 	private int jump_height;
 	private int jump_counter;
@@ -19,18 +18,12 @@ public class PlayerCharacter {
 	private int closest_right_wall,closest_left_wall, closest_floor;
 	
 	public PlayerCharacter(Bitmap bitmap, int x, int y){
-		
-		
-		
-		
 		this.bitmap = bitmap;
 		this.x = x; this.y = y;
 		this.move_rate = 1; this.jump_rate = 4;
 		this.jump_height = 16;
 		this.jump_counter = 0;
 		this.isJumping = false; this.isMoving = false;
-	
-		
 	}
 	
 	public int getX(){
@@ -58,15 +51,6 @@ public class PlayerCharacter {
 	public int getMoveRate(){
 		return move_rate;
 	}
-	
-	public void setTouch(Boolean touched){
-		this.touch = touched;
-	}
-	
-	public boolean getTouch(){
-		return touch;
-	}
-	
 	
 	public boolean getIsJumping(){
 		
