@@ -32,11 +32,16 @@ public class MapRender {
 	 * 
 	 * @return Converted black and white bitmap.
 	 */
-	public Bitmap getMapImage(int hue, int saturation, int value) {
+	public Bitmap getMapImage(int saturation_tracker, int value_tracker) {
+		float saturation=(float)saturation_tracker;
+		saturation = (float)saturation/100;
+		float value= (float)value_tracker;
+		value = (float)value / 100;
+		
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				Color.colorToHSV(pixels[i * width + j], hsv);
-				if (hsv[2] < .5 && hsv[1] < 0.5) { // .07
+				if (hsv[2] < value && hsv[1] < saturation) { // .07
 					pixels[i * width + j] = Color.BLACK;
 				} else {
 					pixels[i * width + j] = Color.WHITE;

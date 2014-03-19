@@ -66,8 +66,7 @@ public class MainGamePanel extends SurfaceView implements
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
 	}
 
@@ -81,7 +80,7 @@ public class MainGamePanel extends SurfaceView implements
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
-		temp_bg = mapRender.getMapImage(0,0,0);
+		temp_bg = mapRender.getMapImage(0,0);
 
 		// Create 2D pixel array. Used for collision detection.
 		map_array = MapRender.convertTo2DArray(mapRender.getPixelArray(),
