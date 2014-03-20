@@ -26,9 +26,6 @@ public class ImageAdjustmentMenu extends Activity {
 	private Context context;
 	private Bitmap backBmp;
 	private Button render_image_button;
-	
-	
-	
 	private SeekBar saturation;
 	private SeekBar value;
 	private int saturation_tracker = 50;
@@ -52,9 +49,6 @@ public class ImageAdjustmentMenu extends Activity {
 		Intent intent = new Intent();
 		intent = getIntent();
 		imageUri = Uri.parse(intent.getStringExtra("imageUri"));
-		
-		
-		
 
 		// Find views by id attributes identified in XML file
 		saturation = (SeekBar) findViewById(R.id.saturation);
@@ -103,35 +97,7 @@ public class ImageAdjustmentMenu extends Activity {
 	 * preview.
 	 * 
 	 * @param view
-	 
-	
-	
-	
-	public void renderPicture(View view) {
-		saturation_tracker = saturation.getProgress();
-		value_tracker = value.getProgress();
-		
-		rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
-		
-		// Set preview to reflect rendered bitmap
-		rendering_preview.setImageBitmap(rendering.getMapImage(
-				saturation_tracker, value_tracker));
-				
-				
-				
-	}
-	
-	
 	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void renderPicture(View view) {
 		view.setEnabled(false);
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -167,7 +133,7 @@ public class ImageAdjustmentMenu extends Activity {
 			
 			@Override
 			protected void onPostExecute(Void result) {
-				if (pd!=null) {
+				if (pd != null) {
 					pd.dismiss();
 					render_image_button.setEnabled(true);
 					rendering_preview.setImageBitmap(backBmp);
@@ -177,11 +143,4 @@ public class ImageAdjustmentMenu extends Activity {
 		};
 		task.execute((Void[])null);
 	}
-
-    
-	
-	
-	
-	
-	
 }

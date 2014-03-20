@@ -10,6 +10,8 @@ public class PlayerCharacter {
 	private Bitmap bitmap;
 	private int x;
 	private int y;
+	private int height;
+	private int width;
 	private int direction;
 	private int move_rate, jump_rate;
 	private int jump_height;
@@ -20,19 +22,27 @@ public class PlayerCharacter {
 	public PlayerCharacter(Bitmap bitmap, int x, int y){
 		this.bitmap = bitmap;
 		this.x = x; this.y = y;
+		this.height = bitmap.getHeight();
+		this.width = bitmap.getWidth();
 		this.move_rate = 1; this.jump_rate = 4;
 		this.jump_height = 16;
 		this.jump_counter = 0;
 		this.isJumping = false; this.isMoving = false;
 	}
 	
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
 	public int getX(){
-		
 		return x;
 	}
 	
 	public int getY(){
-		
 		return y;
 	}
 	
@@ -61,8 +71,7 @@ public class PlayerCharacter {
 		this.isJumping = isJumping;
 	}
 	
-	public boolean getIsMoving(){
-		
+	public boolean getIsMoving(){	
 		return isMoving;
 	}
 	
