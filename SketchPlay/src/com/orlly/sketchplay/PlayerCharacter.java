@@ -102,6 +102,10 @@ public class PlayerCharacter {
 		return bitmap;
 	}
 	
+	public void setBitmap(Bitmap bitmap) {
+		this.bitmap = bitmap;
+	}
+
 	public int getDirection(){
 		return direction;
 	}
@@ -169,7 +173,7 @@ public class PlayerCharacter {
 	}
 	
 	public void descend(){
-		y_top += jump_rate;
-		y_bottom += jump_rate;	
+		y_top += jump_rate + 4;
+		y_bottom += jump_rate + 4;	
 	}	
 }

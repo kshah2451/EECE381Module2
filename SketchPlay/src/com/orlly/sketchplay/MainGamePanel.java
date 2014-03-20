@@ -261,12 +261,16 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
+				player.setBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.afro_man));
 			}
 		// This handles presses on the left button
 		} else if ((x > left_button_x0) && (x <= left_button_x1)) { // left
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
+				player.setBitmap(BitmapFactory.decodeResource(
+						getResources(), R.drawable.afro_man_left));
 			}
 		// This handles presses on the up button
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
