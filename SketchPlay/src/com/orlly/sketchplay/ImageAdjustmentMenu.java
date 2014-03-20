@@ -5,18 +5,30 @@ import java.io.IOException;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
 public class ImageAdjustmentMenu extends Activity {
 
+	//Background task variables
+	private ProgressDialog pd;
+	private Context context;
+	private Bitmap backBmp;
+	private Button render_image_button;
+	
+	
+	
 	private SeekBar saturation;
 	private SeekBar value;
 	private int saturation_tracker = 50;
@@ -32,10 +44,17 @@ public class ImageAdjustmentMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.adjustment_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
+		
+		//Background task stuff
+		context = this;
+		render_image_button = (Button)findViewById(R.id.render_picture_button);
 
 		Intent intent = new Intent();
 		intent = getIntent();
 		imageUri = Uri.parse(intent.getStringExtra("imageUri"));
+		
+		
+		
 
 		// Find views by id attributes identified in XML file
 		saturation = (SeekBar) findViewById(R.id.saturation);
@@ -84,7 +103,10 @@ public class ImageAdjustmentMenu extends Activity {
 	 * preview.
 	 * 
 	 * @param view
-	 */
+	 
+	
+	
+	
 	public void renderPicture(View view) {
 		saturation_tracker = saturation.getProgress();
 		value_tracker = value.getProgress();
@@ -94,5 +116,72 @@ public class ImageAdjustmentMenu extends Activity {
 		// Set preview to reflect rendered bitmap
 		rendering_preview.setImageBitmap(rendering.getMapImage(
 				saturation_tracker, value_tracker));
+				
+				
+				
 	}
+	
+	
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public void renderPicture(View view) {
+		view.setEnabled(false);
+		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+			
+			@Override
+			protected void onPreExecute() {
+				pd = new ProgressDialog(context);
+				pd.setTitle("Rendering...");
+				pd.setMessage("Please wait.");
+				pd.setCancelable(false);
+				pd.setIndeterminate(true);
+				pd.show();
+			}
+			
+			@Override
+			protected Void doInBackground(Void... arg0) {
+				try {
+					//Do something...
+					saturation_tracker = saturation.getProgress();
+					value_tracker = value.getProgress();
+					
+					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
+					
+					// Set preview to reflect rendered bitmap
+					backBmp = rendering.getMapImage(saturation_tracker, value_tracker);
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(Void result) {
+				if (pd!=null) {
+					pd.dismiss();
+					render_image_button.setEnabled(true);
+					rendering_preview.setImageBitmap(backBmp);
+				}
+			}
+			
+		};
+		task.execute((Void[])null);
+	}
+
+    
+	
+	
+	
+	
+	
 }
