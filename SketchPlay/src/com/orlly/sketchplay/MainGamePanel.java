@@ -20,11 +20,12 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap temp_bg;
 	int startx = 600;
 	int starty = 100;
-	
+
 	private int saturation;
 	private int value;
-	
-	private int[][] map_array;
+
+	private boolean moveOkay = true;
+
 	private MapRender mapRender;
 	int right_button_x0;
 	int right_button_x1;
@@ -39,12 +40,15 @@ public class MainGamePanel extends SurfaceView implements
 	int up_button_y0;
 	int up_button_y1;
 
-	public MainGamePanel(Context context, Bitmap bitmap, int saturation, int value) {
+	public MainGamePanel(Context context, Bitmap bitmap, int saturation,
+			int value) {
 		super(context);
 		getHolder().addCallback(this);
-		
+
 		this.saturation = saturation;
 		this.value = value;
+
+		setWillNotDraw(false);
 
 		// Create new player character
 		player = new PlayerCharacter(BitmapFactory.decodeResource(
@@ -60,20 +64,15 @@ public class MainGamePanel extends SurfaceView implements
 		up_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.up_arrow));
 
-		Log.d("size", "width:" + Integer.toString(getWidth()));
-		Log.d("size", "height:" + Integer.toString(getHeight()));
-
 		this.bitmap = bitmap;
-		
-		
-
 
 		// Set to true so we can interact with surface
 		setFocusable(true);
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
 
 	}
 
@@ -84,35 +83,31 @@ public class MainGamePanel extends SurfaceView implements
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
 
+		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
+		Log.d("debug", "Scaled Bitmap width: " + bitmap.getWidth());
+
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
 
-		// Create 2D pixel array. Used for collision detection.
-		map_array = MapRender.convertTo2DArray(mapRender.getPixelArray(),
-				this.getHeight(), this.getWidth());
-		
-		//initializes positioning of right button
+		// Initializes positioning of right button
 		right_button_x0 = left_button.width + (left_button.width / 2);
 		right_button_x1 = right_button_x0 + right_button.width;
 		right_button_y0 = getHeight() - right_button.height;
 		right_button_y1 = getHeight();
-		
-		//initializes positioning of left button
+
+		// Initializes positioning of left button
 		left_button_x0 = 0;
 		left_button_x1 = left_button.width;
 		left_button_y0 = getHeight() - left_button.height;
 		left_button_y1 = getHeight();
-		
-		//initializes positioning of up button
+
+		// Initializes positioning of up button
 		up_button_x0 = getWidth() - up_button.width;
-		up_button_x1 = up_button_x0 + up_button.width;	
+		up_button_x1 = up_button_x0 + up_button.width;
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
-
-		
-		
 
 		// Start thread
 		thread = new GameThread(getHolder(), this);
@@ -134,94 +129,146 @@ public class MainGamePanel extends SurfaceView implements
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * Draws background and player with updated position
+	 * @param canvas
+	 */
 	public void drawImages(Canvas canvas) {
 		canvas.drawBitmap(temp_bg, 0, 0, null);
-		player.draw(canvas, player.getX(), player.getY());
+		player.draw(canvas, player.getX_left(), player.getY_top());
 		right_button.draw(canvas, right_button_x0, right_button_y0);
-		left_button.draw(canvas, left_button_x0,
-				left_button_y0);
+		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
 	}
-
+	
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
-		// When user presses the touchscreen
+		// Check to see if user has touched the touch screen
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// call action handler to check what has happened
+			// Call action handler to check what area of touch screen has been touched
 			handleTouch((int) event.getX(), (int) event.getY());
 		}
 
-		// when the user lifts their finger off the screen
+		// Check to see if user lifts their finger off the screen
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-
-			if (player.getIsMoving()) {
-				player.setIsMoving(false);
-			}
-
+			player.setIsMoving(false);
 		}
 		return true;
 	}
 
+	
 	/**
 	 * Update player position
 	 */
 	public void update() {
-		if(player.getY() > 0){
+
+		// Check to see if player is below top of screen
+		if (player.getY_top() > 0) {
+			// Check to see if player is already jumping. If so, then allow
+			// jump.
 			if (player.getIsJumping()) {
 				player.jump();
 			}
 		}
+		// If player reaches ceiling, set jumping flag to false to disallow
+		// jumping.
+		else {
+			player.setIsJumping(false);
+		}
 
-		// if is moving
-		// move player if they're going right and aren't bounded by the right
-		// side
-		if ((player.getX() + player.getBitmap().getWidth() <= getWidth())
-				&& (player.getDirection() == player.getMoveRate())) {
-			try{
-				if (map_array[player.getY()][player.getX()
-						+ player.getBitmap().getWidth()] == Color.WHITE) {
+		// Check to see if player's right x position is less than right edge of
+		// screen, and if player is moving in the right direction.
+		if ((player.getX_right() <= getWidth()) && (player.getDirection() > 0)) {
+			try {
+				// If black pixel is detected to the right of the player,
+				// disallow movement.
+				for (int i = 0; i < player.getHeight(); i++) {
+					if (temp_bg.getPixel(player.getX_right() + 1,
+							player.getY_top() + i) == Color.BLACK) {
+						this.moveOkay = false;
+						break;
+					}
+				}
+					
+				if (this.moveOkay == true) {
 					player.move();
 				}
-			} catch(IndexOutOfBoundsException e) {
-				
+				this.moveOkay = true;
+
+			} catch (IllegalStateException e) {
+
 			}
 		}
 
-		// move player if they're going left and aren't bounded by the left side
-		else if ((player.getX() > 0)
-				&& (player.getDirection() == -(player.getMoveRate()))) {
-			player.move();
-		}
+		// Check to see if player's left x position is greater than left edge of
+		// screen, and if player is moving in the left direction.
+		else if ((player.getX_left() > 0) && (player.getDirection() < 0)) {
+			try {
+				// If black pixel is detected to the left of the player,
+				// disallow movement.
+				for (int i = 0; i < player.getHeight() - 1; i++) {
+					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
+							+ i) == Color.BLACK) {
+						this.moveOkay = false;
+					}
+				}
 
-		if(player.getY()+ player.getBitmap().getHeight() < getHeight()){
-			if ((map_array[player.getY() + player.getBitmap().getHeight()][player
-					.getX()] == -1)  && (player.getIsJumping() == false)){
-				Log.d("debug",
-						Integer.toString(map_array[player.getY()
-								+ player.getBitmap().getHeight()][player.getX()]));
-				player.descend();
+				if (this.moveOkay == true) {
+					player.move();
+				}
+				this.moveOkay = true;
+
+			} catch (IllegalStateException e) {
+
 			}
 		}
 
+		// Check to see if player's bottom y position is less than bottom of screen
+		if (player.getY_bottom() < getHeight()) {
+			try {
+				if (player.getIsJumping() == false) {
+					for (int i = 0; i < player.getWidth(); i++) {
+						if (temp_bg.getPixel(player.getX_left() + i,
+								player.getY_bottom() + 2) == Color.BLACK) {
+							this.moveOkay = false;
+						}
+					}
+					if (this.moveOkay == true) {
+						player.descend();
+					}
+					this.moveOkay = true;
+
+				}
+			} catch (IllegalStateException e) {
+
+			}
+		}
 	}
-
+	
+	
+	/**
+	 * Checks the region that was touched on touch screen.
+	 * @param x
+	 * @param y
+	 */
 	public void handleTouch(int x, int y) {
-
-		// this handles presses on the right button
-		if ((x > right_button_x0) && (x <= right_button_x1)) { 
+		// This handles presses on the right button
+		if ((x > right_button_x0) && (x <= right_button_x1)) {
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
 			}
-		// this handles presses on the left button
+		// This handles presses on the left button
 		} else if ((x > left_button_x0) && (x <= left_button_x1)) { // left
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
 			}
-		// this handles presses on the up button
+		// This handles presses on the up button
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);
@@ -235,7 +282,6 @@ public class MainGamePanel extends SurfaceView implements
 		int width;
 		int height;
 		boolean touched;
-
 
 		DirectionalButton(Bitmap bitmap) {
 			this.bitmap = bitmap;

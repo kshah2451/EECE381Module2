@@ -1,12 +1,7 @@
 package com.orlly.sketchplay;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
-import android.util.Log;
 
 public class MapRender {
 	private int height;
@@ -41,7 +36,7 @@ public class MapRender {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				Color.colorToHSV(pixels[i * width + j], hsv);
-				if (hsv[2] < value && hsv[1] < saturation) { // .07
+				if (hsv[2] <= value && hsv[1] <= saturation) { // .07
 					pixels[i * width + j] = Color.BLACK;
 				} else {
 					pixels[i * width + j] = Color.WHITE;
@@ -52,26 +47,7 @@ public class MapRender {
 				height, Bitmap.Config.ARGB_8888);
 		return blackAndWhite;
 	}
-	
-	
-	/**
-	 * Converts a 1D pixel array into a 2D pixel array
-	 * @param pixels - the 1D pixel array to convert
-	 * @param height - the height of the 2D array to create
-	 * @param width - the width of the 2D array to create
-	 * @return Converted 2D array
-	 */
-	public static int[][] convertTo2DArray(int[] pixels, int height, int width) {
-		int[][] pixels2D = new int[height][width];
 
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				pixels2D[i][j] = pixels[i * height + j];
-			}
-
-		}
-		return pixels2D;
-	}
 	
 	/**
 	 * Return this.pixels
