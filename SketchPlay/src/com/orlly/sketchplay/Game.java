@@ -29,9 +29,6 @@ public class Game extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		getActionBar().setDisplayHomeAsUpEnabled(false);
-		
-		 //Remove title bar
-	   // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		Intent intent = new Intent();
 		intent = getIntent();
