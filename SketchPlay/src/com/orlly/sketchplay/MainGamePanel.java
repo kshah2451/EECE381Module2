@@ -228,7 +228,7 @@ public class MainGamePanel extends SurfaceView implements
 		}
 
 		// Check to see if player's bottom y position is less than bottom of screen
-		if (player.getY_bottom() < getHeight()) {
+		if (player.getY_bottom() < getHeight()-2) {
 			try {
 				if (player.getIsJumping() == false) {
 					for (int i = 0; i < player.getWidth(); i++) {
