@@ -18,8 +18,8 @@ public class MainGamePanel extends SurfaceView implements
 	private DirectionalButton right_button, left_button, up_button;
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
-	int startx = 600;
-	int starty = 100;
+	int startx = 5;
+	int starty = 5;
 
 	private int saturation;
 	private int value;
@@ -186,7 +186,7 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the right of the player,
 				// disallow movement.
-				for (int i = 0; i < player.getHeight(); i++) {
+				for (int i = 0; i < player.getHeight() * (2.0/3); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
 						this.moveOkay = false;
@@ -201,7 +201,11 @@ public class MainGamePanel extends SurfaceView implements
 
 			} catch (IllegalStateException e) {
 
+			} catch (IllegalArgumentException a){
+				
 			}
+			
+		
 		}
 
 		// Check to see if player's left x position is greater than left edge of
@@ -210,7 +214,7 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the left of the player,
 				// disallow movement.
-				for (int i = 0; i < player.getHeight() - 1; i++) {
+				for (int i = 0; i < player.getHeight() * (2.0/3) - 1; i++) {
 					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
 							+ i) == Color.BLACK) {
 						this.moveOkay = false;
@@ -224,6 +228,8 @@ public class MainGamePanel extends SurfaceView implements
 
 			} catch (IllegalStateException e) {
 
+			} catch (IllegalArgumentException a){
+				
 			}
 		}
 
@@ -245,6 +251,8 @@ public class MainGamePanel extends SurfaceView implements
 				}
 			} catch (IllegalStateException e) {
 
+			} catch (IllegalArgumentException a){
+				
 			}
 		}
 	}
