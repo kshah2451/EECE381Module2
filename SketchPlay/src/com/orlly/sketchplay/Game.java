@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 
 
 public class Game extends Activity {
@@ -29,6 +27,7 @@ public class Game extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		getActionBar().setDisplayHomeAsUpEnabled(false);
+		
 
 		Intent intent = new Intent();
 		intent = getIntent();

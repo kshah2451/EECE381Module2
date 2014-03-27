@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainMenuActivity extends Activity {
-
+	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,6 @@ public class MainMenuActivity extends Activity {
 		setContentView(R.layout.main_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
-		
 
 	/**
 	 * Function called when "start game" button is pressed. Launches
@@ -32,7 +31,6 @@ public class MainMenuActivity extends Activity {
 		startActivity(intent);
 	}
 
-	
 	/**
 	 * Function called when "options" button is pressed. Launches OptionsMenu
 	 * activity.
@@ -44,7 +42,6 @@ public class MainMenuActivity extends Activity {
 		startActivity(intent);
 	}
 
-	
 	/**
 	 * Function called when "Getting Started" button is pressed. Launches
 	 * GettingStarted activity.
@@ -55,11 +52,11 @@ public class MainMenuActivity extends Activity {
 		Intent intent = new Intent(this, GettingStarted.class);
 		startActivity(intent);
 	}
-	
-	
+
 	/**
-	 * Function called when "Getting Started" action bar item is pressed. Launches
-	 * GettingStarted activity.
+	 * Function called when "Getting Started" action bar item is pressed.
+	 * Launches GettingStarted activity.
+	 * 
 	 * @param item
 	 * @return
 	 */
@@ -69,11 +66,10 @@ public class MainMenuActivity extends Activity {
 		return true;
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu); 
-	    return super.onCreateOptionsMenu(menu);
+		inflater.inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 }

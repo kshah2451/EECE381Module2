@@ -24,7 +24,7 @@ import android.widget.SeekBar;
 
 public class ImageAdjustmentMenu extends Activity {
 
-	//Background task variables
+	// Background task variables
 	private ProgressDialog pd;
 	private Context context;
 	private Bitmap backBmp;
@@ -44,10 +44,10 @@ public class ImageAdjustmentMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.adjustment_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
-		
-		//Background task stuff
+
+		// Background task stuff
 		context = this;
-		render_image_button = (Button)findViewById(R.id.render_picture_button);
+		render_image_button = (Button) findViewById(R.id.render_picture_button);
 
 		Intent intent = new Intent();
 		intent = getIntent();
@@ -100,11 +100,11 @@ public class ImageAdjustmentMenu extends Activity {
 	 * preview.
 	 * 
 	 * @param view
-	*/
+	 */
 	public void renderPicture(View view) {
 		view.setEnabled(false);
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-			
+
 			@Override
 			protected void onPreExecute() {
 				pd = new ProgressDialog(context);
@@ -114,18 +114,20 @@ public class ImageAdjustmentMenu extends Activity {
 				pd.setIndeterminate(true);
 				pd.show();
 			}
-			
+
 			@Override
 			protected Void doInBackground(Void... arg0) {
 				try {
-					//Do something...
+					// Do something...
 					saturation_tracker = saturation.getProgress();
 					value_tracker = value.getProgress();
-					
-					rendering = new MapRender(bitmap, bitmap.getHeight(), bitmap.getWidth());
-					
+
+					rendering = new MapRender(bitmap, bitmap.getHeight(),
+							bitmap.getWidth());
+
 					// Set preview to reflect rendered bitmap
-					backBmp = rendering.getMapImage(saturation_tracker, value_tracker);
+					backBmp = rendering.getMapImage(saturation_tracker,
+							value_tracker);
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -133,7 +135,7 @@ public class ImageAdjustmentMenu extends Activity {
 				}
 				return null;
 			}
-			
+
 			@Override
 			protected void onPostExecute(Void result) {
 				if (pd != null) {
@@ -142,14 +144,15 @@ public class ImageAdjustmentMenu extends Activity {
 					rendering_preview.setImageBitmap(backBmp);
 				}
 			}
-			
+
 		};
-		task.execute((Void[])null);
+		task.execute((Void[]) null);
 	}
-	
+
 	/**
-	 * Function called when "Getting Started" action bar item is pressed. Launches
-	 * GettingStarted activity.
+	 * Function called when "Getting Started" action bar item is pressed.
+	 * Launches GettingStarted activity.
+	 * 
 	 * @param item
 	 * @return
 	 */
@@ -158,11 +161,11 @@ public class ImageAdjustmentMenu extends Activity {
 		startActivity(intent);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu); 
-	    return super.onCreateOptionsMenu(menu);
+		inflater.inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 }
