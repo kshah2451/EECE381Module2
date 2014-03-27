@@ -14,6 +14,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -142,5 +145,24 @@ public class ImageAdjustmentMenu extends Activity {
 			
 		};
 		task.execute((Void[])null);
+	}
+	
+	/**
+	 * Function called when "Getting Started" action bar item is pressed. Launches
+	 * GettingStarted activity.
+	 * @param item
+	 * @return
+	 */
+	public boolean gettingStartedActionBar(MenuItem item) {
+		Intent intent = new Intent(this, GettingStarted.class);
+		startActivity(intent);
+		return true;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu); 
+	    return super.onCreateOptionsMenu(menu);
 	}
 }

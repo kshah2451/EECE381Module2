@@ -63,7 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="renderPicture"
-            android:text="@string/render_picture" />
+            android:background="@drawable/button_selector"
+            android:text="@string/render_picture"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/play_game_button"
@@ -71,7 +74,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="playGame"
-            android:text="@string/play_game" />
+            android:background="@drawable/button_selector"
+            android:text="@string/play_game"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 
