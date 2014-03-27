@@ -27,7 +27,7 @@
             android:id="@+id/import_picture_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:onClick="importPicture"
             android:background="@drawable/button_selector"
             android:text="@string/import_picture"
