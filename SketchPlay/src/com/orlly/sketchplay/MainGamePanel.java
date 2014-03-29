@@ -19,6 +19,7 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
 	private Bitmap visual_bg;
+	private Bitmap texture;
 	int startx = 5;
 	int starty = 5;
 
@@ -90,6 +91,12 @@ public class MainGamePanel extends SurfaceView implements
 		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.forest_bg), this.getWidth(),
 				this.getHeight(), true);
+		// the image containing the platform textures
+		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.grass_texture), this.getWidth(),
+				this.getHeight(), true);
+		
+		
 
 		
 		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
@@ -104,10 +111,11 @@ public class MainGamePanel extends SurfaceView implements
 		for(int i=0; i< temp_bg.getWidth(); i++){
 			for(int j = 0; j < temp_bg.getHeight(); j++){
 				if(temp_bg.getPixel(i, j) == Color.BLACK){
-					//replace black coloured-platform with dark moss-like colour 
-					//(might need to change colour if it blends with the background too much)
-					visual_bg.setPixel(i, j, Color.rgb(51, 102, 0));
+					//replace black coloured-platform with the colour in
+					// our texture bitmap specified by the pixel coordinates i,j
+					visual_bg.setPixel(i, j, texture.getPixel(i, j));
 				}
+
 
 			}
 		}
