@@ -18,6 +18,7 @@ public class MainGamePanel extends SurfaceView implements
 	private DirectionalButton right_button, left_button, up_button;
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
+	private Bitmap visual_bg;
 	int startx = 5;
 	int starty = 5;
 
@@ -57,6 +58,8 @@ public class MainGamePanel extends SurfaceView implements
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
 
+		
+		//Create the buttons
 		right_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.right_arrow));
 		left_button = new DirectionalButton(BitmapFactory.decodeResource(
@@ -64,6 +67,7 @@ public class MainGamePanel extends SurfaceView implements
 		up_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.up_arrow));
 
+		//set our bitmap bg as the passed in bitmap image
 		this.bitmap = bitmap;
 
 		// Set to true so we can interact with surface
@@ -82,7 +86,12 @@ public class MainGamePanel extends SurfaceView implements
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
+		// the background image
+		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.forest_bg), this.getWidth(),
+				this.getHeight(), true);
 
+		
 		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
 		Log.d("debug", "Scaled Bitmap width: " + bitmap.getWidth());
 
@@ -90,6 +99,20 @@ public class MainGamePanel extends SurfaceView implements
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
+		
+		//combine temp_bg(contains image of platforms) with visual_bg (contains background image)
+		for(int i=0; i< temp_bg.getWidth(); i++){
+			for(int j = 0; j < temp_bg.getHeight(); j++){
+				if(temp_bg.getPixel(i, j) == Color.BLACK){
+					//replace black coloured-platform with dark moss-like colour 
+					//(might need to change colour if it blends with the background too much)
+					visual_bg.setPixel(i, j, Color.rgb(51, 102, 0));
+				}
+
+			}
+		}
+		
+		
 
 		// Initializes positioning of right button
 		right_button_x0 = left_button.width + (left_button.width / 2);
@@ -136,11 +159,13 @@ public class MainGamePanel extends SurfaceView implements
 	 * @param canvas
 	 */
 	public void drawImages(Canvas canvas) {
-		canvas.drawBitmap(temp_bg, 0, 0, null);
+	//	canvas.drawBitmap(temp_bg, 0, 0, null);
+		canvas.drawBitmap(visual_bg, 0, 0, null);
 		player.draw(canvas, player.getX_left(), player.getY_top());
 		right_button.draw(canvas, right_button_x0, right_button_y0);
 		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
+		
 	}
 	
 	
