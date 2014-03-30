@@ -114,7 +114,7 @@ public class MainGamePanel extends SurfaceView implements
 		
 		// create the game level image using these various parameters
 		game_level = new Background(visual_bg, temp_bg, texture, hazard);
-
+		game_level.generate_level_image();
 
 		// Initializes positioning of right button
 		right_button_x0 = left_button.width + (left_button.width / 2);
@@ -267,7 +267,7 @@ public class MainGamePanel extends SurfaceView implements
 				if (player.getIsJumping() == false) {
 					for (int i = 0; i < player.getWidth(); i++) {
 						if (temp_bg.getPixel(player.getX_left() + i,
-								player.getY_bottom() + 2) == Color.BLACK) {
+								player.getY_bottom() + 1) == Color.BLACK) {
 							this.moveOkay = false;
 						}
 					}
