@@ -20,6 +20,9 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap temp_bg;
 	private Bitmap visual_bg;
 	private Bitmap texture;
+	private Bitmap hazard;
+	private Background game_level;
+	private Bitmap level_image;
 	int startx = 5;
 	int starty = 5;
 
@@ -84,6 +87,7 @@ public class MainGamePanel extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 
+
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
@@ -96,7 +100,8 @@ public class MainGamePanel extends SurfaceView implements
 				getResources(), R.drawable.grass_texture), this.getWidth(),
 				this.getHeight(), true);
 		
-		
+		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.forest_hazard));
 
 		
 		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
@@ -107,20 +112,9 @@ public class MainGamePanel extends SurfaceView implements
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
-		//combine temp_bg(contains image of platforms) with visual_bg (contains background image)
-		for(int i=0; i< temp_bg.getWidth(); i++){
-			for(int j = 0; j < temp_bg.getHeight(); j++){
-				if(temp_bg.getPixel(i, j) == Color.BLACK){
-					//replace black coloured-platform with the colour in
-					// our texture bitmap specified by the pixel coordinates i,j
-					visual_bg.setPixel(i, j, texture.getPixel(i, j));
-				}
+		// create the game level image using these various parameters
+		game_level = new Background(visual_bg, temp_bg, texture, hazard);
 
-
-			}
-		}
-		
-		
 
 		// Initializes positioning of right button
 		right_button_x0 = left_button.width + (left_button.width / 2);
@@ -168,7 +162,8 @@ public class MainGamePanel extends SurfaceView implements
 	 */
 	public void drawImages(Canvas canvas) {
 	//	canvas.drawBitmap(temp_bg, 0, 0, null);
-		canvas.drawBitmap(visual_bg, 0, 0, null);
+	//	canvas.drawBitmap(level_image, 0, 0, null);
+		game_level.draw(canvas);
 		player.draw(canvas, player.getX_left(), player.getY_top());
 		right_button.draw(canvas, right_button_x0, right_button_y0);
 		left_button.draw(canvas, left_button_x0, left_button_y0);
