@@ -21,6 +21,7 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap visual_bg;
 	private Bitmap texture;
 	private Bitmap hazard;
+	private Bitmap treasure;
 	private Background game_level;
 	private Bitmap level_image;
 	int startx = 5;
@@ -102,6 +103,11 @@ public class MainGamePanel extends SurfaceView implements
 		
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.forest_hazard));
+		
+		treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.treasure));
+		
+		
 
 		
 		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
@@ -113,7 +119,7 @@ public class MainGamePanel extends SurfaceView implements
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
 		// create the game level image using these various parameters
-		game_level = new Background(visual_bg, temp_bg, texture, hazard);
+		game_level = new Background(visual_bg, temp_bg, texture, hazard, treasure);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -175,10 +181,21 @@ public class MainGamePanel extends SurfaceView implements
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
+		int fingerCount = event.getPointerCount();
+		
 		// Check to see if user has touched the touch screen
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
 			// Call action handler to check what area of touch screen has been touched
-			handleTouch((int) event.getX(), (int) event.getY());
+			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+			Log.d("touchevent", "first finger");
+
+			
+		}
+		
+		if (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
+			Log.d("touchevent", "second finger");
+
+			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
 		}
 
 		// Check to see if user lifts their finger off the screen
@@ -214,12 +231,33 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the right of the player,
 				// disallow movement.
-				for (int i = 0; i < player.getHeight() * (2.0/3); i++) {
+				for (int i = 0; i < player.getHeight(); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
-						this.moveOkay = false;
+						//this.moveOkay = false;
+						
+						
+						//if the black pixel is above his feet (the top 2/3s of his body)
+						// disallow movement
+						if (i < ((5*player.getHeight())/6)) {
+							this.moveOkay = false;
+
+						}
+					
+						//otherwise, he can walk on it and it's treated as a slope
+						else{
+							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
+						//	player.setY_top();
+						}
+					
+					
 						break;
+					
+					
+					
 					}
+						
+					
 				}
 					
 				if (this.moveOkay == true) {
@@ -240,12 +278,33 @@ public class MainGamePanel extends SurfaceView implements
 		// screen, and if player is moving in the left direction.
 		else if ((player.getX_left() > 0) && (player.getDirection() < 0)) {
 			try {
-				// If black pixel is detected to the left of the player,
-				// disallow movement.
-				for (int i = 0; i < player.getHeight() * (2.0/3) - 1; i++) {
+				// If black pixel is detected to the left of the player...
+	
+				for (int i = 0; i < player.getHeight() - 1; i++) {
+
 					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
 							+ i) == Color.BLACK) {
-						this.moveOkay = false;
+
+					
+						//if the black pixel is above his feet (the top 2/3s of his body)
+						// disallow movement
+						if (i < ((5*player.getHeight())/6)) {
+							this.moveOkay = false;
+
+						}
+					
+						//otherwise, he can walk on it and it's treated as a slope
+						else{
+							Log.d("climbing", "is climbing");
+							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
+							//player.setY_top();
+						}
+					
+					
+						break;
+					
+					
+					
 					}
 				}
 
@@ -260,6 +319,10 @@ public class MainGamePanel extends SurfaceView implements
 				
 			}
 		}
+		
+		Log.d("climbing", "player's bottom: " + Integer.toString(player.getY_bottom()));
+		Log.d("climbing", "max height: " + Integer.toString(this.getHeight()));
+
 
 		// Check to see if player's bottom y position is less than bottom of screen
 		if (player.getY_bottom() < getHeight()-2) {
@@ -278,9 +341,8 @@ public class MainGamePanel extends SurfaceView implements
 
 				}
 			} catch (IllegalStateException e) {
-
 			} catch (IllegalArgumentException a){
-				
+
 			}
 		}
 	}

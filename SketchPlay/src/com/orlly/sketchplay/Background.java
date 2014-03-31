@@ -3,26 +3,34 @@ package com.orlly.sketchplay;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 
 public class Background {
 
 	private int hazard_pic_height = 0;
 	private int hazard_pic_width = 0;
+	private int treasure_pic_height = 0;
+	private int treasure_pic_width = 0;
+	int width_count = 0;
 	private Bitmap final_image;
 	private Bitmap background;
 	private Bitmap platform;
 	private Bitmap texture;
 	private Bitmap hazard;
+	private Bitmap treasure;
+
 
 
 	
 	
-	public Background (Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard){
+	public Background (Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure){
 		
 		this.background = background;
 		this.platform = platform;
 		this.texture  = texture;
 		this.hazard = hazard;
+		this.treasure = treasure;
+		
 
 			
 	}
@@ -34,7 +42,14 @@ public class Background {
 		for(int i=0; i< platform.getWidth(); i++){
 			for(int j = 0; j < platform.getHeight(); j++){
 				texturize_platforms(i,j);
-				set_hazards(i, j);
+				//set_hazards(i, j);
+				
+				
+				
+				/*
+				set_treasures(i,j);
+				j = j+width_count;
+				*/
 			}
 		}
 		
@@ -96,52 +111,106 @@ public class Background {
 		
 	}
 	
-	//public void set_treasures(){
-	/*
+	public void set_treasures(int i, int j){
+	
+	try{
 	//DRAW VICTORY PLATFORM 
 	if((platform.getPixel(i, j) == Color.BLACK) && (platform.getPixel(i, j-1) == Color.WHITE)){
-		
-		
-		int first_pixel = i;
-		int count = 0;
-		int[] pixel_heights = new int[100]; int height_count = 0;
-		int width_count = 0;
-		int height_average = 0;
-		
-		
-		while(platform.getPixel(i+1, j)!= Color.WHITE){ //but make it for multiple y values
-			
+		Log.d("treasures", "entering the if");
 
-			while((platform.getPixel(i+1, j) != Color.YELLOW) && (count <= 5)){
-				j -= 1;
-			}
 		
-			//consider this a connection -- so a flag?
+		int first_pixel_x = i;	//the first victory platform pixel we came across - its x value
+		int first_pixel_y = j;  //the first victory platform pixel we came across - its y value
+		int count = 0;
+		int[] pixel_heights = new int[500]; int height_count = 0;  //an array that will collect the height values of all pixels that
+																   // make up the surface of the victory platform
+		int height_average = 0;										// the average of all those heights
+		width_count = 0;											//the length of that victory platform
+		
+		//fill up the height average array with -1's
+		for(int a = 0; a < 500; a++){
+
+			pixel_heights[a] = -1;
+		}
+		
+		
+		//maybe change != Color.WHITE to == Color.YELLOW
+		
+		//while there is a victory-colour pixel to the right of the current pixel, and it is at most 1 above it in both directions
+		// then we consider that pixel as being connected to this one
+		while((platform.getPixel(i+1, j)== Color.BLACK) ||
+			  (platform.getPixel(i+1, j-1)== Color.BLACK) || (platform.getPixel(i+1, j+1)== Color.BLACK) ){
+				
+			
+			//let's check if that next pixel is a surface pixel or if it's inside the platform. if it's in the platform
+			// then let's locate the surface, but only count pixels that are at most 5 pixels above (anything higher probably
+			// isn't connected)
+			while((platform.getPixel(i+1, j-1) != Color.WHITE) && (count <= 5)){
+				j = j-1;
+				count++;
+			}
 			
 			// keep track of the pixel's height
 			pixel_heights[height_count] = j;
-			
+			height_count++;
 			//increment width count
 			width_count++;
+			
+			//move on to the next pixel
+			i++;
 			
 			
 		}
 			//get the average height of connected victory platform pixels
 			for(int a = 0; a < height_count; a++){
-				height_average += pixel_heights[a];
+				if(pixel_heights[a] == -1){
+					break;
+				}
+				else{
+					height_average += pixel_heights[a];
+				}
 			}
 				height_average = height_average/height_count;
 		
-		
-				
+	
+			
 			//now the drawing part
 				
-		
+
+				
+				this.treasure = Bitmap.createScaledBitmap(treasure, width_count,
+						(width_count)/2 , true);
+			
+
+				treasure_pic_width = 0;
+				for(int treasure_width =  first_pixel_x; treasure_width < first_pixel_x + treasure.getWidth(); treasure_width++){
+					for(int treasure_height = first_pixel_y - treasure.getHeight()/2; treasure_height < first_pixel_y + (treasure.getHeight()/2); treasure_height++){
+						Log.d("treasures", "getPixel height: " + Integer.toString(treasure_pic_height));
+						Log.d("treasures", "getPixel width: " + Integer.toString(treasure_pic_width));
+						background.setPixel(treasure_width, treasure_height, treasure.getPixel(treasure_pic_width, treasure_pic_height));
+						treasure_pic_height++;
+					}
+					treasure_pic_height = 0;
+					treasure_pic_width++;
+					
+				}
+				
+
+				
 	}
-	*/
+	}catch (IllegalStateException e) {
+		Log.d("treasures", "illegal state");
+
+	} catch (IllegalArgumentException a){
+		Log.d("treasures", "getPixel height that throws exc: " + Integer.toString(treasure_pic_height));
+		Log.d("treasures", "illegal arg");
+
+	}
 	
 	
-   //}
+	
+	
+   }
 
 	// draw the bitmap
 	public void draw(Canvas canvas){
