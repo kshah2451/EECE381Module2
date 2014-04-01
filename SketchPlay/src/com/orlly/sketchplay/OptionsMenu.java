@@ -31,11 +31,42 @@ public class OptionsMenu extends Activity {
 		return true;
 	}
 	
+	/**
+	 * Function called when "Options" action bar item (Options icon) is pressed.
+	 * Launches GettingStarted activity.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public boolean optionsActionBar(MenuItem item) {
+		return true;
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu); 
 	    return super.onCreateOptionsMenu(menu);
 	}
+	
+//	@Override
+//	protected void onResume() {
+//		BackgroundMusic.play();
+//		super.onResume();
+//	}
+//	
+//	
+//	@Override
+//	public void onBackPressed() {
+//		BackgroundMusic.play();
+//		super.onBackPressed();
+//	}
+//
+//
+//	@Override
+//	protected void onStop() {
+//		BackgroundMusic.stop();
+//		super.onStop();
+//	}
 	
 }

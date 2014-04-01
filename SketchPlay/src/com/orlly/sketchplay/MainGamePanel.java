@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -12,6 +13,8 @@ import android.view.SurfaceView;
 
 public class MainGamePanel extends SurfaceView implements
 		SurfaceHolder.Callback {
+
+	int count = 1;
 
 	private GameThread thread;
 	private PlayerCharacter player;
@@ -39,6 +42,16 @@ public class MainGamePanel extends SurfaceView implements
 	int left_button_y1;
 	int up_button_y0;
 	int up_button_y1;
+	
+	Handler handler = new Handler();
+	private Runnable onEverySecond=new Runnable() {
+	    public void run() {
+	        // do real work here
+
+	        	Log.d("time", "timer exec");
+	            handler.postDelayed(onEverySecond, 1000);
+	    }
+	};
 
 	public MainGamePanel(Context context, Bitmap bitmap, int saturation,
 			int value) {
@@ -109,6 +122,8 @@ public class MainGamePanel extends SurfaceView implements
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
 
+		BackgroundMusic.play();
+
 		// Start thread
 		thread = new GameThread(getHolder(), this);
 		thread.setRunning(true);
@@ -129,10 +144,10 @@ public class MainGamePanel extends SurfaceView implements
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Draws background and player with updated position
+	 * 
 	 * @param canvas
 	 */
 	public void drawImages(Canvas canvas) {
@@ -142,25 +157,34 @@ public class MainGamePanel extends SurfaceView implements
 		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
 	}
-	
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
 		// Check to see if user has touched the touch screen
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// Call action handler to check what area of touch screen has been touched
+		if (event.getAction() == MotionEvent.ACTION_POINTER_DOWN) {
+			// Call action handler to check what area of touch screen has been
+			// touched
+			// handleTouch((int) event.getX(), (int) event.getY());
+			Log.d("BUTTONPRESS", "two button touch");
+		}
+
+		// Check to see if user has touched the touch screen
+		else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			// Call action handler to check what area of touch screen has been
+			// touched
+			Log.d("BUTTONPRESS", "button touch");
 			handleTouch((int) event.getX(), (int) event.getY());
 		}
 
 		// Check to see if user lifts their finger off the screen
-		if (event.getAction() == MotionEvent.ACTION_UP) {
+		else if (event.getAction() == MotionEvent.ACTION_UP) {
 			player.setIsMoving(false);
 		}
+
 		return true;
 	}
 
-	
 	/**
 	 * Update player position
 	 */
@@ -186,14 +210,14 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the right of the player,
 				// disallow movement.
-				for (int i = 0; i < player.getHeight() * (2.0/3); i++) {
+				for (int i = 0; i < player.getHeight() * (2.0 / 3); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
 						this.moveOkay = false;
 						break;
 					}
 				}
-					
+
 				if (this.moveOkay == true) {
 					player.move();
 				}
@@ -201,11 +225,10 @@ public class MainGamePanel extends SurfaceView implements
 
 			} catch (IllegalStateException e) {
 
-			} catch (IllegalArgumentException a){
-				
+			} catch (IllegalArgumentException a) {
+
 			}
-			
-		
+
 		}
 
 		// Check to see if player's left x position is greater than left edge of
@@ -214,7 +237,7 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the left of the player,
 				// disallow movement.
-				for (int i = 0; i < player.getHeight() * (2.0/3) - 1; i++) {
+				for (int i = 0; i < player.getHeight() * (2.0 / 3) - 1; i++) {
 					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
 							+ i) == Color.BLACK) {
 						this.moveOkay = false;
@@ -223,18 +246,20 @@ public class MainGamePanel extends SurfaceView implements
 
 				if (this.moveOkay == true) {
 					player.move();
+
 				}
 				this.moveOkay = true;
 
 			} catch (IllegalStateException e) {
 
-			} catch (IllegalArgumentException a){
-				
+			} catch (IllegalArgumentException a) {
+
 			}
 		}
 
-		// Check to see if player's bottom y position is less than bottom of screen
-		if (player.getY_bottom() < getHeight()-2) {
+		// Check to see if player's bottom y position is less than bottom of
+		// screen
+		if (player.getY_bottom() < getHeight() - 2) {
 			try {
 				if (player.getIsJumping() == false) {
 					for (int i = 0; i < player.getWidth(); i++) {
@@ -251,15 +276,15 @@ public class MainGamePanel extends SurfaceView implements
 				}
 			} catch (IllegalStateException e) {
 
-			} catch (IllegalArgumentException a){
-				
+			} catch (IllegalArgumentException a) {
+
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Checks the region that was touched on touch screen.
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -269,18 +294,24 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				player.setBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man));
+				player.setBitmap(BitmapFactory.decodeResource(getResources(),
+						R.drawable.afro_man));
 			}
-		// This handles presses on the left button
+			// This handles presses on the left button
 		} else if ((x > left_button_x0) && (x <= left_button_x1)) { // left
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				player.setBitmap(BitmapFactory.decodeResource(
-						getResources(), R.drawable.afro_man_left));
+				if (count % 2 == 0) {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_left1));
+				} else {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_left2));
+				}
+				count++;
 			}
-		// This handles presses on the up button
+			// This handles presses on the up button
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);

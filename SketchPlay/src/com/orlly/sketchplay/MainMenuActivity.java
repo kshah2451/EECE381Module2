@@ -3,6 +3,7 @@ package com.orlly.sketchplay;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,10 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainMenuActivity extends Activity {
-	
+
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		BackgroundMusic.play();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -54,8 +59,8 @@ public class MainMenuActivity extends Activity {
 	}
 
 	/**
-	 * Function called when "Getting Started" action bar item is pressed.
-	 * Launches GettingStarted activity.
+	 * Function called when "Getting Started" action bar item (Question mark icon) is
+	 * pressed. Launches GettingStarted activity.
 	 * 
 	 * @param item
 	 * @return
@@ -66,10 +71,40 @@ public class MainMenuActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Function called when "Options" action bar item (Options icon) is pressed.
+	 * Launches GettingStarted activity.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public boolean optionsActionBar(MenuItem item) {
+		Intent intent = new Intent(this, OptionsMenu.class);
+		startActivity(intent);
+		return true;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		continueMusic  = false;
+//		BackgroundMusic.play();
+//		
+//	}
+//	
+//
+//	@Override
+//	protected void onPause() {
+//		super.onPause();
+//		if(!continueMusic) {
+//			BackgroundMusic.stop();
+//		}	
+//	}
 }

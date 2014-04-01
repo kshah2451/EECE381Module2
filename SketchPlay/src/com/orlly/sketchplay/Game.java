@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,19 +16,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
+import android.view.Window;
+import android.view.WindowManager;
 
 public class Game extends Activity {
 
 	private Bitmap background_bmp;
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		getActionBar().setDisplayHomeAsUpEnabled(false);
 		
+		
+		// Removes notification bar
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		Intent intent = new Intent();
 		intent = getIntent();
@@ -46,23 +51,70 @@ public class Game extends Activity {
 			e.printStackTrace();
 		}
 
-		setContentView(new MainGamePanel(this, background_bmp, saturation, value));
+		setContentView(new MainGamePanel(this, background_bmp, saturation,
+				value));
+		
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.funk);
+
 
 	}
+
 	
+//	@Override
+//	public void onBackPressed() {
+//		BackgroundMusic.stop();
+//		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+//		BackgroundMusic.play();
+//		super.onBackPressed();
+//	}
+
+
+//	@Override
+//	protected void onResume() {
+//		BackgroundMusic.stop();
+//		super.onResume();
+//	}
+//
+//
+//	@Override
+//	protected void onStop() {
+//		BackgroundMusic.stop();
+//		super.onStop();
+//	}
+
+
+
+
 	/**
-	 * Function called when "Getting Started" action bar item is pressed. Launches
-	 * GettingStarted activity.
+	 * Function called when "Getting Started" action bar item is pressed.
+	 * Launches GettingStarted activity.
+	 * 
 	 * @param item
 	 * @return
 	 */
 	public boolean gettingStartedActionBar(MenuItem item) {
 		Intent intent = new Intent(this, GettingStarted.class);
+		BackgroundMusic.stop();
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
 		startActivity(intent);
 		return true;
 	}
-	
-	
+
+	/**
+	 * Function called when "Options" action bar item (Options icon) is pressed.
+	 * Launches GettingStarted activity.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public boolean optionsActionBar(MenuItem item) {
+		Intent intent = new Intent(this, OptionsMenu.class);
+		BackgroundMusic.stop();
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		startActivity(intent);
+		return true;
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
