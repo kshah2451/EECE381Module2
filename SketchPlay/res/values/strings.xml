@@ -39,4 +39,7 @@
 	    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	    Yo Taunzu-Sama
 	</string>
+	<string name="image_select">Image Select</string>
+	<string name="render_image">Render Image</string>
+	<string name="options_label">Options</string>
 </resources>
