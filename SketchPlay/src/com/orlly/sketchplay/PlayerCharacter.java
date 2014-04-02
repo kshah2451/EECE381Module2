@@ -58,6 +58,11 @@ public class PlayerCharacter {
 	private int jump_rate;
 	
 	/**
+	 * Player's fall rate
+	 */
+	private int fall_rate;
+	
+	/**
 	 * Player's maximum jump height
 	 */
 	private int jump_height;
@@ -74,6 +79,11 @@ public class PlayerCharacter {
 	 */
 	private boolean isMoving;
 	
+	/**
+	 * Flag to indicate whether player is climbing.
+	 */
+	private boolean isClimbing;
+	
 	public PlayerCharacter(Bitmap bitmap, int x, int y){
 		this.bitmap = bitmap;
 		x_left = x; 
@@ -83,7 +93,7 @@ public class PlayerCharacter {
 		x_right = x_left + width;
 		y_bottom = y_top + height;
 		move_rate = 1; 
-		jump_rate = 4;
+		jump_rate = 4; fall_rate = 6;
 		jump_height = 16;
 		jump_counter = 0;
 		isJumping = false; 
@@ -118,6 +128,10 @@ public class PlayerCharacter {
 		return move_rate;
 	}
 	
+	public int getFallRate(){
+		return fall_rate;
+	}
+	
 	public boolean getIsJumping(){
 		return isJumping;
 	}
@@ -134,6 +148,18 @@ public class PlayerCharacter {
 		this.isMoving = isMoving;
 	}
 	
+	
+	
+	
+	
+	public boolean isClimbing() {
+		return isClimbing;
+	}
+
+	public void setClimbing(boolean isClimbing) {
+		this.isClimbing = isClimbing;
+	}
+
 	public int getX_left() {
 		return x_left;
 	}
@@ -149,7 +175,27 @@ public class PlayerCharacter {
 	public int getY_bottom() {
 		return y_bottom;
 	}
+	
+/*	public void setY_top(int y_top) {
+		this.y_top = y_top;
+	}
+*/	
 
+	public void setY_top() {
+		this.y_top = this.y_bottom
+				- height;	}
+	
+/*	public void setY_bottom(int y_bottom) {
+		this.y_bottom = y_bottom;
+	}
+*/
+	public void setY_bottom(int num) {
+		this.y_bottom = num;
+		setY_top();
+
+		
+	}
+	
 	public void draw(Canvas canvas, int x, int y){
 		canvas.drawBitmap(bitmap, x, y , null);
 	}
@@ -173,7 +219,7 @@ public class PlayerCharacter {
 	}
 	
 	public void descend(){
-		y_top += jump_rate + 4;
-		y_bottom += jump_rate + 4;	
+		y_top += fall_rate;
+		y_bottom += fall_rate;	
 	}	
 }
