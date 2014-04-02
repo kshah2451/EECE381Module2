@@ -14,7 +14,8 @@ import android.view.SurfaceView;
 public class MainGamePanel extends SurfaceView implements
 		SurfaceHolder.Callback {
 
-	int count = 1;
+	int count_left = 1;
+	int count_right = 1;
 
 	private GameThread thread;
 	private PlayerCharacter player;
@@ -71,7 +72,7 @@ public class MainGamePanel extends SurfaceView implements
 
 		// Create new player character
 		player = new PlayerCharacter(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man), startx, starty);
+				getResources(), R.drawable.afro_man_right1), startx, starty, getContext());
 
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
@@ -111,7 +112,7 @@ public class MainGamePanel extends SurfaceView implements
 				this.getHeight(), true);
 		// the image containing the platform textures
 		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.grass_texture), this.getWidth(),
+				getResources(), R.drawable.forest_texture), this.getWidth(),
 				this.getHeight(), true);
 		
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
@@ -376,22 +377,28 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				player.setBitmap(BitmapFactory.decodeResource(getResources(),
-						R.drawable.afro_man));
+				if (count_right % 2 == 0) {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_right1));
+				} else {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_right2));
+				}
+				count_right++;
 			}
 			// This handles presses on the left button
 		} else if ((x > left_button_x0) && (x <= left_button_x1)) { // left
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				if (count % 2 == 0) {
+				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left1));
 				} else {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left2));
 				}
-				count++;
+				count_left++;
 			}
 			// This handles presses on the up button
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump

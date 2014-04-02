@@ -1,12 +1,16 @@
 package com.orlly.sketchplay;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.view.View;
-import android.widget.Button;
 
 public class PlayerCharacter {
-
+	
+	
+	private Context context;
+	
+	
 	/**
 	 * Player's bitmap
 	 */
@@ -83,9 +87,15 @@ public class PlayerCharacter {
 	 * Flag to indicate whether player is climbing.
 	 */
 	private boolean isClimbing;
+
+
+	private int count = 10;
 	
-	public PlayerCharacter(Bitmap bitmap, int x, int y){
+	private boolean animation_flag;
+	
+	public PlayerCharacter(Bitmap bitmap, int x, int y, Context context){
 		this.bitmap = bitmap;
+		this.context = context;
 		x_left = x; 
 		y_top = y;
 		height = bitmap.getHeight();
@@ -148,10 +158,6 @@ public class PlayerCharacter {
 		this.isMoving = isMoving;
 	}
 	
-	
-	
-	
-	
 	public boolean isClimbing() {
 		return isClimbing;
 	}
@@ -175,25 +181,14 @@ public class PlayerCharacter {
 	public int getY_bottom() {
 		return y_bottom;
 	}
-	
-/*	public void setY_top(int y_top) {
-		this.y_top = y_top;
-	}
-*/	
 
 	public void setY_top() {
-		this.y_top = this.y_bottom
-				- height;	}
-	
-/*	public void setY_bottom(int y_bottom) {
-		this.y_bottom = y_bottom;
+		this.y_top = this.y_bottom - height;
 	}
-*/
+	
 	public void setY_bottom(int num) {
 		this.y_bottom = num;
 		setY_top();
-
-		
 	}
 	
 	public void draw(Canvas canvas, int x, int y){
@@ -204,7 +199,33 @@ public class PlayerCharacter {
 		if(isMoving == true){
 			x_left += direction;
 			x_right += direction;
-		}
+			count--;
+			if (count == 0) {
+				if(direction < 0) {
+					if(animation_flag == true) {
+						this.bitmap = BitmapFactory.decodeResource(
+								context.getResources(), R.drawable.afro_man_left1);
+						animation_flag = false;
+					} else {
+						this.bitmap = BitmapFactory.decodeResource(
+								context.getResources(), R.drawable.afro_man_left2);
+						animation_flag = true;
+					}	
+				} else {
+					if(animation_flag == true) {
+						this.bitmap = BitmapFactory.decodeResource(
+								context.getResources(), R.drawable.afro_man_right1);
+						animation_flag = false;
+					} else {
+						this.bitmap = BitmapFactory.decodeResource(
+								context.getResources(), R.drawable.afro_man_right2);
+						animation_flag = true;
+					}	
+				}
+				count = 10;
+			}
+		}	
+				
 	}
 	
 	public void jump(){
