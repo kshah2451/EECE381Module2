@@ -47,10 +47,12 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-
+			android:background="@drawable/button_selector"
             android:onClick="toImageSelector"
             android:padding="10dp"
-            android:text="@string/start" />
+            android:text="@string/start"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/getting_started_button"
@@ -60,10 +62,12 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-
+			android:background="@drawable/button_selector"
             android:onClick="toGettingStarted"
             android:padding="10dp"
-            android:text="@string/getting_started" />
+            android:text="@string/getting_started"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/options_button"
@@ -73,10 +77,12 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-
+			android:background="@drawable/button_selector"
             android:onClick="toOptionsActivity"
             android:padding="10dp"
-            android:text="@string/options" />
+            android:text="@string/options"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
     </LinearLayout>
 
 </LinearLayout>
