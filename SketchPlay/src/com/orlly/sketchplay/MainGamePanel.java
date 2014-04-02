@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -12,6 +13,9 @@ import android.view.SurfaceView;
 
 public class MainGamePanel extends SurfaceView implements
 		SurfaceHolder.Callback {
+
+	int count_left = 1;
+	int count_right = 1;
 
 	private GameThread thread;
 	private PlayerCharacter player;
@@ -45,6 +49,16 @@ public class MainGamePanel extends SurfaceView implements
 	int left_button_y1;
 	int up_button_y0;
 	int up_button_y1;
+	
+	Handler handler = new Handler();
+	private Runnable onEverySecond=new Runnable() {
+	    public void run() {
+	        // do real work here
+
+	        	Log.d("time", "timer exec");
+	            handler.postDelayed(onEverySecond, 1000);
+	    }
+	};
 
 	public MainGamePanel(Context context, Bitmap bitmap, int saturation,
 			int value) {
@@ -58,7 +72,7 @@ public class MainGamePanel extends SurfaceView implements
 
 		// Create new player character
 		player = new PlayerCharacter(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man), startx, starty);
+				getResources(), R.drawable.afro_man_right1), startx, starty, getContext());
 
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
@@ -98,7 +112,7 @@ public class MainGamePanel extends SurfaceView implements
 				this.getHeight(), true);
 		// the image containing the platform textures
 		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.grass_texture), this.getWidth(),
+				getResources(), R.drawable.forest_texture), this.getWidth(),
 				this.getHeight(), true);
 		
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
@@ -140,6 +154,8 @@ public class MainGamePanel extends SurfaceView implements
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
 
+		BackgroundMusic.play();
+
 		// Start thread
 		thread = new GameThread(getHolder(), this);
 		thread.setRunning(true);
@@ -160,10 +176,10 @@ public class MainGamePanel extends SurfaceView implements
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Draws background and player with updated position
+	 * 
 	 * @param canvas
 	 */
 	public void drawImages(Canvas canvas) {
@@ -176,14 +192,14 @@ public class MainGamePanel extends SurfaceView implements
 		up_button.draw(canvas, up_button_x0, up_button_y0);
 		
 	}
-	
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
 		int fingerCount = event.getPointerCount();
 		
 		// Check to see if user has touched the touch screen
+
 		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
 			// Call action handler to check what area of touch screen has been touched
 			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
@@ -199,13 +215,13 @@ public class MainGamePanel extends SurfaceView implements
 		}
 
 		// Check to see if user lifts their finger off the screen
-		if (event.getAction() == MotionEvent.ACTION_UP) {
+		else if (event.getAction() == MotionEvent.ACTION_UP) {
 			player.setIsMoving(false);
 		}
+
 		return true;
 	}
 
-	
 	/**
 	 * Update player position
 	 */
@@ -231,6 +247,7 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the right of the player,
 				// disallow movement.
+
 				for (int i = 0; i < player.getHeight(); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
@@ -259,7 +276,7 @@ public class MainGamePanel extends SurfaceView implements
 						
 					
 				}
-					
+
 				if (this.moveOkay == true) {
 					player.move();
 				}
@@ -267,11 +284,10 @@ public class MainGamePanel extends SurfaceView implements
 
 			} catch (IllegalStateException e) {
 
-			} catch (IllegalArgumentException a){
-				
+			} catch (IllegalArgumentException a) {
+
 			}
-			
-		
+
 		}
 
 		// Check to see if player's left x position is greater than left edge of
@@ -281,7 +297,6 @@ public class MainGamePanel extends SurfaceView implements
 				// If black pixel is detected to the left of the player...
 	
 				for (int i = 0; i < player.getHeight() - 1; i++) {
-
 					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
 							+ i) == Color.BLACK) {
 
@@ -310,13 +325,14 @@ public class MainGamePanel extends SurfaceView implements
 
 				if (this.moveOkay == true) {
 					player.move();
+
 				}
 				this.moveOkay = true;
 
 			} catch (IllegalStateException e) {
 
-			} catch (IllegalArgumentException a){
-				
+			} catch (IllegalArgumentException a) {
+
 			}
 		}
 		
@@ -324,8 +340,9 @@ public class MainGamePanel extends SurfaceView implements
 		Log.d("climbing", "max height: " + Integer.toString(this.getHeight()));
 
 
-		// Check to see if player's bottom y position is less than bottom of screen
-		if (player.getY_bottom() < getHeight()-2) {
+		// Check to see if player's bottom y position is less than bottom of
+		// screen
+		if (player.getY_bottom() < getHeight() - 2) {
 			try {
 				if (player.getIsJumping() == false) {
 					for (int i = 0; i < player.getWidth(); i++) {
@@ -341,15 +358,16 @@ public class MainGamePanel extends SurfaceView implements
 
 				}
 			} catch (IllegalStateException e) {
+				
 			} catch (IllegalArgumentException a){
 
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Checks the region that was touched on touch screen.
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -359,18 +377,30 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				player.setBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man));
+				if (count_right % 2 == 0) {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_right1));
+				} else {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_right2));
+				}
+				count_right++;
 			}
-		// This handles presses on the left button
+			// This handles presses on the left button
 		} else if ((x > left_button_x0) && (x <= left_button_x1)) { // left
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				player.setBitmap(BitmapFactory.decodeResource(
-						getResources(), R.drawable.afro_man_left));
+				if (count_left % 2 == 0) {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_left1));
+				} else {
+					player.setBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.afro_man_left2));
+				}
+				count_left++;
 			}
-		// This handles presses on the up button
+			// This handles presses on the up button
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);

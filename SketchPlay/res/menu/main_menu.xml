@@ -3,9 +3,17 @@
 
     <item
         android:id="@+id/getting_started_a_bar"
+        android:icon="@drawable/ic_action_help"
+        android:onClick="gettingStartedActionBar"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/getting_started_a_bar"
-        android:onClick="gettingStartedActionBar"/>
+        android:title="@string/getting_started_a_bar"/>
+    <item
+        android:id="@+id/options_a_bar"
+        android:icon="@drawable/ic_action_settings"
+        android:onClick="optionsActionBar"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/options_label"/>
 
 </menu>

@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -130,7 +131,6 @@ public class ImageAdjustmentMenu extends Activity {
 							value_tracker);
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;
@@ -161,6 +161,21 @@ public class ImageAdjustmentMenu extends Activity {
 		startActivity(intent);
 		return true;
 	}
+	
+	
+	/**
+	 * Function called when "Options" action bar item (Options icon) is pressed.
+	 * Launches GettingStarted activity.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public boolean optionsActionBar(MenuItem item) {
+		Intent intent = new Intent(this, OptionsMenu.class);
+		startActivity(intent);
+		return true;
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,4 +183,24 @@ public class ImageAdjustmentMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+//	@Override
+//	protected void onResume() {
+//		BackgroundMusic.play();
+//		super.onResume();
+//	}
+//	
+//	@Override
+//	public void onBackPressed() {
+//		BackgroundMusic.play();
+//		super.onBackPressed();
+//	}
+//
+//
+//	@Override
+//	protected void onStop() {
+//		BackgroundMusic.stop();
+//		super.onStop();
+//	}
+	
 }
