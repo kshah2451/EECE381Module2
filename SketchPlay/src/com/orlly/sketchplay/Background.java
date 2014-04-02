@@ -19,6 +19,7 @@ public class Background {
 	private Bitmap hazard;
 	private Bitmap treasure;
 
+	private boolean treasureSet = false;
 
 
 	
@@ -42,14 +43,15 @@ public class Background {
 		for(int i=0; i< platform.getWidth(); i++){
 			for(int j = 0; j < platform.getHeight(); j++){
 				texturize_platforms(i,j);
-				//set_hazards(i, j);
+			//	set_hazards(i, j);
 				
 				
+			/*	
+				if(treasureSet == false){
+					set_treasures(i,j);
+				}
+			*/
 				
-				/*
-				set_treasures(i,j);
-				j = j+width_count;
-				*/
 			}
 		}
 		
@@ -72,7 +74,8 @@ public class Background {
 	}
 	
 	public void set_hazards(int i, int j){
-		
+		boolean drawOkay = true;
+
 		/***DRAW HAZARDS***/
 		//if platform is [insert hazard colour here] then draw hazard on top
 		//TO DO: currently only works properly for perfectly flat platforms
@@ -82,29 +85,47 @@ public class Background {
 		try{
 		// check if it's a platform's surface. we only want to put hazards on the surface	
 		if((platform.getPixel(i, j) == Color.BLACK) && (platform.getPixel(i, j-1) == Color.WHITE)){
-			//draw the hazard using our hazard image
-			for(int hazard_height = j - hazard.getHeight(); hazard_height < j; hazard_height++){
-				background.setPixel(i, hazard_height, hazard.getPixel(hazard_pic_width, hazard_pic_height));
-				hazard_pic_height++;
-			}
 			
-			// reset hazard pic width counter if it reaches end of picture, otherwise increment
-			// could maybe use a modulo here, but my implementation of it wasnt working
-			if((hazard_pic_width+1) == hazard.getWidth()){
-				hazard_pic_width = 0;
-			}
-			else{
-				hazard_pic_width++; 
-			}
 			
-			//reset hazard pic height
-			hazard_pic_height = 0;
+			
+			//Check if there is space to draw a hazard. This checks if there is head room above a platform
+			for(int check_for_space = j-1; check_for_space > j-hazard.getHeight(); check_for_space--){
+				if(platform.getPixel(i, check_for_space) != Color.WHITE){
+					drawOkay = false;
+					break;
+				}
+				else
+					drawOkay = true;
+			}
+
+			if(drawOkay){
+				Log.d("hazards", "drawOkay");
+
+				//draw the hazard using our hazard image
+				for(int hazard_height = j - hazard.getHeight(); hazard_height < j; hazard_height++){
+					background.setPixel(i, hazard_height, hazard.getPixel(hazard_pic_width, hazard_pic_height));
+					hazard_pic_height++;
+				}
+				
+				// reset hazard pic width counter if it reaches end of picture, otherwise increment
+				// could maybe use a modulo here, but my implementation of it wasnt working
+				if((hazard_pic_width+1) == hazard.getWidth()){
+					hazard_pic_width = 0;
+				}
+				else{
+					hazard_pic_width++; 
+				}
+				
+				//reset hazard pic height
+				hazard_pic_height = 0;
+			}
 			
 		}
 		}catch (IllegalStateException e) {
-
+			Log.d("hazards", "state");
 		} catch (IllegalArgumentException a){
-			
+			Log.d("hazards", "arg");
+
 		}
 		
 		
@@ -118,17 +139,19 @@ public class Background {
 	if((platform.getPixel(i, j) == Color.BLACK) && (platform.getPixel(i, j-1) == Color.WHITE)){
 		Log.d("treasures", "entering the if");
 
+		int scaled_width = 1;
+		int scaled_height = 1;
 		
 		int first_pixel_x = i;	//the first victory platform pixel we came across - its x value
 		int first_pixel_y = j;  //the first victory platform pixel we came across - its y value
 		int count = 0;
-		int[] pixel_heights = new int[500]; int height_count = 0;  //an array that will collect the height values of all pixels that
+		int[] pixel_heights = new int[1000]; int height_count = 0;  //an array that will collect the height values of all pixels that
 																   // make up the surface of the victory platform
 		int height_average = 0;										// the average of all those heights
 		width_count = 0;											//the length of that victory platform
 		
 		//fill up the height average array with -1's
-		for(int a = 0; a < 500; a++){
+		for(int a = 0; a < 1000; a++){
 
 			pixel_heights[a] = -1;
 		}
@@ -170,21 +193,34 @@ public class Background {
 					height_average += pixel_heights[a];
 				}
 			}
-				height_average = height_average/height_count;
+				if(height_count != 0){
+					height_average = height_average/height_count;
+				}
+				else{
+					height_average = first_pixel_y;
+				}
+			
 		
 	
 			
 			//now the drawing part
 				
 
+				if(width_count > 5*treasure.getWidth()){
+					scaled_width = width_count/3;
+				}
+				else if(width_count < treasure.getWidth()/5){
+					scaled_width = treasure.getWidth();
+				}
 				
-				this.treasure = Bitmap.createScaledBitmap(treasure, width_count,
-						(width_count)/2 , true);
+				
+				this.treasure = Bitmap.createScaledBitmap(treasure, scaled_width,
+						(scaled_width)/2 , true);
 			
 
-				treasure_pic_width = 0;
-				for(int treasure_width =  first_pixel_x; treasure_width < first_pixel_x + treasure.getWidth(); treasure_width++){
-					for(int treasure_height = first_pixel_y - treasure.getHeight()/2; treasure_height < first_pixel_y + (treasure.getHeight()/2); treasure_height++){
+				treasure_pic_width = 0;					//midpoint
+				for(int treasure_width =  first_pixel_x + (width_count/2); treasure_width < (first_pixel_x + (width_count/2)) + treasure.getWidth(); treasure_width++){
+					for(int treasure_height = height_average - treasure.getHeight(); treasure_height < height_average; treasure_height++){
 						Log.d("treasures", "getPixel height: " + Integer.toString(treasure_pic_height));
 						Log.d("treasures", "getPixel width: " + Integer.toString(treasure_pic_width));
 						background.setPixel(treasure_width, treasure_height, treasure.getPixel(treasure_pic_width, treasure_pic_height));
@@ -195,7 +231,7 @@ public class Background {
 					
 				}
 				
-
+				treasureSet = true;
 				
 	}
 	}catch (IllegalStateException e) {
