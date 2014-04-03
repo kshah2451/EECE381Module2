@@ -9,6 +9,8 @@ import java.util.Date;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -232,6 +234,40 @@ public class ImageSelectorMenu extends Activity {
 			intent.putExtra("imageUri", returnUri.toString());
 			startActivity(intent);
 		}
+	}
+	
+	
+	/**
+	 * Function called when "Send/Receive Image" button is pressed. Opens alert dialog that lets
+	 *  user choose between sending or receiving.
+	 * 
+	 * @param view
+	 */
+	public void serverOptions(View view) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(ImageSelectorMenu.this); //Read Update
+        
+        builder.setTitle("SEND/RECEIVE IMAGE");
+        builder.setItems(R.array.server_options_array, new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int which) {
+              // here you can add functions
+        	   
+        	   //Send to server
+        	   if (which == 0){
+        		   
+        	   }
+        	   //Receive from server
+        	   else if (which == 1){
+        		   
+        	   }
+        	   //Do nothing, user cancelled
+        	   else if (which == 2){
+        		   
+        		  
+        	   }
+           }
+        });
+      
+        builder.create().show();  
 	}
 
 	/**

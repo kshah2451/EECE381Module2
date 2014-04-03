@@ -19,6 +19,7 @@
 	<string name="render_picture">RENDER PICTURE</string>
 	<string name="saturation">Saturation</string>
 	<string name="value">Value</string>
+	<string name="serverOptions">SEND/RECEIVE IMAGE</string>
 	<string name="getting_started_text1">
 	    As of sprint 1, you should do the following:
 	    When you choose \"Take a Picture\", for best results you should set the resolution 
@@ -42,4 +43,15 @@
 	<string name="image_select">Image Select</string>
 	<string name="render_image">Render Image</string>
 	<string name="options_label">Options</string>
+	
+	
+	
+	
+	
+	 <string-array name="server_options_array">
+        <item>Send Image to Server</item>
+        <item>Receive Image from Server</item>
+        <item>Cancel</item>
+    </string-array>
+	
 </resources>
