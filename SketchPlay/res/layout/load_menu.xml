@@ -17,22 +17,33 @@
             android:id="@+id/take_picture_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="takePicture"
             android:background="@drawable/button_selector"
+            android:onClick="takePicture"
             android:text="@string/take_picture"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/import_picture_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:onClick="importPicture"
             android:background="@drawable/button_selector"
+            android:onClick="importPicture"
             android:text="@string/import_picture"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/server_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_selector"
+            android:onClick="serverOptions"
+            android:text="@string/serverOptions"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,11 +65,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:onClick="toImageAdjustment"
             android:background="@drawable/button_selector"
+            android:onClick="toImageAdjustment"
             android:text="@string/choose_picture"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
