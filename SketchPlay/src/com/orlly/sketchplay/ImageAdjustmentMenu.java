@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 public class ImageAdjustmentMenu extends Activity {
 
@@ -94,6 +95,8 @@ public class ImageAdjustmentMenu extends Activity {
 		bundle.putInt("value", value_tracker);
 		intent.putExtras(bundle);
 		startActivity(intent);
+		
+		Toast.makeText(this, "Loading... Please wait", Toast.LENGTH_LONG).show();
 	}
 
 	/**

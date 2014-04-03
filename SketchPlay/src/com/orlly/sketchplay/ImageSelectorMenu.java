@@ -80,6 +80,8 @@ public class ImageSelectorMenu extends Activity {
 
 		// Start the intent
 		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+		
+		Toast.makeText(this, "Please take picture in landscape mode and set resolution to 640 x 480.", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
