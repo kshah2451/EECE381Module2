@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 public class MapRender {
+	
+	public static final int ORANGE = 0xFFFFA500;
 	private int height;
 	private int width;
 	
@@ -36,10 +38,36 @@ public class MapRender {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				Color.colorToHSV(pixels[i * width + j], hsv);
-				if (hsv[2] <= value && hsv[1] <= saturation) { // .07
+				//if (hsv[2] <= value && hsv[1] <= saturation) {
+				if (hsv[2] <= value) {
 					pixels[i * width + j] = Color.BLACK;
-				} else {
+				}
+				else if(hsv[1] <= saturation) {
 					pixels[i * width + j] = Color.WHITE;
+				}
+				else{
+					if(hsv[0]<40){
+						pixels[i * width + j] = ORANGE;
+					}
+					else if(hsv[0]<70 && hsv[0]>40){
+						pixels[i * width + j] = Color.YELLOW;
+					}
+					else if(hsv[0]<140 && hsv[0]>70){
+						pixels[i * width + j] = Color.GREEN;
+					}
+					else if(hsv[0]<200 && hsv[0]>140){
+						pixels[i * width + j] = Color.CYAN;
+					}
+					else if(hsv[0]<260 && hsv[0]>200){
+						pixels[i * width + j] = Color.BLUE;
+					}
+					else if(hsv[0]<310 && hsv[0]>260){
+						pixels[i * width + j] = Color.MAGENTA;
+					}
+					else{
+						pixels[i * width + j] = Color.RED;
+					}
+					//pixels[i * width + j] = Color.BLACK;
 				}
 			}
 		}
