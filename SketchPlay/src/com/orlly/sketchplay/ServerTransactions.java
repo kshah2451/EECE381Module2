@@ -18,16 +18,16 @@ public class ServerTransactions {
 	}
 
 	public static Bitmap receiveServer(){
-		
+		return null;
 	}
 
 	
 	private Bitmap arrayToBMP(){
-		
+		return null;
 	}
 
 	private char[] BMPToArray(){
-		
+		return null;
 	}
 
 }

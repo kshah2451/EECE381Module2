@@ -17,10 +17,8 @@ public class MainMenuActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
-		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
-		BackgroundMusic.play();
 		super.onCreate(savedInstanceState);
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
 		setContentView(R.layout.main_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
@@ -91,20 +89,20 @@ public class MainMenuActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		continueMusic  = false;
-//		BackgroundMusic.play();
-//		
-//	}
-//	
-//
-//	@Override
-//	protected void onPause() {
-//		super.onPause();
-//		if(!continueMusic) {
-//			BackgroundMusic.stop();
-//		}	
-//	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		BackgroundMusic.play();
+		
+	}
+
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+			BackgroundMusic.stop();
+			BackgroundMusic.release();
+		
+	}
+	
 }
