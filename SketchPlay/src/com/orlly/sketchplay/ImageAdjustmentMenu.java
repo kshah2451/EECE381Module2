@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ public class ImageAdjustmentMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("backbutton", "this menu is created");
 		setContentView(R.layout.adjustment_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -186,24 +188,7 @@ public class ImageAdjustmentMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
-//	@Override
-//	protected void onResume() {
-//		BackgroundMusic.play();
-//		super.onResume();
-//	}
-//	
-//	@Override
-//	public void onBackPressed() {
-//		BackgroundMusic.play();
-//		super.onBackPressed();
-//	}
-//
-//
-//	@Override
-//	protected void onStop() {
-//		BackgroundMusic.stop();
-//		super.onStop();
-//	}
+
+
 	
 }

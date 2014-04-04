@@ -30,7 +30,6 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap treasure;
 	private Bitmap gold_texture;
 	private Background game_level;
-	private Bitmap level_image;
 	//spawn point (starting top left corner position)
 	int startx = 5;
 	int starty = 5;
@@ -109,7 +108,7 @@ public class MainGamePanel extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 
-
+		
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
@@ -176,10 +175,6 @@ public class MainGamePanel extends SurfaceView implements
 		//Set thread flags to let it know that it needs to terminate
 		boolean retry = true;
 		thread.setRunning(false);
-
-		//Stop and release current music track
-		BackgroundMusic.stop();
-		BackgroundMusic.release();
 		
 		//wait for threads to die
 		while (retry) {
