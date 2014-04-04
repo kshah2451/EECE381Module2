@@ -40,11 +40,20 @@ public class GameThread extends Thread {
 				canvas = this.surfaceHolder.lockCanvas();
 				if(canvas != null){
 					synchronized (surfaceHolder) {
-						// update game state 
-						this.gamePanel.update();
-						// render state to the screen
-						// draws the canvas on the panel
-						this.gamePanel.drawImages(canvas);				
+						
+						/*It will do the following if the game is being played*/
+						if(this.gamePanel.isGame_over() == false){
+							// update game state 
+							this.gamePanel.update();
+							// render state to the screen
+							// draws the canvas on the panel
+							this.gamePanel.drawImages(canvas);	
+						}
+						/*It will do the following if the game is over*/
+						else{
+							this.gamePanel.game_over_screen(canvas);
+						}
+						
 					}
 				}
 			} finally {
@@ -55,6 +64,8 @@ public class GameThread extends Thread {
 				}
 			}	// end finally
 		}
+		
+		
 	}
 	
 	

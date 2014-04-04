@@ -40,7 +40,11 @@ public class Background {
 			
 	}
 	
-	
+	/**
+	 * This will generate the game level image by calling several functions that each add 
+	 * a visual element to the final game level image (the texturized platforms, the hazards
+	 * , the victory platform, etc)
+	 */
 	public void generate_level_image(){
 		//Go through the whole image of the user's level, and check the colour of each pixel to
 		// determine what map element we'll have to draw
@@ -63,6 +67,13 @@ public class Background {
 		this.final_image = background;
 	}
 	
+	/**
+	 * Adds a texture to the black platforms that the user draws and that
+	 * we render on our map
+	 * @param i
+	 * @param j
+	 */
+	
 	public void texturize_platforms(int i, int j){
 		
 		/*********DRAW PLATFORMS*********/
@@ -81,6 +92,13 @@ public class Background {
 		
 		
 	}
+	
+	/**
+	 * Sets a hazard image on top of red and orange platforms as drawn by the user
+	 * and rendered by our MapRender
+	 * @param i
+	 * @param j
+	 */
 	
 	public void set_hazards(int i, int j){
 		boolean drawOkay = true;
@@ -131,9 +149,7 @@ public class Background {
 			
 		}
 		}catch (IllegalStateException e) {
-			Log.d("hazards", "state");
 		} catch (IllegalArgumentException a){
-			Log.d("hazards", "arg");
 
 		}
 		
@@ -141,12 +157,19 @@ public class Background {
 		
 	}
 	
+	/**
+	 * Sets treasure image on top of Blue or Cyan platforms as drawn by the user and
+	 * rendered by our MapRender class. Currently unused as the algorithm logic is flawed -
+	 * it won't work for most cases
+	 * @param i
+	 * @param j
+	 */
+	
 	public void set_treasures(int i, int j){
 	
 	try{
 	//DRAW VICTORY PLATFORM 
 	if((platform.getPixel(i, j) == Color.BLACK) && (platform.getPixel(i, j-1) == Color.WHITE)){
-		Log.d("treasures", "entering the if");
 
 		int scaled_width = 1;
 		int scaled_height = 1;
@@ -256,6 +279,11 @@ public class Background {
 	
 	
    }
+	
+	/**
+	 * This draws the final game level image that we generate above
+	 * @param canvas
+	 */
 
 	// draw the bitmap
 	public void draw(Canvas canvas){
