@@ -55,6 +55,9 @@ public class MainGamePanel extends SurfaceView implements
 	int up_button_y0;
 	int up_button_y1;
 	
+	int soundIDs[];
+	float left_volume = 1.0f;
+	float right_volume = 1.0f;
 	Handler handler = new Handler();
 	private Runnable onEverySecond=new Runnable() {
 	    public void run() {
@@ -73,6 +76,12 @@ public class MainGamePanel extends SurfaceView implements
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
+
+		soundIDs = new int[4];
+		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
+		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
+		this.soundIDs[2] = SoundEffects.sp.load(context, R.raw.pain, 1);
+		this.soundIDs[3] = SoundEffects.sp.load(context, R.raw.step, 1);
 
 		setWillNotDraw(false);
 
@@ -404,6 +413,7 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
+				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_right1));
@@ -418,6 +428,7 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
+				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left1));
@@ -431,6 +442,7 @@ public class MainGamePanel extends SurfaceView implements
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);
+				SoundEffects.sp.play(soundIDs[0], left_volume, right_volume, 1, 0, 1.0f);
 			}
 		}
 	}
