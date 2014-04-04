@@ -18,19 +18,23 @@ public class Background {
 	private Bitmap texture;
 	private Bitmap hazard;
 	private Bitmap treasure;
+	private Bitmap gold_texture;
+
 
 	private boolean treasureSet = false;
 
 
 	
 	
-	public Background (Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure){
+	public Background (Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure, Bitmap gold_texture){
 		
 		this.background = background;
 		this.platform = platform;
 		this.texture  = texture;
 		this.hazard = hazard;
 		this.treasure = treasure;
+		this.gold_texture = gold_texture;
+
 		
 
 			
@@ -43,7 +47,7 @@ public class Background {
 		for(int i=0; i< platform.getWidth(); i++){
 			for(int j = 0; j < platform.getHeight(); j++){
 				texturize_platforms(i,j);
-			//	set_hazards(i, j);
+				set_hazards(i, j);
 				
 				
 			/*	
@@ -63,10 +67,15 @@ public class Background {
 		
 		/*********DRAW PLATFORMS*********/
 		//if drawn platform is black, texturize it
-		if(platform.getPixel(i, j) == Color.BLACK){
+		if((platform.getPixel(i, j) == Color.BLACK)|| (platform.getPixel(i, j) == Color.RED) ||(platform.getPixel(i, j) == 0xFFFFA500)){
 			//replace black coloured-platform with the colour in
 			// our texture bitmap specified by the pixel coordinates i,j
 			background.setPixel(i, j, texture.getPixel(i, j));
+		}
+		else if((platform.getPixel(i, j) == Color.BLUE)|| (platform.getPixel(i, j) == Color.CYAN)){
+			background.setPixel(i, j, gold_texture.getPixel(i, j));
+
+			
 		}
 		
 		
@@ -84,7 +93,7 @@ public class Background {
 		// colour will be
 		try{
 		// check if it's a platform's surface. we only want to put hazards on the surface	
-		if((platform.getPixel(i, j) == Color.BLACK) && (platform.getPixel(i, j-1) == Color.WHITE)){
+		if(((platform.getPixel(i, j) == Color.RED)||(platform.getPixel(i, j) == 0xFFFFA500)) && (platform.getPixel(i, j-1) == Color.WHITE)){
 			
 			
 			
@@ -99,11 +108,11 @@ public class Background {
 			}
 
 			if(drawOkay){
-				Log.d("hazards", "drawOkay");
-
 				//draw the hazard using our hazard image
 				for(int hazard_height = j - hazard.getHeight(); hazard_height < j; hazard_height++){
-					background.setPixel(i, hazard_height, hazard.getPixel(hazard_pic_width, hazard_pic_height));
+					if(hazard.getPixel(hazard_pic_width, hazard_pic_height)!= Color.BLACK){
+						background.setPixel(i, hazard_height, hazard.getPixel(hazard_pic_width, hazard_pic_height));
+					}
 					hazard_pic_height++;
 				}
 				

@@ -26,8 +26,10 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap texture;
 	private Bitmap hazard;
 	private Bitmap treasure;
+	private Bitmap gold_texture;
 	private Background game_level;
 	private Bitmap level_image;
+	//spawn point (starting top left corner position)
 	int startx = 5;
 	int starty = 5;
 
@@ -121,6 +123,9 @@ public class MainGamePanel extends SurfaceView implements
 		treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.treasure));
 		
+		gold_texture =Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.gold_texture), this.getWidth(),
+				this.getHeight(), true);
 		
 
 		
@@ -133,7 +138,7 @@ public class MainGamePanel extends SurfaceView implements
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
 		// create the game level image using these various parameters
-		game_level = new Background(visual_bg, temp_bg, texture, hazard, treasure);
+		game_level = new Background(visual_bg, temp_bg, texture, hazard, treasure, gold_texture);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -167,6 +172,7 @@ public class MainGamePanel extends SurfaceView implements
 		boolean retry = true;
 		thread.setRunning(false);
 
+		
 		while (retry) {
 			try {
 				thread.join();
@@ -175,6 +181,12 @@ public class MainGamePanel extends SurfaceView implements
 				e.printStackTrace();
 			}
 		}
+		
+		//stop the background music
+		BackgroundMusic.stop();
+		BackgroundMusic.release();
+		
+		
 	}
 
 	/**
@@ -215,7 +227,7 @@ public class MainGamePanel extends SurfaceView implements
 		}
 
 		// Check to see if user lifts their finger off the screen
-		else if (event.getAction() == MotionEvent.ACTION_UP) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {
 			player.setIsMoving(false);
 		}
 
@@ -226,6 +238,10 @@ public class MainGamePanel extends SurfaceView implements
 	 * Update player position
 	 */
 	public void update() {
+
+		Log.d("fall", "Player's height: " + Integer.toString(player.getY_bottom()));
+		Log.d("fall", "Screen's height: " + Integer.toString(this.getHeight()));
+		Log.d("fall", "Screen's height - 3: " + Integer.toString(this.getHeight() - 3));
 
 		// Check to see if player is below top of screen
 		if (player.getY_top() > 0) {
@@ -263,7 +279,7 @@ public class MainGamePanel extends SurfaceView implements
 					
 						//otherwise, he can walk on it and it's treated as a slope
 						else{
-							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
+							player.setY_bottom((player.getY_bottom() - ((player.getHeight()-1)-i))-1);
 						//	player.setY_top();
 						}
 					
@@ -283,8 +299,10 @@ public class MainGamePanel extends SurfaceView implements
 				this.moveOkay = true;
 
 			} catch (IllegalStateException e) {
+				Log.d("fall", "throws state exception");
 
 			} catch (IllegalArgumentException a) {
+				Log.d("fall", "throws argument exception");
 
 			}
 
@@ -296,8 +314,8 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				// If black pixel is detected to the left of the player...
 	
-				for (int i = 0; i < player.getHeight() - 1; i++) {
-					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
+				for (int i = 0; i < player.getHeight(); i++) {
+					if (temp_bg.getPixel(player.getX_left()-1, player.getY_top()
 							+ i) == Color.BLACK) {
 
 					
@@ -310,8 +328,7 @@ public class MainGamePanel extends SurfaceView implements
 					
 						//otherwise, he can walk on it and it's treated as a slope
 						else{
-							Log.d("climbing", "is climbing");
-							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
+							player.setY_bottom((player.getY_bottom() - ((player.getHeight()-1)-i))-1);
 							//player.setY_top();
 						}
 					
@@ -336,13 +353,11 @@ public class MainGamePanel extends SurfaceView implements
 			}
 		}
 		
-		Log.d("climbing", "player's bottom: " + Integer.toString(player.getY_bottom()));
-		Log.d("climbing", "max height: " + Integer.toString(this.getHeight()));
 
 
 		// Check to see if player's bottom y position is less than bottom of
 		// screen
-		if (player.getY_bottom() < getHeight() - 2) {
+		if (player.getY_bottom() < this.getHeight() - 2) {
 			try {
 				if (player.getIsJumping() == false) {
 					for (int i = 0; i < player.getWidth(); i++) {
@@ -350,19 +365,39 @@ public class MainGamePanel extends SurfaceView implements
 								player.getY_bottom() + 1) == Color.BLACK) {
 							this.moveOkay = false;
 						}
+						else if((temp_bg.getPixel(player.getX_left() + i,
+								player.getY_bottom() + 1) == Color.RED)|| temp_bg.getPixel(player.getX_left() + i,
+										player.getY_bottom() + 1) == 0xFFFFA500){
+							player.die(startx, starty);
+						}
 					}
 					if (this.moveOkay == true) {
 						player.descend();
 					}
+
+					
 					this.moveOkay = true;
 
 				}
 			} catch (IllegalStateException e) {
-				
 			} catch (IllegalArgumentException a){
 
 			}
 		}
+		
+		
+		//temporary fix for the player getting stuck on the ground
+		if (player.getY_bottom() > this.getHeight() - 2) {
+			player.setY_bottom(getHeight()-3);
+			
+		
+		}
+		
+		//if (temp_bg.getPixel(player.getX_left()-1, player.getY_top()
+
+
+		
+		
 	}
 
 	/**

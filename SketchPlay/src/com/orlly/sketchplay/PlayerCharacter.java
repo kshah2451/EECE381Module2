@@ -243,4 +243,14 @@ public class PlayerCharacter {
 		y_top += fall_rate;
 		y_bottom += fall_rate;	
 	}	
+	
+	public void die(int startx, int starty){
+		y_top = starty;
+		y_bottom = y_top + height;
+		x_left = startx;
+		x_right = x_left+ width;
+	}
+	
+	
+	
 }
