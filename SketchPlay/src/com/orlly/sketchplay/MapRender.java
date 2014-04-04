@@ -45,24 +45,29 @@ public class MapRender {
 					pixels[i * width + j] = Color.WHITE;
 				}
 				else{
-					if(hsv[0]<=40){
+		if(hsv[0]<=40){
 						pixels[i * width + j] = ORANGE;
 					}
 					else if(hsv[0]<=70 && hsv[0]>40){
 						pixels[i * width + j] = Color.YELLOW;
-					}
+					} 
 					else if(hsv[0]<=140 && hsv[0]>70){
 						pixels[i * width + j] = Color.GREEN;
 					}
+					
 					else if(hsv[0]<=200 && hsv[0]>140){
 						pixels[i * width + j] = Color.CYAN;
 					}
 					else if(hsv[0]<=260 && hsv[0]>200){
 						pixels[i * width + j] = Color.BLUE;
 					}
+					
 					else if(hsv[0]<=310 && hsv[0]>260){
 						pixels[i * width + j] = Color.MAGENTA;
 					}
+					
+
+
 					else{
 						pixels[i * width + j] = Color.RED;
 					}

@@ -60,29 +60,14 @@ public class Game extends Activity {
 	}
 
 	
-//	@Override
-//	public void onBackPressed() {
-//		BackgroundMusic.stop();
-//		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
-//		BackgroundMusic.play();
-//		super.onBackPressed();
-//	}
-
-
-//	@Override
-//	protected void onResume() {
-//		BackgroundMusic.stop();
-//		super.onResume();
-//	}
-//
-//
-//	@Override
-//	protected void onStop() {
-//		BackgroundMusic.stop();
-//		super.onStop();
-//	}
-
-
+	@Override
+	public void onBackPressed() {
+		BackgroundMusic.stop();
+		BackgroundMusic.release();
+		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		BackgroundMusic.play();
+		super.onBackPressed();
+	}
 
 
 	/**
