@@ -49,15 +49,18 @@ public class MainGamePanel extends SurfaceView implements
 	int left_button_y1;
 	int up_button_y0;
 	int up_button_y1;
-	
-	Handler handler = new Handler();
-	private Runnable onEverySecond=new Runnable() {
-	    public void run() {
-	        // do real work here
 
-	        	Log.d("time", "timer exec");
-	            handler.postDelayed(onEverySecond, 1000);
-	    }
+	int soundIDs[];
+	float left_volume = 1.0f;
+	float right_volume = 1.0f;
+	Handler handler = new Handler();
+	private Runnable onEverySecond = new Runnable() {
+		public void run() {
+			// do real work here
+
+			Log.d("time", "timer exec");
+			handler.postDelayed(onEverySecond, 1000);
+		}
 	};
 
 	public MainGamePanel(Context context, Bitmap bitmap, int saturation,
@@ -67,18 +70,23 @@ public class MainGamePanel extends SurfaceView implements
 
 		this.saturation = saturation;
 		this.value = value;
+		soundIDs = new int[4];
+		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
+		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
+		this.soundIDs[2] = SoundEffects.sp.load(context, R.raw.pain, 1);
+		this.soundIDs[3] = SoundEffects.sp.load(context, R.raw.step, 1);
 
 		setWillNotDraw(false);
 
 		// Create new player character
 		player = new PlayerCharacter(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man_right1), startx, starty, getContext());
+				getResources(), R.drawable.afro_man_right1), startx, starty,
+				getContext());
 
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
 
-		
-		//Create the buttons
+		// Create the buttons
 		right_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.right_arrow));
 		left_button = new DirectionalButton(BitmapFactory.decodeResource(
@@ -86,7 +94,7 @@ public class MainGamePanel extends SurfaceView implements
 		up_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.up_arrow));
 
-		//set our bitmap bg as the passed in bitmap image
+		// set our bitmap bg as the passed in bitmap image
 		this.bitmap = bitmap;
 
 		// Set to true so we can interact with surface
@@ -96,34 +104,29 @@ public class MainGamePanel extends SurfaceView implements
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-
 
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
 		// the background image
 		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_bg), this.getWidth(),
-				this.getHeight(), true);
+				getResources(), R.drawable.forest_bg), this.getWidth(), this
+				.getHeight(), true);
 		// the image containing the platform textures
 		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.forest_texture), this.getWidth(),
 				this.getHeight(), true);
-		
+
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.forest_hazard));
-		
+
 		treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.treasure));
-		
-		
 
-		
 		Log.d("debug", "Scaled Bitmap height: " + bitmap.getHeight());
 		Log.d("debug", "Scaled Bitmap width: " + bitmap.getWidth());
 
@@ -131,9 +134,10 @@ public class MainGamePanel extends SurfaceView implements
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
-		
+
 		// create the game level image using these various parameters
-		game_level = new Background(visual_bg, temp_bg, texture, hazard, treasure);
+		game_level = new Background(visual_bg, temp_bg, texture, hazard,
+				treasure);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -183,35 +187,37 @@ public class MainGamePanel extends SurfaceView implements
 	 * @param canvas
 	 */
 	public void drawImages(Canvas canvas) {
-	//	canvas.drawBitmap(temp_bg, 0, 0, null);
-	//	canvas.drawBitmap(level_image, 0, 0, null);
+		// canvas.drawBitmap(temp_bg, 0, 0, null);
+		// canvas.drawBitmap(level_image, 0, 0, null);
 		game_level.draw(canvas);
 		player.draw(canvas, player.getX_left(), player.getY_top());
 		right_button.draw(canvas, right_button_x0, right_button_y0);
 		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
-		
+
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
 		int fingerCount = event.getPointerCount();
-		
+
 		// Check to see if user has touched the touch screen
 
 		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-			// Call action handler to check what area of touch screen has been touched
-			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+			// Call action handler to check what area of touch screen has been
+			// touched
+			handleTouch((int) event.getX(event.getActionIndex()),
+					(int) event.getY(event.getActionIndex()));
 			Log.d("touchevent", "first finger");
 
-			
 		}
-		
+
 		if (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
 			Log.d("touchevent", "second finger");
 
-			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+			handleTouch((int) event.getX(event.getActionIndex()),
+					(int) event.getY(event.getActionIndex()));
 		}
 
 		// Check to see if user lifts their finger off the screen
@@ -251,30 +257,27 @@ public class MainGamePanel extends SurfaceView implements
 				for (int i = 0; i < player.getHeight(); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
-						//this.moveOkay = false;
-						
-						
-						//if the black pixel is above his feet (the top 2/3s of his body)
+						// this.moveOkay = false;
+
+						// if the black pixel is above his feet (the top 2/3s of
+						// his body)
 						// disallow movement
-						if (i < ((5*player.getHeight())/6)) {
+						if (i < ((5 * player.getHeight()) / 6)) {
 							this.moveOkay = false;
 
 						}
-					
-						//otherwise, he can walk on it and it's treated as a slope
-						else{
-							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
-						//	player.setY_top();
+
+						// otherwise, he can walk on it and it's treated as a
+						// slope
+						else {
+							player.setY_bottom(player.getY_bottom()
+									- ((player.getHeight() - 1) - i));
+							// player.setY_top();
 						}
-					
-					
+
 						break;
-					
-					
-					
 					}
-						
-					
+
 				}
 
 				if (this.moveOkay == true) {
@@ -295,37 +298,29 @@ public class MainGamePanel extends SurfaceView implements
 		else if ((player.getX_left() > 0) && (player.getDirection() < 0)) {
 			try {
 				// If black pixel is detected to the left of the player...
-	
+
 				for (int i = 0; i < player.getHeight() - 1; i++) {
 					if (temp_bg.getPixel(player.getX_left(), player.getY_top()
 							+ i) == Color.BLACK) {
-
-					
-						//if the black pixel is above his feet (the top 2/3s of his body)
+						// if the black pixel is above his feet (the top 2/3s of
+						// his body)
 						// disallow movement
-						if (i < ((5*player.getHeight())/6)) {
+						if (i < ((5 * player.getHeight()) / 6)) {
 							this.moveOkay = false;
-
 						}
-					
-						//otherwise, he can walk on it and it's treated as a slope
-						else{
+						// otherwise, he can walk on it and it's treated as a
+						// slope
+						else {
 							Log.d("climbing", "is climbing");
-							player.setY_bottom(player.getY_bottom() - ((player.getHeight()-1)-i));
-							//player.setY_top();
+							player.setY_bottom(player.getY_bottom()
+									- ((player.getHeight() - 1) - i));
+							// player.setY_top();
 						}
-					
-					
 						break;
-					
-					
-					
 					}
 				}
-
 				if (this.moveOkay == true) {
 					player.move();
-
 				}
 				this.moveOkay = true;
 
@@ -335,10 +330,10 @@ public class MainGamePanel extends SurfaceView implements
 
 			}
 		}
-		
-		Log.d("climbing", "player's bottom: " + Integer.toString(player.getY_bottom()));
-		Log.d("climbing", "max height: " + Integer.toString(this.getHeight()));
 
+		Log.d("climbing",
+				"player's bottom: " + Integer.toString(player.getY_bottom()));
+		Log.d("climbing", "max height: " + Integer.toString(this.getHeight()));
 
 		// Check to see if player's bottom y position is less than bottom of
 		// screen
@@ -358,8 +353,8 @@ public class MainGamePanel extends SurfaceView implements
 
 				}
 			} catch (IllegalStateException e) {
-				
-			} catch (IllegalArgumentException a){
+
+			} catch (IllegalArgumentException a) {
 
 			}
 		}
@@ -377,6 +372,7 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
+				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_right1));
@@ -391,6 +387,7 @@ public class MainGamePanel extends SurfaceView implements
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
+				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left1));
@@ -404,6 +401,7 @@ public class MainGamePanel extends SurfaceView implements
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);
+				SoundEffects.sp.play(soundIDs[0], left_volume, right_volume, 1, 0, 1.0f);
 			}
 		}
 	}
