@@ -1,4 +1,8 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
+
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.sound.BackgroundMusic;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -6,23 +10,26 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainMenuActivity extends Activity {
+public class MainMenu extends Activity {
 
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		
 		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
+	
 	/**
 	 * Function called when "start game" button is pressed. Launches
 	 * ImageSelectorMenu activity.
@@ -30,10 +37,11 @@ public class MainMenuActivity extends Activity {
 	 * @param view
 	 */
 	public void toImageSelector(View view) {
-		Intent intent = new Intent(this, ImageSelectorMenu.class);
+		Intent intent = new Intent(this, ImageSelectionMenu.class);
 		startActivity(intent);
 	}
 
+	
 	/**
 	 * Function called when "options" button is pressed. Launches OptionsMenu
 	 * activity.
@@ -45,6 +53,7 @@ public class MainMenuActivity extends Activity {
 		startActivity(intent);
 	}
 
+	
 	/**
 	 * Function called when "Getting Started" button is pressed. Launches
 	 * GettingStarted activity.
@@ -52,10 +61,11 @@ public class MainMenuActivity extends Activity {
 	 * @param view
 	 */
 	public void toGettingStarted(View view) {
-		Intent intent = new Intent(this, GettingStarted.class);
+		Intent intent = new Intent(this, GettingStartedMenu.class);
 		startActivity(intent);
 	}
 
+	
 	/**
 	 * Function called when "Getting Started" action bar item (Question mark icon) is
 	 * pressed. Launches GettingStarted activity.
@@ -64,11 +74,12 @@ public class MainMenuActivity extends Activity {
 	 * @return
 	 */
 	public boolean gettingStartedActionBar(MenuItem item) {
-		Intent intent = new Intent(this, GettingStarted.class);
+		Intent intent = new Intent(this, GettingStartedMenu.class);
 		startActivity(intent);
 		return true;
 	}
 
+	
 	/**
 	 * Function called when "Options" action bar item (Options icon) is pressed.
 	 * Launches GettingStarted activity.
@@ -82,6 +93,7 @@ public class MainMenuActivity extends Activity {
 		return true;
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -89,11 +101,11 @@ public class MainMenuActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		BackgroundMusic.play();
-		
+		BackgroundMusic.play();	
 	}
 
 	
@@ -102,7 +114,6 @@ public class MainMenuActivity extends Activity {
 		super.onDestroy();
 			BackgroundMusic.stop();
 			BackgroundMusic.release();
-		
 	}
-	
+
 }

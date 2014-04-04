@@ -1,13 +1,13 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.game;
+
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameThread extends Thread {
 
 	private SurfaceHolder surfaceHolder;
-	private MainGamePanel gamePanel;
+	private MainGameView gamePanel;
 	
 	/**
 	 *  Flag to hold game state 
@@ -23,7 +23,7 @@ public class GameThread extends Thread {
 		return running;
 	}
 	
-	public GameThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
+	public GameThread(SurfaceHolder surfaceHolder, MainGameView gamePanel) {
 		super();
 		this.surfaceHolder = surfaceHolder;
 		this.gamePanel = gamePanel;
@@ -67,12 +67,5 @@ public class GameThread extends Thread {
 		
 		
 	}
-	
-	
 
-	
-	
-	
-	
-	
 }

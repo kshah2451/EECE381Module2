@@ -1,11 +1,15 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
+
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.sound.BackgroundMusic;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
-public class GettingStarted extends Activity {
+public class GettingStartedMenu extends Activity {
 	
 	private boolean continueMusic = true;
 	

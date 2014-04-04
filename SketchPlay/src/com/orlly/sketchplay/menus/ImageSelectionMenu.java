@@ -1,11 +1,21 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.rendering.MapRender;
+import com.orlly.sketchplay.server.ServerTransactions;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,6 +25,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,7 +38,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class ImageSelectorMenu extends Activity {
+public class ImageSelectionMenu extends Activity {
 
 	private Bitmap bitmap;
 
@@ -40,6 +51,10 @@ public class ImageSelectorMenu extends Activity {
 	private static final int REQUEST_CODE = 1;
 
 	private static final int MEDIA_TYPE_IMAGE = 1;
+
+	private static final int SEND_TO_SERVER = 0;
+	private static final int RECV_FROM_SERVER = 1;
+	private static final int CANCEL = 2;
 
 	private MapRender rendering;
 
@@ -59,6 +74,10 @@ public class ImageSelectorMenu extends Activity {
 
 		// Find views by id attributes identified in XML file
 		preview = (ImageView) findViewById(R.id.img_preview);
+
+		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
+		Timer tcp_timer = new Timer();
+		tcp_timer.schedule(tcp_task, 3000, 500);
 
 	}
 
@@ -80,8 +99,11 @@ public class ImageSelectorMenu extends Activity {
 
 		// Start the intent
 		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-		
-		Toast.makeText(this, "Please take picture in landscape mode and set resolution to 640 x 480.", Toast.LENGTH_LONG).show();
+
+		Toast.makeText(
+				this,
+				"Please take picture in landscape mode and set resolution to 640 x 480.",
+				Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -230,44 +252,65 @@ public class ImageSelectorMenu extends Activity {
 					"No image specified. Please select an image for the background.",
 					Toast.LENGTH_LONG).show();
 		} else {
-			Intent intent = new Intent(this, ImageAdjustmentMenu.class);
+			Intent intent = new Intent(this, RenderImageMenu.class);
 			intent.putExtra("imageUri", returnUri.toString());
 			startActivity(intent);
 		}
 	}
-	
-	
+
 	/**
-	 * Function called when "Send/Receive Image" button is pressed. Opens alert dialog that lets
-	 *  user choose between sending or receiving.
+	 * Function called when "Send/Receive Image" button is pressed. Opens alert
+	 * dialog that lets user choose between sending or receiving.
 	 * 
 	 * @param view
 	 */
 	public void serverOptions(View view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ImageSelectorMenu.this); //Read Update
-        
-        builder.setTitle("SEND/RECEIVE IMAGE");
-        builder.setItems(R.array.server_options_array, new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int which) {
-              // here you can add functions
-        	   
-        	   //Send to server
-        	   if (which == 0){
-        		   
-        	   }
-        	   //Receive from server
-        	   else if (which == 1){
-        		   
-        	   }
-        	   //Do nothing, user cancelled
-        	   else if (which == 2){
-        		   
-        		  
-        	   }
-           }
-        });
-      
-        builder.create().show();  
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ImageSelectionMenu.this); // Read Update
+
+		builder.setTitle("Send / Receive Image From Server");
+		builder.setItems(R.array.server_options_array,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+
+						// Send to server
+						if (which == SEND_TO_SERVER) {
+							MyApplication app = (MyApplication) getApplication();
+							String msg = "1231412";
+
+							ServerTransactions server_connect = new ServerTransactions(
+									app);
+							server_connect.connectServer();
+
+							byte buf[] = new byte[msg.length() + 1];
+							buf[0] = (byte) msg.length();
+							System.arraycopy(msg.getBytes(), 0, buf, 1,
+									msg.length());
+
+							OutputStream out;
+							try {
+								out = app.sock.getOutputStream();
+								try {
+									out.write(buf, 0, msg.length() + 1);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						// Receive from server
+						else if (which == RECV_FROM_SERVER) {
+
+						}
+						// Do nothing, user cancelled
+						else if (which == CANCEL) {
+
+						}
+					}
+				});
+
+		builder.create().show();
 	}
 
 	/**
@@ -278,12 +321,11 @@ public class ImageSelectorMenu extends Activity {
 	 * @return
 	 */
 	public boolean gettingStartedActionBar(MenuItem item) {
-		Intent intent = new Intent(this, GettingStarted.class);
+		Intent intent = new Intent(this, GettingStartedMenu.class);
 		startActivity(intent);
 		return true;
 	}
-	
-	
+
 	/**
 	 * Function called when "Options" action bar item (Options icon) is pressed.
 	 * Launches GettingStarted activity.
@@ -296,7 +338,6 @@ public class ImageSelectorMenu extends Activity {
 		startActivity(intent);
 		return true;
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -304,25 +345,85 @@ public class ImageSelectorMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
-	
-//	@Override
-//	protected void onResume() {
-//		BackgroundMusic.play();
-//		super.onResume();
-//	}
-//	
-//	@Override
-//	public void onBackPressed() {
-//		BackgroundMusic.play();
-//		super.onBackPressed();
-//	}
-//
-//
-//	@Override
-//	protected void onStop() {
-//		BackgroundMusic.stop();
-//		super.onStop();
-//	}
-	
+
+	public void connectServer() {
+		MyApplication myapp = (MyApplication) getApplication();
+		if (myapp.sock != null && myapp.sock.isConnected()
+				&& !myapp.sock.isClosed()) {
+			return;
+		}
+
+		new SocketConnect().execute((Void) null);
+	}
+
+	// @Override
+	// protected void onResume() {
+	// BackgroundMusic.play();
+	// super.onResume();
+	// }
+	//
+	// @Override
+	// public void onBackPressed() {
+	// BackgroundMusic.play();
+	// super.onBackPressed();
+	// }
+	//
+	//
+	// @Override
+	// protected void onStop() {
+	// BackgroundMusic.stop();
+	// super.onStop();
+	// }
+
+	public class SocketConnect extends AsyncTask<Void, Void, Socket> {
+
+		@Override
+		protected Socket doInBackground(Void... params) {
+			Socket socket = null;
+			String ip = "192.168.1.133";
+			int port = 50002;
+
+			try {
+				socket = new Socket(ip, port);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return socket;
+		}
+
+		protected void onPostExecute(Socket s) {
+			MyApplication myApp = (MyApplication) ImageSelectionMenu.this
+					.getApplication();
+			myApp.sock = s;
+		}
+
+	}
+
+	public class TCPReadTimerTask extends TimerTask {
+		public void run() {
+			MyApplication app = (MyApplication) getApplication();
+			if (app.sock != null && app.sock.isConnected()
+					&& !app.sock.isClosed()) {
+				try {
+					InputStream in = app.sock.getInputStream();
+
+					int bytes_avail = in.available();
+					if (bytes_avail > 0) {
+						byte buf[] = new byte[bytes_avail];
+						in.read(buf);
+
+						final String s = new String(buf, 0, bytes_avail,
+								"US-ASCII");
+
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 }

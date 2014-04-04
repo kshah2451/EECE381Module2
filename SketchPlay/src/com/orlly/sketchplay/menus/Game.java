@@ -1,7 +1,12 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import com.orlly.sketchplay.game.MainGameView;
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.sound.BackgroundMusic;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,9 +32,7 @@ public class Game extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
-		
+
 		// Removes notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -51,12 +54,8 @@ public class Game extends Activity {
 			e.printStackTrace();
 		}
 
-		setContentView(new MainGamePanel(this, background_bmp, saturation,
+		setContentView(new MainGameView(this, background_bmp, saturation,
 				value));
-		
-		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.funk);
-
-
 	}
 
 	
@@ -78,13 +77,15 @@ public class Game extends Activity {
 	 * @return
 	 */
 	public boolean gettingStartedActionBar(MenuItem item) {
-		Intent intent = new Intent(this, GettingStarted.class);
+		Intent intent = new Intent(this, GettingStartedMenu.class);
 		BackgroundMusic.stop();
 		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		BackgroundMusic.play();
 		startActivity(intent);
 		return true;
 	}
 
+	
 	/**
 	 * Function called when "Options" action bar item (Options icon) is pressed.
 	 * Launches GettingStarted activity.
@@ -96,15 +97,16 @@ public class Game extends Activity {
 		Intent intent = new Intent(this, OptionsMenu.class);
 		BackgroundMusic.stop();
 		BackgroundMusic.mPlayer = MediaPlayer.create(this, R.raw.short_change_hero_bg);
+		BackgroundMusic.play();
 		startActivity(intent);
 		return true;
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
 }

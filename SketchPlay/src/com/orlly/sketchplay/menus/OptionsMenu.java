@@ -1,4 +1,7 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
+
+
+import com.orlly.sketchplay.menus.R;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
