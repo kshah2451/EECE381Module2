@@ -15,4 +15,8 @@ public class BackgroundMusic {
 		mPlayer.stop();
 	}
 	
+	public static void release() {
+		mPlayer.release();
+	}
+	
 }
