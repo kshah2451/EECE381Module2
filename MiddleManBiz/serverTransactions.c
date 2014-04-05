@@ -178,9 +178,121 @@ int main() {
 		}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		//Send file to middleman from SD
 		else if(mode == 2){
 
+
+
+			printf("Waiting for num char:\n");
+			// The second byte is the number of characters in the file name
+			while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+			alt_up_rs232_read_data(uart, &data, &parity);
+			numFileName = (int)data;
+			numFileName -= 48;
+
+			if(numFileName == 207){
+				//
+				//
+				//
+				// TODO:
+				// RETURN NAMES OF FILES ON SD CARD
+				//
+				//
+				//
+				//
+				//
+			}
+			else{
+
+
+
+				//Now receive the file name
+				printf("About to receive %d characters:\n\n", numFileName);
+				printf("Filename received:");
+				for (i = 0; i < numFileName; i++) {
+					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+					alt_up_rs232_read_data(uart, &data, &parity);
+
+					fileName[i] = data;
+
+					printf("%c", data);
+				}
+				printf("\n");
+
+				//
+				//
+				//TODO:  IF FILE FOUND SEND A 1, IF NOT FOUND SEND A 2 AND ABORT ON BOTH SIDES
+				//
+				//
+				//
+				//
+				//
+				// TODO:
+				// USE THAT FILENAME TO GET FILE ON SD CARD HERE
+				// WE NEED TO CHANGE THE NEXT WHILE LOOP INTO A WHILE THERES STILL FILE TO SEND
+				//
+				//
+				//
+				//
+
+				printf("About to send file\n");
+
+				/*
+				TODO:  MAKE THIS WHILE LOOP A WHILE STILL FILE LEFT TO SEND
+				while (){
+
+					TODO: PUT THE CHARACTER TO SEND AS THE SECOND PARAMETER, MUST BE UNSIGNED CHAR
+					alt_up_rs232_write_data(uart, data);
+
+
+				}
+
+
+				TODO: WRITE A "FILE DONE" STRING OR WHATEVER WE DECIDE
+
+
+				*/
+
+
+				//
+				//
+				//
+				//TODO: close up the SD card here
+				//
+				//
+				//
+
+
+
+
+			}
 
 
 
