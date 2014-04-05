@@ -421,7 +421,7 @@ public class MainGameView extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				//SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_right1));
@@ -436,7 +436,7 @@ public class MainGameView extends SurfaceView implements
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				//SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left1));

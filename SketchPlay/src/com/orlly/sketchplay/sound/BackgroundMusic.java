@@ -21,6 +21,10 @@ public class BackgroundMusic {
 		mPlayer.release();
 	}
 	
+	public static void pause() {
+		mPlayer.pause();
+	}
+	
 	public static void setVolume(float new_volume){
 		volume = new_volume;
 		mPlayer.setVolume(volume, volume);
