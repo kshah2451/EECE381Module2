@@ -19,6 +19,8 @@
 	<string name="render_picture">RENDER PICTURE</string>
 	<string name="saturation">Saturation</string>
 	<string name="value">Value</string>
+	<string name="soundeffects_volume">Sound Effects Volume</string>
+	<string name="music_volume">Music Volume</string>
 	<string name="serverOptions">SEND/RECEIVE IMAGE</string>
 	<string name="getting_started_text1">
 	    As of sprint 1, you should do the following:

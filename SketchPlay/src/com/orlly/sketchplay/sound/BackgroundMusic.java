@@ -6,9 +6,11 @@ public class BackgroundMusic {
 	
 	public static MediaPlayer mPlayer;
 	
+	private static float volume = 1.0f;
 	public static void play() {
 		mPlayer.setLooping(true);
 		mPlayer.start();
+		mPlayer.setVolume( volume, volume);
 	}
 	
 	public static void stop() {
@@ -18,5 +20,14 @@ public class BackgroundMusic {
 	public static void release() {
 		mPlayer.release();
 	}
+	
+	public static void setVolume(float new_volume){
+		volume = new_volume;
+		mPlayer.setVolume(volume, volume);
+	}
+	public static float getVolume(){
+		return volume;
+	}
+	
 	
 }
