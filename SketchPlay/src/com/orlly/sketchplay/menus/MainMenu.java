@@ -107,6 +107,12 @@ public class MainMenu extends Activity {
 		super.onResume();
 		BackgroundMusic.play();	
 	}
+	
+	@Override 
+	protected void onPause() {
+		super.onPause();
+		BackgroundMusic.pause();
+	}
 
 	
 	@Override

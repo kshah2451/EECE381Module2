@@ -68,6 +68,11 @@ public class Game extends Activity {
 		super.onBackPressed();
 	}
 
+	@Override 
+	public void onPause(){
+		BackgroundMusic.pause();
+		super.onPause();
+	}
 
 	/**
 	 * Function called when "Getting Started" action bar item is pressed.
