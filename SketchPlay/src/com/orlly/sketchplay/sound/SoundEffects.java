@@ -1,4 +1,4 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.sound;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;

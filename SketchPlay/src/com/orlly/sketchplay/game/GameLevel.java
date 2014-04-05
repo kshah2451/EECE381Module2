@@ -1,11 +1,11 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
-public class Background {
+public class GameLevel {
 
 	private int hazard_pic_height = 0;
 	private int hazard_pic_width = 0;
@@ -26,7 +26,7 @@ public class Background {
 
 	
 	
-	public Background (Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure, Bitmap gold_texture){
+	public GameLevel(Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure, Bitmap gold_texture){
 		
 		this.background = background;
 		this.platform = platform;

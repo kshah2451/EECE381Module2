@@ -1,7 +1,11 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.menus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.rendering.MapRender;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,7 +19,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-public class ImageAdjustmentMenu extends Activity {
+public class RenderImageMenu extends Activity {
 
 	// Background task variables
 	private ProgressDialog pd;
@@ -45,7 +48,6 @@ public class ImageAdjustmentMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("backbutton", "this menu is created");
 		setContentView(R.layout.adjustment_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -162,7 +164,7 @@ public class ImageAdjustmentMenu extends Activity {
 	 * @return
 	 */
 	public boolean gettingStartedActionBar(MenuItem item) {
-		Intent intent = new Intent(this, GettingStarted.class);
+		Intent intent = new Intent(this, GettingStartedMenu.class);
 		startActivity(intent);
 		return true;
 	}
@@ -188,7 +190,5 @@ public class ImageAdjustmentMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
-
 	
 }

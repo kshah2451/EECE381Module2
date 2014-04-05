@@ -1,4 +1,4 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.rendering;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

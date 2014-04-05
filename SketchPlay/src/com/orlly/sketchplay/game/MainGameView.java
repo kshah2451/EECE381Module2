@@ -1,4 +1,9 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.game;
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.rendering.MapRender;
+import com.orlly.sketchplay.sound.BackgroundMusic;
+import com.orlly.sketchplay.sound.SoundEffects;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +18,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class MainGamePanel extends SurfaceView implements
+public class MainGameView extends SurfaceView implements
 		SurfaceHolder.Callback {
 
 	int count_left = 1;
 	int count_right = 1;
 
 	private GameThread thread;
-	private PlayerCharacter player;
+	private Player player;
 	private DirectionalButton right_button, left_button, up_button;
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
@@ -29,7 +34,7 @@ public class MainGamePanel extends SurfaceView implements
 	private Bitmap hazard;
 	private Bitmap treasure;
 	private Bitmap gold_texture;
-	private Background game_level;
+	private GameLevel game_level;
 	//spawn point (starting top left corner position)
 	int startx = 5;
 	int starty = 5;
@@ -68,7 +73,7 @@ public class MainGamePanel extends SurfaceView implements
 	    }
 	};
 
-	public MainGamePanel(Context context, Bitmap bitmap, int saturation,
+	public MainGameView(Context context, Bitmap bitmap, int saturation,
 			int value) {
 		super(context);
 		getHolder().addCallback(this);
@@ -86,7 +91,7 @@ public class MainGamePanel extends SurfaceView implements
 		setWillNotDraw(false);
 
 		// Create new player character
-		player = new PlayerCharacter(BitmapFactory.decodeResource(
+		player = new Player(BitmapFactory.decodeResource(
 				getResources(), R.drawable.afro_man_right1), startx, starty, getContext());
 
 		// Create new thread
@@ -149,7 +154,7 @@ public class MainGamePanel extends SurfaceView implements
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
 		// create the game level image using these various parameters
-		game_level = new Background(visual_bg, temp_bg, texture, hazard, treasure, gold_texture);
+		game_level = new GameLevel(visual_bg, temp_bg, texture, hazard, treasure, gold_texture);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -169,7 +174,9 @@ public class MainGamePanel extends SurfaceView implements
 		up_button_x1 = up_button_x0 + up_button.width;
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
-
+		
+		BackgroundMusic.stop();
+		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
 		BackgroundMusic.play();
 
 		// Start thread
@@ -365,6 +372,7 @@ public class MainGamePanel extends SurfaceView implements
 						else if((temp_bg.getPixel(player.getX_left() + i,
 								player.getY_bottom() + 1) == Color.RED)|| temp_bg.getPixel(player.getX_left() + i,
 										player.getY_bottom() + 1) == 0xFFFFA500){
+							SoundEffects.sp.play(soundIDs[2], left_volume, right_volume, 1, 0, 1.0f);
 							player.die(startx, starty);
 						}
 						

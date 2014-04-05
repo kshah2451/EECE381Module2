@@ -1,11 +1,15 @@
-package com.orlly.sketchplay;
+package com.orlly.sketchplay.game;
+
+
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.sound.SoundEffects;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-public class PlayerCharacter {
+public class Player {
 	
 	
 	private Context context;
@@ -93,7 +97,12 @@ public class PlayerCharacter {
 	
 	private boolean animation_flag;
 	
-	public PlayerCharacter(Bitmap bitmap, int x, int y, Context context){
+	int soundIDs[];
+	
+	float left_volume = 1.0f;
+	float right_volume = 1.0f;
+	
+	public Player(Bitmap bitmap, int x, int y, Context context){
 		this.bitmap = bitmap;
 		this.context = context;
 		x_left = x; 
@@ -108,6 +117,11 @@ public class PlayerCharacter {
 		jump_counter = 0;
 		isJumping = false; 
 		isMoving = false;
+		soundIDs = new int[4];
+		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
+		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
+		this.soundIDs[2] = SoundEffects.sp.load(context, R.raw.pain, 1);
+		this.soundIDs[3] = SoundEffects.sp.load(context, R.raw.step, 1);
 	}
 	
 	public int getHeight() {
@@ -205,20 +219,24 @@ public class PlayerCharacter {
 					if(animation_flag == true) {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_left1);
+						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 						animation_flag = false;
 					} else {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_left2);
+						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 						animation_flag = true;
 					}	
 				} else {
 					if(animation_flag == true) {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_right1);
+						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 						animation_flag = false;
 					} else {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_right2);
+						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
 						animation_flag = true;
 					}	
 				}
