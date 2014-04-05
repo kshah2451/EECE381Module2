@@ -61,8 +61,8 @@ public class MainGameView extends SurfaceView implements
 	int up_button_y1;
 	
 	int soundIDs[];
-	float left_volume = 1.0f;
-	float right_volume = 1.0f;
+	//float left_volume = 1.0f;
+	//float right_volume = 1.0f;
 	Handler handler = new Handler();
 	private Runnable onEverySecond=new Runnable() {
 	    public void run() {
@@ -372,7 +372,7 @@ public class MainGameView extends SurfaceView implements
 						else if((temp_bg.getPixel(player.getX_left() + i,
 								player.getY_bottom() + 1) == Color.RED)|| temp_bg.getPixel(player.getX_left() + i,
 										player.getY_bottom() + 1) == 0xFFFFA500){
-							SoundEffects.sp.play(soundIDs[2], left_volume, right_volume, 1, 0, 1.0f);
+							SoundEffects.sp.play(soundIDs[2], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 							player.die(startx, starty);
 						}
 						
@@ -421,7 +421,7 @@ public class MainGameView extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+				//SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_right1));
@@ -436,7 +436,7 @@ public class MainGameView extends SurfaceView implements
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+				//SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_left1));
@@ -450,7 +450,7 @@ public class MainGameView extends SurfaceView implements
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);
-				SoundEffects.sp.play(soundIDs[0], left_volume, right_volume, 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[0], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 			}
 		}
 	}

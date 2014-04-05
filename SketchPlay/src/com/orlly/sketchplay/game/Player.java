@@ -219,24 +219,24 @@ public class Player {
 					if(animation_flag == true) {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_left1);
-						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+						SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 						animation_flag = false;
 					} else {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_left2);
-						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+						SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 						animation_flag = true;
 					}	
 				} else {
 					if(animation_flag == true) {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_right1);
-						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+						SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 						animation_flag = false;
 					} else {
 						this.bitmap = BitmapFactory.decodeResource(
 								context.getResources(), R.drawable.afro_man_right2);
-						SoundEffects.sp.play(soundIDs[3], left_volume, right_volume, 1, 0, 1.0f);
+						SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 						animation_flag = true;
 					}	
 				}
