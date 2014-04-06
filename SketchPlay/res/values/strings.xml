@@ -11,19 +11,18 @@
     <string name="sound">SOUND</string>
     <string name="info">INFO</string>
     <string name="start">START</string>
-	<string name="getting_started">GETTING STARTED</string>
-	<string name="getting_started_a_bar">Getting Started</string>
-	<string name="left_button">Left</string>
-	<string name="right_button">Right</string>
-	<string name="choose_picture">CONTINUE</string>
-	<string name="render_picture">RENDER PICTURE</string>
-	<string name="saturation">Saturation</string>
-	<string name="value">Value</string>
-	<string name="soundeffects_volume">Sound Effects Volume</string>
-	<string name="music_volume">Music Volume</string>
-	<string name="serverOptions">SEND/RECEIVE IMAGE</string>
-	<string name="getting_started_text1">
-	    As of sprint 1, you should do the following:
+    <string name="getting_started">GETTING STARTED</string>
+    <string name="getting_started_a_bar">Getting Started</string>
+    <string name="left_button">Left</string>
+    <string name="right_button">Right</string>
+    <string name="choose_picture">CONTINUE</string>
+    <string name="render_picture">RENDER PICTURE</string>
+    <string name="saturation">Saturation</string>
+    <string name="value">Value</string>
+    <string name="soundeffects_volume">Sound Effects Volume</string>
+    <string name="music_volume">Music Volume</string>
+    <string name="serverOptions">SEND/RECEIVE IMAGE</string>
+    <string name="getting_started_text1">	    As of sprint 1, you should do the following:
 	    When you choose \"Take a Picture\", for best results you should set the resolution 
 	    to 640x480 and take the picture in landscape/horizontal mode.\n\n
 	    When you choose \"Import a Picture\", if you are having problems, please insure the 
@@ -40,20 +39,20 @@
 	    key in the bottom right is used to jump.  At present, there is no objective.\n\n
 	    
 	    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-	    Yo Taunzu-Sama
-	</string>
-	<string name="image_select">Image Select</string>
-	<string name="render_image">Render Image</string>
-	<string name="options_label">Options</string>
-	
-	
-	
-	
-	
-	 <string-array name="server_options_array">
+	    Yo Taunzu-Sama</string>
+    <string name="filename_hint">Enter File Name</string>
+    <string name="sendToServer">Send Image to Server</string>
+    <string name="receiveFromServer">Receive Image from Server</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="image_select">Image Select</string>
+    <string name="render_image">Render Image</string>
+    <string name="options_label">Options</string>
+
+    <string-array name="server_options_array">
         <item>Send Image to Server</item>
         <item>Receive Image from Server</item>
         <item>Cancel</item>
     </string-array>
-	
+
 </resources>
