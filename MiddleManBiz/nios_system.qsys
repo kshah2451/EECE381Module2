@@ -12,6 +12,14 @@
    element $${FILENAME}
    {
    }
+   element Altera_UP_SD_Card_Avalon_Interface_0
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
+   }
    element jtag_uart_0.avalon_jtag_slave
    {
       datum baseAddress
@@ -24,7 +32,15 @@
    {
       datum baseAddress
       {
-         value = "8200";
+         value = "9216";
+         type = "long";
+      }
+   }
+   element Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave
+   {
+      datum baseAddress
+      {
+         value = "8192";
          type = "long";
       }
    }
@@ -128,7 +144,7 @@
  <parameter name="projectName" value="" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1396570087848" />
+ <parameter name="timeStamp" value="1396494583022" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="sdram_wire" internal="sdram_0.wire" type="conduit" dir="end" />
@@ -141,10 +157,15 @@
    type="conduit"
    dir="end" />
  <interface
-   name="clk_0_clk_reset"
-   internal="clk_0.clk_reset"
-   type="reset"
-   dir="start" />
+   name="jtag_uart_0_avalon_jtag_slave"
+   internal="jtag_uart_0.avalon_jtag_slave"
+   type="avalon"
+   dir="end" />
+ <interface
+   name="conduit_end"
+   internal="Altera_UP_SD_Card_Avalon_Interface_0.conduit_end"
+   type="conduit"
+   dir="end" />
  <module
    kind="altera_nios2_qsys"
    version="12.0"
@@ -237,8 +258,8 @@
   <parameter name="tightlyCoupledInstructionMaster1AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster2AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster3AddrWidth" value="1" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='sdram_0.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x2000' end='0x2008' /><slave name='rs232_0.avalon_rs232_slave' start='0x2008' end='0x2010' /><slave name='sdram_0.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='sdram_0.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave' start='0x2000' end='0x2400' /><slave name='rs232_0.avalon_rs232_slave' start='0x2400' end='0x2408' /><slave name='sdram_0.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="deviceFamilyName" value="Cyclone II" />
   <parameter name="internalIrqMaskSystemInfo" value="33" />
@@ -318,7 +339,7 @@
  <module
    kind="altera_avalon_onchip_memory2"
    version="12.0"
-   enabled="0"
+   enabled="1"
    name="onchip_memory2_0">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
   <parameter name="autoInitializationFileName">nios_system_onchip_memory2_0</parameter>
@@ -354,6 +375,14 @@
   <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone II" />
  </module>
+ <module
+   kind="Altera_UP_SD_Card_Avalon_Interface"
+   version="1.0"
+   enabled="1"
+   name="Altera_UP_SD_Card_Avalon_Interface_0">
+  <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone II" />
+ </module>
  <connection
    kind="avalon"
    version="12.0"
@@ -378,8 +407,18 @@
  <connection
    kind="reset"
    version="12.0"
+   start="clk_0.clk_reset"
+   end="nios2_qsys_0.reset_n" />
+ <connection
+   kind="reset"
+   version="12.0"
    start="nios2_qsys_0.jtag_debug_module_reset"
    end="nios2_qsys_0.reset_n" />
+ <connection
+   kind="reset"
+   version="12.0"
+   start="clk_0.clk_reset"
+   end="clocks.clk_in_primary_reset" />
  <connection
    kind="reset"
    version="12.0"
@@ -397,6 +436,11 @@
    start="nios2_qsys_0.jtag_debug_module_reset"
    end="sdram_0.reset" />
  <connection
+   kind="reset"
+   version="12.0"
+   start="clk_0.clk_reset"
+   end="sdram_0.reset" />
+ <connection
    kind="avalon"
    version="12.0"
    start="nios2_qsys_0.instruction_master"
@@ -412,16 +456,13 @@
  <connection
    kind="reset"
    version="12.0"
-   start="nios2_qsys_0.jtag_debug_module_reset"
+   start="clk_0.clk_reset"
    end="jtag_uart_0.reset" />
  <connection
-   kind="avalon"
+   kind="reset"
    version="12.0"
-   start="nios2_qsys_0.data_master"
-   end="jtag_uart_0.avalon_jtag_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2000" />
- </connection>
+   start="nios2_qsys_0.jtag_debug_module_reset"
+   end="jtag_uart_0.reset" />
  <connection
    kind="interrupt"
    version="12.0"
@@ -476,6 +517,11 @@
  <connection
    kind="reset"
    version="12.0"
+   start="clk_0.clk_reset"
+   end="rs232_0.clock_reset_reset" />
+ <connection
+   kind="reset"
+   version="12.0"
    start="nios2_qsys_0.jtag_debug_module_reset"
    end="rs232_0.clock_reset_reset" />
  <connection
@@ -484,7 +530,7 @@
    start="nios2_qsys_0.data_master"
    end="rs232_0.avalon_rs232_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2008" />
+  <parameter name="baseAddress" value="0x2400" />
  </connection>
  <connection
    kind="interrupt"
@@ -493,4 +539,27 @@
    end="rs232_0.interrupt">
   <parameter name="irqNumber" value="0" />
  </connection>
+ <connection
+   kind="avalon"
+   version="12.0"
+   start="nios2_qsys_0.data_master"
+   end="Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x2000" />
+ </connection>
+ <connection
+   kind="clock"
+   version="12.0"
+   start="clocks.sys_clk"
+   end="Altera_UP_SD_Card_Avalon_Interface_0.clock_sink" />
+ <connection
+   kind="reset"
+   version="12.0"
+   start="clk_0.clk_reset"
+   end="Altera_UP_SD_Card_Avalon_Interface_0.clock_sink_reset" />
+ <connection
+   kind="reset"
+   version="12.0"
+   start="nios2_qsys_0.jtag_debug_module_reset"
+   end="Altera_UP_SD_Card_Avalon_Interface_0.clock_sink_reset" />
 </system>
