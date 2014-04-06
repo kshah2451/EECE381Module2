@@ -12,8 +12,6 @@ int main() {
 	int i;
 	int j;
 
-	printf("beforevar\n");
-
 	//1 for receiving file from middleman, 2 for sending to middleman
 	int mode;
 
@@ -41,11 +39,8 @@ int main() {
 	//Variable to keep track of whether the SD CARD is connected or not.
 
 	while (1) {
-		printf("before dev\n");
 		alt_up_sd_card_dev *device_reference = NULL;
-		printf("before ref\n");
-		device_reference = alt_up_sd_card_open_dev(
-				ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_NAME);
+		device_reference = alt_up_sd_card_open_dev(ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_NAME);
 
 		printf("UART Initialization\n");
 		alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232_0");
