@@ -1,10 +1,5 @@
 package com.orlly.sketchplay.game;
 
-import com.orlly.sketchplay.menus.R;
-import com.orlly.sketchplay.rendering.MapRender;
-import com.orlly.sketchplay.sound.BackgroundMusic;
-import com.orlly.sketchplay.sound.SoundEffects;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +12,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.orlly.sketchplay.menus.ImageSelectionMenu;
+import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.rendering.MapRender;
+import com.orlly.sketchplay.sound.BackgroundMusic;
+import com.orlly.sketchplay.sound.SoundEffects;
 
 public class MainGameView extends SurfaceView implements
 		SurfaceHolder.Callback {
@@ -138,8 +139,8 @@ public class MainGameView extends SurfaceView implements
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.forest_hazard));
 		
-		treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.treasure));
+	/*	treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.treasure));*/
 		
 		gold_texture =Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.gold_texture), this.getWidth(),
@@ -204,6 +205,12 @@ public class MainGameView extends SurfaceView implements
 
 			}
 		}
+		Log.d("destroy", "surfacedestroyed goes past while");
+		visual_bg.recycle();
+		texture.recycle();
+		hazard.recycle();
+		gold_texture.recycle();
+
 		
 	}
 
@@ -478,6 +485,7 @@ public class MainGameView extends SurfaceView implements
 		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.win);
 		BackgroundMusic.play();
 		
+
 	}
 	
 	/**
