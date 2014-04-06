@@ -68,7 +68,6 @@ public class Game extends Activity {
 		super.onBackPressed();
 	}
 
-
 	/**
 	 * Function called when "Getting Started" action bar item is pressed.
 	 * Launches GettingStarted activity.

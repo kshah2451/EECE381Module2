@@ -5,6 +5,20 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/sound_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sound_options"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/orange" />
+
+    <TextView
         android:id="@+id/soundeffects_volume_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,7 +27,7 @@
     <SeekBar
         android:id="@+id/soundeffects_volume"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:max="100"
         android:progress="100" />
 
@@ -22,12 +36,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/music_volume" />
-    
+
     <SeekBar
-       	android:id="@+id/music_volume"
-       	android:layout_width="match_parent"
-       	android:layout_height="wrap_content"
-       	android:max="100" 
-       	android:progress="100" />
+        android:id="@+id/music_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="100" />
+
+    <TextView
+        android:id="@+id/select_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"     
+        android:layout_marginTop="20dp"                  
+        android:text="@string/level_theme"
+        android:textSize="25sp"
+        android:textStyle="bold" />
     
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/orange" />
+
+    <Spinner
+        android:id="@+id/theme_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    
+
 </LinearLayout>
