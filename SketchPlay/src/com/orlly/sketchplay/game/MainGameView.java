@@ -92,7 +92,7 @@ public class MainGameView extends SurfaceView implements
 
 		// Create new player character
 		player = new Player(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man_right1), startx, starty, getContext());
+				getResources(), R.drawable.afro_man_colour_right1), startx, starty, getContext());
 
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
@@ -128,7 +128,7 @@ public class MainGameView extends SurfaceView implements
 				this.getHeight(), true);
 		// the background image
 		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_bg), this.getWidth(),
+				getResources(), R.drawable.desert_bg), this.getWidth(),
 				this.getHeight(), true);
 		// the image containing the platform textures
 		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
@@ -230,7 +230,6 @@ public class MainGameView extends SurfaceView implements
 			// Call action handler to check what area of touch screen has been touched
 			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
 
-			
 		}
 		
 		//Checks for the second finger down touch even
@@ -424,10 +423,10 @@ public class MainGameView extends SurfaceView implements
 				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
-							getResources(), R.drawable.afro_man_right1));
+							getResources(), R.drawable.afro_man_colour_right1));
 				} else {
 					player.setBitmap(BitmapFactory.decodeResource(
-							getResources(), R.drawable.afro_man_right2));
+							getResources(), R.drawable.afro_man_colour_right2));
 				}
 				count_right++;
 			}
@@ -439,10 +438,10 @@ public class MainGameView extends SurfaceView implements
 				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
-							getResources(), R.drawable.afro_man_left1));
+							getResources(), R.drawable.afro_man_colour_left1));
 				} else {
 					player.setBitmap(BitmapFactory.decodeResource(
-							getResources(), R.drawable.afro_man_left2));
+							getResources(), R.drawable.afro_man_colour_left2));
 				}
 				count_left++;
 			}
