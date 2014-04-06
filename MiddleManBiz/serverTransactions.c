@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
-#define MAX_FILENAME 30
+#define MAX_FILENAME 7
 #define MAX_PACKETSIZE 256
 
 int main() {
@@ -40,8 +40,7 @@ int main() {
 
 	while (1) {
 		alt_up_sd_card_dev *device_reference = NULL;
-		device_reference = alt_up_sd_card_open_dev(
-				ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_NAME);
+		device_reference = alt_up_sd_card_open_dev(ALTERA_UP_SD_CARD_AVALON_INTERFACE_0_NAME);
 
 		printf("UART Initialization\n");
 		alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232_0");
@@ -175,7 +174,8 @@ int main() {
 
 					printf("Waiting for num char:\n");
 					// The second byte is the number of characters in the file name
-					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0)
+						;
 					alt_up_rs232_read_data(uart, &data, &parity);
 					numFileName = (int) data;
 					numFileName -= 48;
@@ -184,7 +184,9 @@ int main() {
 					printf("About to receive %d characters:\n\n", numFileName);
 					printf("Filename received:");
 					for (i = 0; i < numFileName; i++) {
-						while (alt_up_rs232_get_used_space_in_read_FIFO(uart)== 0);
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart)
+								== 0)
+							;
 						alt_up_rs232_read_data(uart, &data, &parity);
 
 						fileName[i] = data;
@@ -198,23 +200,20 @@ int main() {
 					//TODO:  IF FILE FOUND SEND A 1, IF NOT FOUND SEND A 2 AND THEN SEND LIST OF FILE NAME
 					handle = alt_up_sd_card_fopen(&fileName, 1);
 
-					if(handle == -1){
+					if (handle == -1) {
 						alt_up_rs232_write_data(uart, 50);
 
 						//TODO SEND LIST OF ALL FILE NAMES
-					}
-					else{
-
+					} else {
 
 						// WE NEED TO CHANGE THE NEXT WHILE LOOP INTO A WHILE THERES STILL FILE TO SEND
 
 
 						printf("About to send file\n");
 
-
 						//TODO:  MAKE THIS WHILE LOOP A WHILE STILL FILE LEFT TO SEND
 						data = alt_up_sd_card_read(handle);
-						while (data != -2){
+						while (data != -2) {
 
 							//TODO: PUT THE CHARACTER TO SEND AS THE SECOND PARAMETER, MUST BE UNSIGNED CHAR
 							alt_up_rs232_write_data(uart, data);
@@ -222,14 +221,12 @@ int main() {
 
 						}
 
-
 						//TODO: WRITE A "FILE DONE" STRING OR WHATEVER WE DECIDE
 
 						alt_up_rs232_write_data(uart, 1);
 						alt_up_rs232_write_data(uart, 2);
 						alt_up_rs232_write_data(uart, 3);
 						alt_up_rs232_write_data(uart, 4);
-
 
 						//
 						//
@@ -239,22 +236,20 @@ int main() {
 
 					}
 
+					//This bracket ends sending a file
+				}
 
-
-				//This bracket ends sending a file
+				//Something broke
+				else {
+					printf("Wrong mode, something broke, starting over\n");
+				}
 			}
+		}
 
-			//Something broke
-else		{
-			printf("Wrong mode, something broke, starting over\n");
+		else {
+			printf("Card Reader is not working\n");
 		}
 	}
-}
-
-else {
-	printf("Card Reader is not working\n");
-}
-}
-return 0;
-//end main
+	return 0;
+	//end main
 }
