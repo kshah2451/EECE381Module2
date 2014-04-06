@@ -1,31 +1,35 @@
 package com.orlly.sketchplay.menus;
 
 
-import com.orlly.sketchplay.menus.R;
-import com.orlly.sketchplay.sound.BackgroundMusic;
-import com.orlly.sketchplay.sound.SoundEffects;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+
+import com.orlly.sketchplay.sound.BackgroundMusic;
+import com.orlly.sketchplay.sound.SoundEffects;
 
 public class OptionsMenu extends Activity {
 	
 	private SeekBar soundeffects_volume;
 	private SeekBar music_volume;
+	private Spinner theme_spinner;
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
+		
+		theme_spinner = (Spinner)findViewById(R.id.theme_spinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.theme_options_array, android.R.layout.simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		theme_spinner.setAdapter(adapter);
+
 		
 		soundeffects_volume = (SeekBar) findViewById(R.id.soundeffects_volume);
 		music_volume = (SeekBar) findViewById(R.id.music_volume);
