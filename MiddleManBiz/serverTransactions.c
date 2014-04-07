@@ -81,7 +81,7 @@ int main() {
 				// First byte is the mode, 1 for receiving file from middleman, 2 for sending to middleman
 				alt_up_rs232_read_data(uart, &data, &parity);
 				mode = (int) data;
-				mode -= 48;
+				//mode -= 48;
 
 				printf("Mode:%d\n", mode);
 
@@ -94,7 +94,7 @@ int main() {
 						;
 					alt_up_rs232_read_data(uart, &data, &parity);
 					numFileName = (int) data;
-					numFileName -= 48;
+					//numFileName -= 48;
 
 					//Now receive the file name
 					printf("About to receive %d characters:\n\n", numFileName);
@@ -186,8 +186,6 @@ int main() {
 					}
 					printf("Leftover received, file done\n");
 
-					//TODO: close up the file here
-					//TODO: error checking
 					alt_up_sd_card_fclose(handle);
 					//This bracket ends receiving a file
 				}
@@ -201,7 +199,7 @@ int main() {
 						;
 					alt_up_rs232_read_data(uart, &data, &parity);
 					numFileName = (int) data;
-					numFileName -= 48;
+					//numFileName -= 48;
 
 					//Now receive the file name
 					printf("About to receive %d characters:\n\n", numFileName);
@@ -232,8 +230,10 @@ int main() {
 						printf("neg handle");
 						if(alt_up_sd_card_find_first(".",listName) ==-1){
 							alt_up_rs232_write_data(uart, 50);
+							printf("no files");
 						}
 						else{
+							printf("some files");
 							i=0;
 							for(i = 0; listName[i] != '.'; i++){
 								alt_up_rs232_write_data(uart, listName[i]);
@@ -245,6 +245,8 @@ int main() {
 								}
 								alt_up_rs232_write_data(uart, 32);
 							}
+							alt_up_rs232_write_data(uart, 1);
+							printf("done files");
 						}
 					} else {
 
@@ -267,10 +269,8 @@ int main() {
 
 						//TODO: WRITE A "FILE DONE" STRING OR WHATEVER WE DECIDE
 						printf("sending end bits");
-						alt_up_rs232_write_data(uart, 49);
-						alt_up_rs232_write_data(uart, 50);
-						alt_up_rs232_write_data(uart, 51);
-						alt_up_rs232_write_data(uart, 52);
+						alt_up_rs232_write_data(uart, 1);
+
 
 						//
 						//
