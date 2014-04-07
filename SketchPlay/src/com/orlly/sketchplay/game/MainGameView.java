@@ -129,11 +129,11 @@ public class MainGameView extends SurfaceView implements
 				this.getHeight(), true);
 		// the background image
 		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.desert_bg), this.getWidth(),
+				getResources(), R.drawable.volcano_bg), this.getWidth(),
 				this.getHeight(), true);
 		// the image containing the platform textures
 		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_texture), this.getWidth(),
+				getResources(), R.drawable.desert_texture), this.getWidth(),
 				this.getHeight(), true);
 		
 		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(

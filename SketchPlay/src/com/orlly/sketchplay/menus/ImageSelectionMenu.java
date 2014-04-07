@@ -314,7 +314,8 @@ public class ImageSelectionMenu extends Activity {
 	 */
 	public void receiveFromServer(View view){
 		
-		
+		EditText filename = (EditText)dialog.findViewById(R.id.filename);
+		String fileToSend = filename.getText().toString();
 		
 		ServerTransactions server = new ServerTransactions((MyApplication)getApplication());
 		server.connectServer();
@@ -323,7 +324,7 @@ public class ImageSelectionMenu extends Activity {
 		while(!server.isSocketConnected() && (server.isConnection_timeout()) == false);
 
 		if(!server.isConnection_timeout()){
-			bitmap = server.receiveServer();
+			bitmap = server.receiveServer(fileToSend);
 			
 			while(server.isImageRetrieved() == false);
 			if(bitmap == null){
