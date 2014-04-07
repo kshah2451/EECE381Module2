@@ -1,11 +1,12 @@
 package com.orlly.sketchplay.game;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.orlly.sketchplay.menus.ImageSelectionMenu;
 import com.orlly.sketchplay.menus.R;
 import com.orlly.sketchplay.rendering.MapRender;
 import com.orlly.sketchplay.sound.BackgroundMusic;
@@ -28,12 +28,11 @@ public class MainGameView extends SurfaceView implements
 	private GameThread thread;
 	private Player player;
 	private DirectionalButton right_button, left_button, up_button;
+	
+	private String theme;
+	
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
-	private Bitmap visual_bg;
-	private Bitmap texture;
-	private Bitmap hazard;
-	private Bitmap treasure;
 	private Bitmap gold_texture;
 	private GameLevel game_level;
 	//spawn point (starting top left corner position)
@@ -61,6 +60,9 @@ public class MainGameView extends SurfaceView implements
 	int up_button_y0;
 	int up_button_y1;
 	
+	int screen_width;
+	int screen_height;
+	
 	int soundIDs[];
 	//float left_volume = 1.0f;
 	//float right_volume = 1.0f;
@@ -75,10 +77,11 @@ public class MainGameView extends SurfaceView implements
 	};
 
 	public MainGameView(Context context, Bitmap bitmap, int saturation,
-			int value) {
+			int value, String theme) {
 		super(context);
 		getHolder().addCallback(this);
 
+		this.theme = theme;
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
@@ -127,35 +130,20 @@ public class MainGameView extends SurfaceView implements
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
-		// the background image
-		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.volcano_bg), this.getWidth(),
-				this.getHeight(), true);
-		// the image containing the platform textures
-		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.desert_texture), this.getWidth(),
-				this.getHeight(), true);
-		
-		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_hazard));
-		
-	/*	treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.treasure));*/
-		
+
 		gold_texture =Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.gold_texture), this.getWidth(),
 				this.getHeight(), true);
 		
-
 		
-
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
 		// create the game level image using these various parameters
-		game_level = new GameLevel(visual_bg, temp_bg, texture, hazard, treasure, gold_texture);
+		game_level = new GameLevel(this, temp_bg, gold_texture);
+		game_level.selectImages(theme);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -175,6 +163,9 @@ public class MainGameView extends SurfaceView implements
 		up_button_x1 = up_button_x0 + up_button.width;
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
+		
+		screen_height = getHeight();
+		screen_width = getWidth();
 		
 		BackgroundMusic.stop();
 		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
@@ -205,12 +196,9 @@ public class MainGameView extends SurfaceView implements
 
 			}
 		}
-		Log.d("destroy", "surfacedestroyed goes past while");
-		visual_bg.recycle();
-		texture.recycle();
-		hazard.recycle();
-		gold_texture.recycle();
 
+		game_level.recycle_images();
+		gold_texture.recycle();
 		
 	}
 
@@ -225,7 +213,11 @@ public class MainGameView extends SurfaceView implements
 		right_button.draw(canvas, right_button_x0, right_button_y0);
 		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
-		
+		Paint paint = new Paint();
+		paint.setColor(Color.GREEN);
+		paint.setTextSize(100);
+		paint.setTextAlign(Align.CENTER);
+		canvas.drawText("0:0:0", screen_width / 2, 100, paint);
 	}
 
 	@Override

@@ -5,6 +5,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -18,12 +22,15 @@ public class OptionsMenu extends Activity {
 	private SeekBar soundeffects_volume;
 	private SeekBar music_volume;
 	private Spinner theme_spinner;
+	private MyApplication app;
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
+		
+		app = (MyApplication)getApplication();
 		
 		theme_spinner = (Spinner)findViewById(R.id.theme_spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.theme_options_array, android.R.layout.simple_spinner_dropdown_item);
@@ -70,6 +77,29 @@ public class OptionsMenu extends Activity {
 						SoundEffects.setVolume(new_volume);
 					}
 				});
+		theme_spinner.setOnItemSelectedListener(
+			 new OnItemSelectedListener(){
+				
+				 	@Override
+				    public void onItemSelected(AdapterView<?> parent, View view, 
+				            int pos, long id) {
+				        // An item was selected. You can retrieve the selected item using
+				        // parent.getItemAtPosition(pos)
+				    	app.theme =  (String) parent.getItemAtPosition(pos);
+				    	Log.d("theme", app.theme);
+				 	}
+					
+				 	@Override
+				    public void onNothingSelected(AdapterView<?> parent) {
+				        // Another interface callback
+				 		app.theme = "Forest";
+				    	Log.d("theme", app.theme);
+
+				    }
+				 
+				 
+		});
+				
 	}
 	
 

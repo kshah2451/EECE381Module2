@@ -47,39 +47,106 @@ public class ServerTransactions {
 	}
 
 	public void sendServer(Bitmap bitmap, String filename) {
-
+		
+		Log.d("server", "filename = " + filename);
+		
+		
 		if (bitmap == null) {
 			return;
 		}
 		byte[] byteArray = BMPToArray(bitmap);
 
 		// byte buf[] = new byte[byteArray.length + 13];
-		byte buf_file_name[] = new byte[filename.length() + 6
-				+ byteArray.length];
+		byte buf_file_name[] = new byte[filename.length() + 6];
 		buf_file_name[0] = 1;
 		buf_file_name[1] = (byte) filename.length();
 
 		System.arraycopy(filename.getBytes(), 0, buf_file_name, 2,
 				filename.length());
+		
+		Log.d("server", "data length=" + byteArray.length);
+		
+		byte[] intInBytes = intToByte(byteArray.length);
+		
+		for(int i = 0; i < intInBytes.length; i++) {
+			Log.d("test", "byte" + i + ": " + intInBytes[i]);
+		}
+		
+		System.arraycopy(intInBytes, 0, buf_file_name, 2 + filename.length(), 4);
+		
+//		OutputStream out;
+//		try {
+//
+//			out = myapp.sock.getOutputStream();
+//			try {
+//				out.write(buf_file_name, 0, buf_file_name.length);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
 
-		System.arraycopy(intToByte(byteArray.length), 0, buf_file_name, 3, 4);
-
-		System.arraycopy(byteArray, 0, buf_file_name, 7, byteArray.length);
+		
+		
+		//System.arraycopy(byteArray, 0, buf_file_name, 2 + filename.length() + 4, byteArray.length);
 
 		// Send stuff and await confirmation
 		OutputStream out;
 		try {
-
 			out = myapp.sock.getOutputStream();
 			try {
 				out.write(buf_file_name, 0, buf_file_name.length);
+				//out.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		long startTime = System.currentTimeMillis();
+		long elapsedTime = 0L;
+		int bytesToSend = byteArray.length % 50;
+		int startIndex = 0;
+		int mult_index = 0;
+		int bytesSent = 0;
+		int packetCount = 1;
+		
+		while(bytesSent < byteArray.length) {
+			while(elapsedTime < 25) {
+				elapsedTime = (new Date()).getTime() - startTime;
+			}
+			startTime = System.currentTimeMillis();
+			elapsedTime = 0L;
+			
+			if(startIndex >= byteArray.length) {
+				Log.d("server2", "break out of while loop(bytesSent, bytesToSend, startINdex:" + bytesSent + " " + bytesToSend + " " + startIndex);
+				break;
+			}
+			
+			try {
+				out = myapp.sock.getOutputStream();
+				try {
+					out.write(byteArray, startIndex, bytesToSend);
+					Log.d("server2", "Packet " + packetCount + " sent");
+					packetCount++;
+					//out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			bytesSent += bytesToSend;
+			startIndex = bytesSent;
+			if(bytesToSend == byteArray.length % 50) {
+				bytesToSend = 50;
+			}
 
+		}
 	}
 
 	public Bitmap receiveServer(String filename) {
@@ -118,12 +185,13 @@ public class ServerTransactions {
 	}
 
 	public Bitmap arrayToBMP(byte[] byteArray) {
-		Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 13,
-				byteArray.length - 13);
+		Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
+				byteArray.length);
 		return bitmap;
 	}
 
 	public byte[] BMPToArray(Bitmap bitmap) {
+		bitmap = Bitmap.createScaledBitmap(bitmap, 160, 120, false);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		byte[] byteArray = stream.toByteArray();
@@ -154,13 +222,13 @@ public class ServerTransactions {
 		this.imageRetrieved = imageRetrieved;
 	}
 
-	public byte[] intToByte(int x) {
+	public static byte[] intToByte(int x) {
 		ByteBuffer buffer = ByteBuffer.allocate(4);
 		buffer.putInt(x);
 		return buffer.array();
 	}
 
-	public int bytesToInt(byte[] bytes) {
+	public static int bytesToInt(byte[] bytes) {
 		ByteBuffer buffer = ByteBuffer.allocate(4);
 		buffer.put(bytes);
 		buffer.flip();
@@ -257,7 +325,35 @@ public class ServerTransactions {
 
 					} else if (buf[0] == '1') {
 						// File is found
-						while (buf[0] != 1) {
+						int index = 0;
+						byte fileSize[] = new byte[4];
+						int fileInt;
+						
+						
+						for(int i = 0; i < fileSize.length; i++){
+							startTime = System.currentTimeMillis();
+							elapsedTime = 0L;
+							while (bytes_avail <= 0 && elapsedTime < 60 * 1000) {
+								bytes_avail = in.available();
+								elapsedTime = (new Date()).getTime()
+										- startTime;
+								if (bytes_avail > 0) {
+									buf = new byte[1];
+									in.read(buf);
+									bytes_avail = 0;
+									break;
+								}
+							}
+							fileSize[i] = buf[0];
+						}
+						
+						fileInt = bytesToInt(fileSize);
+						
+						Log.d("server2", "filesToInt:" + fileInt);
+						
+						byte fileData[] = new byte[fileInt];
+						
+						while (index < fileInt) {
 
 							// get next char
 							startTime = System.currentTimeMillis();
@@ -273,11 +369,22 @@ public class ServerTransactions {
 									break;
 								}
 							}
-
-							if (buf[0] != 1) {
+							fileData[index] = buf[0];
+							index++;
+							if (index < fileInt) {
 								// do something with char
-								Log.d("server", "" + (char) buf[0]);
+								Log.d("server", "index:" + index + " buf:" + (char) buf[0]);
 							}
+							
+						}
+						
+						if(fileData == null || fileData.length != fileInt) {
+							Log.d("server2", "fileData is null");
+						}
+						
+						bitmap = arrayToBMP(fileData);
+						if(bitmap == null) {
+							Log.d("server2", "bitmap is null");
 						}
 
 					} else {
@@ -291,7 +398,7 @@ public class ServerTransactions {
 				}
 
 			}
-
+			Log.d("server", "done");
 			imageRetrieved = true;
 			return bitmap;
 

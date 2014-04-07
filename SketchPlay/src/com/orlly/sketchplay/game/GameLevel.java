@@ -1,16 +1,22 @@
 package com.orlly.sketchplay.game;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.SurfaceView;
 
-public class GameLevel {
+import com.orlly.sketchplay.menus.R;
+
+public class GameLevel extends Activity{
 
 	private int hazard_pic_height = 0;
 	private int hazard_pic_width = 0;
 	private int treasure_pic_height = 0;
 	private int treasure_pic_width = 0;
+	private SurfaceView surface;
 	int width_count = 0;
 	private Bitmap final_image;
 	private Bitmap background;
@@ -26,19 +32,104 @@ public class GameLevel {
 
 	
 	
-	public GameLevel(Bitmap background, Bitmap platform, Bitmap texture, Bitmap hazard, Bitmap treasure, Bitmap gold_texture){
+	public GameLevel(SurfaceView surface, Bitmap platform, Bitmap gold_texture){
 		
-		this.background = background;
 		this.platform = platform;
-		this.texture  = texture;
-		this.hazard = hazard;
-		this.treasure = treasure;
 		this.gold_texture = gold_texture;
+		this.surface = surface;
 
-		
-
-			
 	}
+	
+	
+	
+	public void selectImages(String theme){
+
+		if(theme.equals("Forest")){
+		// the background image
+			this.background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.forest_bg), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			// the image containing the platform textures
+			this.texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.forest_texture), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			this.hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.forest_hazard));
+			
+		}
+		
+		else if(theme.equals("Desert")){
+			this.background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.desert_bg), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			// the image containing the platform textures
+			this.texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.desert_texture), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			this.hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.desert_hazard));
+			
+		}
+		
+		else if(theme.equals("Snow")){
+			// the background image
+			this.background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.snow_bg), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			// the image containing the platform textures
+			this.texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.ice_texture), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			this.hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.snow_hazard));
+		}
+		
+		else if(theme.equals("Volcano")){
+		// the background image
+			this.background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.volcano_bg), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			// the image containing the platform textures
+			this.texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.desert_texture), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			this.hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.volcano_hazard));
+			
+		}
+		
+		
+		else if(theme.equals("Space")){
+			this.background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.space_bg), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			// the image containing the platform textures
+			this.texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.space_texture), surface.getWidth(),
+					surface.getHeight(), true);
+			
+			this.hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
+					surface.getResources(), R.drawable.space_hazard));
+		
+		}
+		
+		else {
+			this.background = platform;
+			this.texture = null;
+			this.hazard = null;
+		}
+		
+	}
+	
 	
 	/**
 	 * This will generate the game level image by calling several functions that each add 
@@ -46,25 +137,29 @@ public class GameLevel {
 	 * , the victory platform, etc)
 	 */
 	public void generate_level_image(){
-		//Go through the whole image of the user's level, and check the colour of each pixel to
-		// determine what map element we'll have to draw
-		for(int i=0; i< platform.getWidth(); i++){
-			for(int j = 0; j < platform.getHeight(); j++){
-				texturize_platforms(i,j);
-				set_hazards(i, j);
-				
-				
-			/*	
-				if(treasureSet == false){
-					set_treasures(i,j);
+	
+		if(hazard != null && texture != null){
+		
+			//Go through the whole image of the user's level, and check the colour of each pixel to
+			// determine what map element we'll have to draw
+			for(int i=0; i< platform.getWidth(); i++){
+				for(int j = 0; j < platform.getHeight(); j++){
+					texturize_platforms(i,j);
+					set_hazards(i, j);
+					
+					
+				/*	
+					if(treasureSet == false){
+						set_treasures(i,j);
+					}
+				*/
+					
 				}
-			*/
-				
 			}
 		}
 		
+			this.final_image = background;
 		
-		this.final_image = background;
 	}
 	
 	/**
@@ -292,6 +387,12 @@ public class GameLevel {
 	
 	
 	
+	public void recycle_images(){
+		background.recycle();
+		texture.recycle();
+		hazard.recycle();
+		
+	}
 	
 	
 	
