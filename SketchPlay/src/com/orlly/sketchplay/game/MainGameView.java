@@ -28,12 +28,11 @@ public class MainGameView extends SurfaceView implements
 	private GameThread thread;
 	private Player player;
 	private DirectionalButton right_button, left_button, up_button;
+	
+	private String theme;
+	
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
-	private Bitmap visual_bg;
-	private Bitmap texture;
-	private Bitmap hazard;
-	private Bitmap treasure;
 	private Bitmap gold_texture;
 	private GameLevel game_level;
 	//spawn point (starting top left corner position)
@@ -75,10 +74,11 @@ public class MainGameView extends SurfaceView implements
 	};
 
 	public MainGameView(Context context, Bitmap bitmap, int saturation,
-			int value) {
+			int value, String theme) {
 		super(context);
 		getHolder().addCallback(this);
 
+		this.theme = theme;
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
@@ -127,35 +127,20 @@ public class MainGameView extends SurfaceView implements
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
-		// the background image
-		visual_bg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.desert_bg), this.getWidth(),
-				this.getHeight(), true);
-		// the image containing the platform textures
-		texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_texture), this.getWidth(),
-				this.getHeight(), true);
-		
-		hazard = Bitmap.createBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.forest_hazard));
-		
-	/*	treasure = Bitmap.createBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.treasure));*/
-		
+
 		gold_texture =Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.gold_texture), this.getWidth(),
 				this.getHeight(), true);
 		
-
 		
-
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
 		
 		// create the game level image using these various parameters
-		game_level = new GameLevel(visual_bg, temp_bg, texture, hazard, treasure, gold_texture);
+		game_level = new GameLevel(this, temp_bg, gold_texture);
+		game_level.selectImages(theme);
 		game_level.generate_level_image();
 
 		// Initializes positioning of right button
@@ -205,12 +190,9 @@ public class MainGameView extends SurfaceView implements
 
 			}
 		}
-		Log.d("destroy", "surfacedestroyed goes past while");
-		visual_bg.recycle();
-		texture.recycle();
-		hazard.recycle();
-		gold_texture.recycle();
 
+		game_level.recycle_images();
+		gold_texture.recycle();
 		
 	}
 

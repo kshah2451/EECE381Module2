@@ -6,5 +6,5 @@ import android.app.Application;
 
 public class MyApplication extends Application {
 	public Socket sock = null;
-	public int theme_id = 1;
+	public String theme = "Forest";
 }
