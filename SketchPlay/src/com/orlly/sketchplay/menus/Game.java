@@ -27,6 +27,7 @@ import android.view.WindowManager;
 public class Game extends Activity {
 
 	private Bitmap background_bmp;
+	private MyApplication app;
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -43,6 +44,9 @@ public class Game extends Activity {
 		int saturation = intent.getExtras().getInt("saturation");
 		int value = intent.getExtras().getInt("value");
 
+		app = (MyApplication)getApplication();
+		
+		
 		try {
 			background_bmp = MediaStore.Images.Media.getBitmap(
 					this.getContentResolver(), imageUri);
@@ -55,7 +59,7 @@ public class Game extends Activity {
 		}
 
 		setContentView(new MainGameView(this, background_bmp, saturation,
-				value));
+				value, app.theme));
 	}
 
 	
