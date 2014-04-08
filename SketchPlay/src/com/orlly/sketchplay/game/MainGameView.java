@@ -7,6 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
@@ -19,7 +23,7 @@ import com.orlly.sketchplay.rendering.MapRender;
 import com.orlly.sketchplay.sound.BackgroundMusic;
 import com.orlly.sketchplay.sound.SoundEffects;
 
-public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
+public class MainGameView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener{
 
 	int count_left = 1;
 	int count_right = 1;
@@ -35,11 +39,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 	private Bitmap gold_texture;
 	private Bitmap victory_screen;
 	private GameLevel game_level;
+	
+	private Sensor accelerometer;
+	private SensorManager sensorManager;
 	// spawn point (starting top left corner position)
 	int startx = 5;
 	int starty = 5;
 
 	boolean game_over;
+	private boolean fallingSky = true;
 
 	private int saturation;
 	private int value;
@@ -122,6 +130,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 
 		// set our bitmap bg as the passed in bitmap image
 		this.bitmap = bitmap;
+		
+		sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
 
 		// Set to true so we can interact with surface
 		setFocusable(true);
@@ -388,10 +400,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 						}
 
 					}
-					if (this.moveOkay == true) {
+					if (this.moveOkay == true  && this.fallingSky == true) {
 						player.descend();
 					}
-
+					fallingSky = true;
 					this.moveOkay = true;
 
 				}
@@ -576,6 +588,31 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback 
 			canvas.drawBitmap(this.bitmap, x, y, null);
 		}
 
+	}
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		float[] sensor_values = event.values;
+		if(sensor_values[0] < -5.0f && (sensor_values[1] > 5.0f || sensor_values[1] < -5.0f)){
+			fallingSky = false;
+			handleAcceleration((int)sensor_values[0], (int)sensor_values[1]);
+		}
+		else if(sensor_values[0] < -5.0f){
+			fallingSky = false;
+			handleAcceleration((int)sensor_values[0], 0);
+		}
+		else if((sensor_values[1] > 5.0f || sensor_values[1] < -5.0f) && sensor_values[0] > -5.0f){
+			handleAcceleration(0, (int)sensor_values[1]);
+		}
+	}
+	
+	public void handleAcceleration(int x, int y){
+		player.toss(x, y, this.getWidth());
+		//Log.i("sensor", "X:" + Float.toString(x) + " Y:" + Float.toString(y));
 	}
 
 }
