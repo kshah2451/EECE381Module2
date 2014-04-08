@@ -6,41 +6,30 @@
 #include <altera_up_sd_card_avalon_interface.h>
 
 #define MAX_FILENAME 12
-#define MAX_PACKETSIZE 256
+
 
 int main() {
 	int i;
-	int j;
 
 	//1 for receiving file from middleman, 2 for sending to middleman
 	int mode;
 
+
+
 	//Num char in filename array
 	int numFileName;
-	//Num packets in the file
-	int numPackets;
-	//Num leftover characters in the file not in a packet
-	int numLeftover;
-	//Array to hole filename
-	unsigned char fileName[MAX_FILENAME];
+	//Num bytes in file
+	int numBytesFile;
+
 	//Num characters in file array
 	int numFile;
-
-
-
-
-
-	char* fileNameString;
 
 	char* listName;
 
 
 
-
-
-
 	//File to send or receive (likely a piece of it)
-	unsigned char file[MAX_PACKETSIZE];
+	unsigned char fileName[MAX_FILENAME];
 
 	//variable to hold data received from uart
 	unsigned char data;
@@ -59,6 +48,7 @@ int main() {
 
 		printf("UART Initialization\n");
 		alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232_0");
+
 
 		if(!alt_up_sd_card_is_FAT16()){
 			printf("SD CARD is not FAT16 Format\n");
@@ -90,8 +80,7 @@ int main() {
 
 					printf("Waiting for num char:\n");
 					// The second byte is the number of characters in the file name
-					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0)
-						;
+					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
 					alt_up_rs232_read_data(uart, &data, &parity);
 					numFileName = (int) data;
 					//numFileName -= 48;
@@ -100,13 +89,9 @@ int main() {
 					printf("About to receive %d characters:\n\n", numFileName);
 					printf("Filename received:");
 					for (i = 0; i < numFileName; i++) {
-						while (alt_up_rs232_get_used_space_in_read_FIFO(uart)
-								== 0)
-							;
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart)== 0);
 						alt_up_rs232_read_data(uart, &data, &parity);
-
 						fileName[i] = data;
-
 						printf("%c", data);
 					}
 					printf("\n");
@@ -120,73 +105,53 @@ int main() {
 					// USE THAT FILENAME TO MAKE A NEW FILE ON SD CARD HERE
 
 					handle = alt_up_sd_card_fopen(fileName, 1);
-					// The byte(s)? after filename is the number of packets in the file
-					//
+					if(handle < 0){
+						//TODO: File can't be opened, do something about it
+						printf("send had a neg handle \n\n");
+					}
+					else{
+						// The 4 bytes after filename is the number of bytes in the file
+						//
+						// SHIFT BYTES LEFT AND CONCATENATE TO ACCOUNT FOR SEVERAL BYTES WORTH OF FILE
+						// WRITE FIRST 4 BYTES OF FILE AS SIZE OF FILE IN BYTES
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+						alt_up_rs232_read_data(uart, &data, &parity);
+						alt_up_sd_card_write(handle, data);
+						numBytesFile = (int) data;
+						numBytesFile = numBytesFile << 8;
 
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+						alt_up_rs232_read_data(uart, &data, &parity);
+						alt_up_sd_card_write(handle, data);
+						numBytesFile += (int) data;
+						numBytesFile = numBytesFile << 8;
 
-					//TODO:  send andropid notice of whether file can open or not
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+						alt_up_rs232_read_data(uart, &data, &parity);
+						alt_up_sd_card_write(handle, data);
+						numBytesFile += (int) data;
+						numBytesFile = numBytesFile << 8;
 
+						while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0);
+						alt_up_rs232_read_data(uart, &data, &parity);
+						alt_up_sd_card_write(handle, data);
+						numBytesFile += (int) data;
 
-					// TODO: SHIFT BYTES LEFT AND CONCATENATE TO ACCOUNT FOR SEVERAL BYTES WORTH OF PACKET AMOUNT
-					//
+						//WRITE BYTES TO SD CARD
+						printf("About to receive %d file chars:\n\n",numBytesFile);
+						for (i = 0; i < numBytesFile; i++) {
 
-					printf("Waiting for num packets\n");
-					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0)
-						;
-					alt_up_rs232_read_data(uart, &data, &parity);
-					numPackets = (int) data;
-					numPackets -= 48;
-
-					//Now receive the file
-					//We receive packets of a fixed size, all packets are full
-					//After receiving all full packets, receive a byte of characters still left
-					// Then read the remaining characters
-					printf("About to receive %d packets:\n\n", numPackets);
-					for (i = 0; i < numPackets; i++) {
-						for (j = 0; j < MAX_PACKETSIZE; j++) {
-
-							while (alt_up_rs232_get_used_space_in_read_FIFO(
-									uart) == 0)
-								;
+							while (alt_up_rs232_get_used_space_in_read_FIFO(uart)== 0);
 							alt_up_rs232_read_data(uart, &data, &parity);
-
-							//file[i] = data;
-							//
-							//
-							// TODO:
-							// Dump this into SD card, maybe just straight up use data char instead of putting it into a file array
-							//TODO: ERROR CHECKing for successful/unsucessful writes, alt_up_sd_card_write returns a bool
 							alt_up_sd_card_write(handle, data);
 						}
+						printf("File done\n");
+
+						alt_up_sd_card_fclose(handle);
+
 					}
-					printf("Packets received, waiting for leftover\n");
 
-					// This byte is the number of characters left in file not filling a packet
-					while (alt_up_rs232_get_used_space_in_read_FIFO(uart) == 0)
-						;
-					alt_up_rs232_read_data(uart, &data, &parity);
-					numLeftover = (int) data;
-					numLeftover -= 48;
 
-					printf("About to receive %d leftover chars:\n\n",
-							numLeftover);
-					for (i = 0; i < numLeftover; i++) {
-
-						while (alt_up_rs232_get_used_space_in_read_FIFO(uart)
-								== 0)
-							;
-						alt_up_rs232_read_data(uart, &data, &parity);
-
-						//file[i] = data;
-						//
-						//
-						// TODO:
-						// Dump this into SD card, maybe just straight up use data char instead of putting it into a file array
-						alt_up_sd_card_write(handle, data);
-					}
-					printf("Leftover received, file done\n");
-
-					alt_up_sd_card_fclose(handle);
 					//This bracket ends receiving a file
 				}
 
@@ -226,13 +191,16 @@ int main() {
 					handle = alt_up_sd_card_fopen(fileName, 0);
 
 					if (handle == -1) {
+						//SEND ANDROID AN ASCII 2 TO LET THEM KNOW TO RECEIVE FILE NAME
 						alt_up_rs232_write_data(uart, 50);
 						printf("neg handle");
 						if(alt_up_sd_card_find_first(".",listName) ==-1){
+							//SEND ANDROID AN ASCII 2 TO LET THEM KNOW THERES NO FILE NAMES
 							alt_up_rs232_write_data(uart, 50);
 							printf("no files");
 						}
 						else{
+							//SEND ANDROID LIST OF FILE NAMES
 							printf("some files");
 							i=0;
 							for(i = 0; listName[i] != '.'; i++){
@@ -240,6 +208,7 @@ int main() {
 							}
 							alt_up_rs232_write_data(uart, 32);
 							while(alt_up_sd_card_find_next(listName)!=-1){
+								i=0;
 								for(i = 0; listName[i] != '.'; i++){
 									alt_up_rs232_write_data(uart, listName[i]);
 								}
@@ -250,26 +219,50 @@ int main() {
 						}
 					} else {
 
+						//SEND ANDROID AN ASCII 1 TO LET THEM KNOW TO RECEIVE A FILE
 						alt_up_rs232_write_data(uart, 49);
 
-						printf("About to send file\n");
 
-						numFile = alt_up_sd_card_read(handle);
-						numFile -= 48;
 
+						// SHIFT BYTES LEFT AND CONCATENATE TO ACCOUNT FOR SEVERAL BYTES WORTH OF FILE
+						// WRITE FIRST 4 BYTES OF FILE AS SIZE OF FILE IN BYTES
+
+						data = alt_up_sd_card_read(handle);
+						alt_up_rs232_write_data(uart, data);
+						numFile = (int) data;
+						numFile = numFile << 8;
+
+						data = (int) alt_up_sd_card_read(handle);
+						alt_up_rs232_write_data(uart, data);
+						numFile += (int) data;
+						numFile = numFile << 8;
+
+						data = (int) alt_up_sd_card_read(handle);
+						alt_up_rs232_write_data(uart, data);
+						numFile += (int) data;
+						numFile = numFile << 8;
+
+						data = (int) alt_up_sd_card_read(handle);
+						alt_up_rs232_write_data(uart, data);
+						numFile += (int) data;
+
+						printf("About to send %d file bytes\n", numFile);
 						while (numFile > 0) {
 
+							while(alt_up_rs232_get_available_space_in_write_FIFO(uart) == 0);
 
 							data = alt_up_sd_card_read(handle);
 							alt_up_rs232_write_data(uart, data);
 
 							numFile--;
 
+
+
 						}
 
-						//TODO: WRITE A "FILE DONE" STRING OR WHATEVER WE DECIDE
-						printf("sending end bits");
-						alt_up_rs232_write_data(uart, 1);
+						// WRITE A "FILE DONE" STRING OR WHATEVER WE DECIDE
+						printf("sending end bits\n");
+					//	alt_up_rs232_write_data(uart, 1);
 
 
 						//
