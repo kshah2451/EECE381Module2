@@ -269,6 +269,21 @@ public class Player {
 		x_right = x_left+ width;
 	}
 	
+	public void toss(int x, int y, int map_width){
+		if(y_top-x > 0){
+			y_bottom += x;
+			y_top += x;
+		}
+		if(y < 0 && (x_left +(y/3) > 0)){
+			x_left +=(y/3);
+			x_right +=(y/3);
+		}
+		else if (y > 0 && (x_right +(y/3) < map_width)){
+			x_left +=(y/3);
+			x_right +=(y/3);
+		}
+	}
+	
 	
 	
 }
