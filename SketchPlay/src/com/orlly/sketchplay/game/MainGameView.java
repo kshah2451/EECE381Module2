@@ -34,6 +34,7 @@ public class MainGameView extends SurfaceView implements
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
 	private Bitmap gold_texture;
+	private Bitmap victory_screen;
 	private GameLevel game_level;
 	//spawn point (starting top left corner position)
 	int startx = 5;
@@ -43,7 +44,14 @@ public class MainGameView extends SurfaceView implements
 
 	private int saturation;
 	private int value;
-
+	
+	/*Timer bullshit*/
+	private long startTime;
+	private Paint timerText;
+	private long timeNow;
+	private long timeToGo;
+	private int second, minute;
+	
 	private boolean moveOkay = true;
 
 	private MapRender mapRender;
@@ -59,9 +67,6 @@ public class MainGameView extends SurfaceView implements
 	int left_button_y1;
 	int up_button_y0;
 	int up_button_y1;
-	
-	int screen_width;
-	int screen_height;
 	
 	int soundIDs[];
 	//float left_volume = 1.0f;
@@ -85,7 +90,13 @@ public class MainGameView extends SurfaceView implements
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
-
+		
+		/*Game Timer initializations*/
+		this.startTime = System.currentTimeMillis();
+		this.timeNow = System.currentTimeMillis();
+		this.timerText = new Paint();
+		timerText.setColor(Color.RED);
+		timerText.setTextSize(50);
 		soundIDs = new int[4];
 		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
 		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
@@ -135,6 +146,10 @@ public class MainGameView extends SurfaceView implements
 				getResources(), R.drawable.gold_texture), this.getWidth(),
 				this.getHeight(), true);
 		
+		victory_screen = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.victory), this.getWidth(),
+				this.getHeight(), true);
+		
 		
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
@@ -164,10 +179,9 @@ public class MainGameView extends SurfaceView implements
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
 		
-		screen_height = getHeight();
-		screen_width = getWidth();
 		
 		BackgroundMusic.stop();
+		//get_BGM(theme);
 		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
 		BackgroundMusic.play();
 
@@ -199,25 +213,7 @@ public class MainGameView extends SurfaceView implements
 
 		game_level.recycle_images();
 		gold_texture.recycle();
-		
-	}
 
-	/**
-	 * Draws background and player with updated position
-	 * 
-	 * @param canvas
-	 */
-	public void drawImages(Canvas canvas) {
-		game_level.draw(canvas);
-		player.draw(canvas, player.getX_left(), player.getY_top());
-		right_button.draw(canvas, right_button_x0, right_button_y0);
-		left_button.draw(canvas, left_button_x0, left_button_y0);
-		up_button.draw(canvas, up_button_x0, up_button_y0);
-		Paint paint = new Paint();
-		paint.setColor(Color.GREEN);
-		paint.setTextSize(100);
-		paint.setTextAlign(Align.CENTER);
-		canvas.drawText("0:0:0", screen_width / 2, 100, paint);
 	}
 
 	@Override
@@ -251,6 +247,13 @@ public class MainGameView extends SurfaceView implements
 	 */
 	public void update() {
 
+		
+		/**TIMER UPDATES**/
+	    timeNow = System.currentTimeMillis();
+	    timeToGo = ((timeNow - startTime) / 1000)-10;
+	    second = (int)timeToGo % 60;
+		minute = (int)timeToGo / 60;
+		
 		/**JUMP STATE**/
 		// Check to see if player is below top of screen
 		if (player.getY_top() > 0) {
@@ -408,6 +411,33 @@ public class MainGameView extends SurfaceView implements
 	}
 
 	/**
+	 * Draws background and player with updated position
+	 * 
+	 * @param canvas
+	 */
+	public void drawImages(Canvas canvas) {
+		String timeToDisplay;
+		
+		game_level.draw(canvas);
+		player.draw(canvas, player.getX_left(), player.getY_top());
+		right_button.draw(canvas, right_button_x0, right_button_y0);
+		left_button.draw(canvas, left_button_x0, left_button_y0);
+		up_button.draw(canvas, up_button_x0, up_button_y0);
+		
+	
+	    if (!game_over) {
+	    	if(second < 10) {
+	    		timeToDisplay = Integer.toString(minute) + ":" + "0" + Integer.toString(second);
+	    	}
+	    	else {
+	    		timeToDisplay = Integer.toString(minute) + ":" + Integer.toString(second);
+	    	}
+	    	canvas.drawText(timeToDisplay, (this.getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
+	    }
+		
+	}
+
+	/**
 	 * Checks the region that was touched on touch screen.
 	 * 
 	 * @param x
@@ -456,6 +486,50 @@ public class MainGameView extends SurfaceView implements
 	
 	
 	
+	
+	
+	/*
+	 
+	 public void get_BGM(String theme){
+	 
+	  
+	  if(theme.equals("Forest"){
+	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+	  }
+	  
+	  else if(theme.equals("Desert"){
+	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+	  }
+	  
+	  else if(theme.equals("Snow"){
+	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+	  }
+	  
+	  else if(theme.equals("Volcano"){
+	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+	  }
+	  
+	  else {
+	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+	  }
+	  
+	  
+	  
+	}
+	  
+	  
+	  
+	  
+	  
+	  
+	  */
+	 
+	
+	
+	
+	
+	
+	
 	/**
 	 * Getter for the game over flag
 	 * @return
@@ -484,7 +558,11 @@ public class MainGameView extends SurfaceView implements
 	 * @param canvas
 	 */
 	public void game_over_screen(Canvas canvas){
-		canvas.drawColor(Color.GREEN);
+		String yourTimeMessage = "Your Time: " + minute + ":" + second;
+		canvas.drawBitmap(victory_screen, 0, 0, null);
+		timerText.setTextAlign(Align.CENTER);
+		canvas.drawText(yourTimeMessage, (getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
+		
 	}
 
 	// Class for the buttons -- removeable if we decide to use layout buttons

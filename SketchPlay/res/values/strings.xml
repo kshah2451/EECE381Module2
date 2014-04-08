@@ -50,6 +50,7 @@
     <string name="image_select">Image Select</string>
     <string name="render_image">Render Image</string>
     <string name="options_label">Options</string>
+    <string name="file_list_title"><u>File List From Server</u></string>
 
     <string-array name="server_options_array">
         <item>Send Image to Server</item>

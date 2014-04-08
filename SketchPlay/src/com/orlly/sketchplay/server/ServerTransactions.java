@@ -149,8 +149,10 @@ public class ServerTransactions {
 		}
 	}
 
-	public Bitmap receiveServer(String filename) {
+	public ReceiveObject receiveServer(String filename) {
 		Bitmap bitmap = null;
+		
+		ReceiveObject retObj = null;
 
 		byte[] filename_buf = new byte[filename.length() + 2];
 
@@ -173,14 +175,14 @@ public class ServerTransactions {
 		}
 
 		try {
-			bitmap = new retrieveImage().execute().get();
+			retObj = new retrieveImage().execute().get();
 		} catch (ExecutionException ee) {
 
 		} catch (InterruptedException ie) {
 
 		}
 
-		return bitmap;
+		return retObj;
 
 	}
 
@@ -235,7 +237,7 @@ public class ServerTransactions {
 		return buffer.getInt();
 	}
 
-	public class retrieveImage extends AsyncTask<Void, Void, Bitmap> {
+	public class retrieveImage extends AsyncTask<Void, Void, ReceiveObject> {
 
 		@Override
 		protected void onPreExecute() {
@@ -245,9 +247,11 @@ public class ServerTransactions {
 		}
 
 		@Override
-		protected Bitmap doInBackground(Void... voids) {
+		protected ReceiveObject doInBackground(Void... voids) {
 			Socket s = null;
 			Bitmap bitmap = null;
+			
+			ReceiveObject retObj = new ReceiveObject();
 			
 			ArrayList<String> fileList = new ArrayList<String>();
 			
@@ -258,12 +262,13 @@ public class ServerTransactions {
 			long elapsedTime = 0L;
 
 			byte buf[] = new byte[1];
+			InputStream in;
 
 			if (myapp.sock != null && myapp.sock.isConnected()
 					&& !myapp.sock.isClosed()) {
-
+			Log.d("server", "sock is not null and sock is connected");
 				try {
-					InputStream in = myapp.sock.getInputStream();
+					in = myapp.sock.getInputStream();
 					while (bytes_avail <= 0 && elapsedTime < 60 * 1000) {
 						bytes_avail = in.available();
 						elapsedTime = (new Date()).getTime() - startTime;
@@ -277,6 +282,7 @@ public class ServerTransactions {
 
 					if (buf[0] == '2') {
 						// File is not found
+						Log.d("server", "file is not found");
 						startTime = System.currentTimeMillis();
 						elapsedTime = 0L;
 						while (bytes_avail <= 0 && elapsedTime < 60 * 1000) {
@@ -291,10 +297,15 @@ public class ServerTransactions {
 						}
 
 						if (buf[0] == '2') {
+							Log.d("server", "no file on system");
 							// Quit transaction
 						} else {
+							Log.d("server", "send out file list");
+							tempFile += (char) buf[0];
+							// Send out list of filenames
 							while (buf[0] != 1) {
 								Log.d("server", "" + (char) buf[0]);
+								
 								startTime = System.currentTimeMillis();
 								elapsedTime = 0L;
 								while (bytes_avail <= 0
@@ -318,13 +329,16 @@ public class ServerTransactions {
 								}
 							}
 							
-							//Log.d("server", fileList);
+							for(int i = 0; i < fileList.size(); i++) {
+								Log.d("server", fileList.get(i));
+							}
 							
-							
+							retObj.setFilename_list(fileList);
 						}
 
 					} else if (buf[0] == '1') {
 						// File is found
+						Log.d("server", "file is found");
 						int index = 0;
 						byte fileSize[] = new byte[4];
 						int fileInt;
@@ -383,6 +397,7 @@ public class ServerTransactions {
 						}
 						
 						bitmap = arrayToBMP(fileData);
+						
 						if(bitmap == null) {
 							Log.d("server2", "bitmap is null");
 						}
@@ -391,8 +406,6 @@ public class ServerTransactions {
 
 					}
 
-					// bitmap = arrayToBMP(buf);
-
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -400,7 +413,9 @@ public class ServerTransactions {
 			}
 			Log.d("server", "done");
 			imageRetrieved = true;
-			return bitmap;
+			
+			retObj.setBitmap(bitmap);
+			return retObj;
 
 		}
 	}

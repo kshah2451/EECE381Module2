@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.TargetApi;
@@ -20,16 +21,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orlly.sketchplay.rendering.MapRender;
+import com.orlly.sketchplay.server.ReceiveObject;
 import com.orlly.sketchplay.server.ServerTransactions;
 
 public class ImageSelectionMenu extends Activity {
@@ -53,6 +60,8 @@ public class ImageSelectionMenu extends Activity {
 	private MapRender rendering;
 
 	private AlertDialog dialog;
+
+	private AlertDialog file_list_dialog;
 
 	/**
 	 * Uniform Resource Identifier - an address that identifies an abstract or
@@ -318,6 +327,12 @@ public class ImageSelectionMenu extends Activity {
 
 		EditText filename = (EditText) dialog.findViewById(R.id.filename);
 		String fileToSend = filename.getText().toString();
+		
+		TextView filename_list = (TextView)dialog.findViewById(R.id.file_list);
+
+		ReceiveObject retObj = new ReceiveObject();
+
+		ArrayList<String> fileList = new ArrayList<String>();
 
 		ServerTransactions server = new ServerTransactions(
 				(MyApplication) getApplication());
@@ -328,7 +343,24 @@ public class ImageSelectionMenu extends Activity {
 			;
 
 		if (!server.isConnection_timeout()) {
-			bitmap = server.receiveServer(fileToSend);
+			retObj = server.receiveServer(fileToSend);
+			bitmap = retObj.getBitmap();
+
+			fileList = retObj.getFilename_list();
+			if (!fileList.isEmpty()) {
+				
+				String filenames = "";
+
+				for (int i = 0; i < fileList.size(); i++) {
+					filenames += fileList.get(i);
+					filenames += "\n";
+				}
+				
+				filename_list.setMovementMethod(new ScrollingMovementMethod());
+				filename_list.setText(filenames);
+				
+				
+			}
 
 			while (server.isImageRetrieved() == false)
 				;
@@ -346,7 +378,7 @@ public class ImageSelectionMenu extends Activity {
 						Environment
 								.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 						"SketchPlay/Downloads");
-				
+
 				if (!mediaStorageDir.exists()) {
 					if (!mediaStorageDir.mkdirs()) {
 						return;
@@ -357,16 +389,16 @@ public class ImageSelectionMenu extends Activity {
 						.format(new Date());
 				File mediaFile = new File(mediaStorageDir.getPath()
 						+ File.separator + "IMG_" + timeStamp + ".bmp");
-				
+
 				try {
 					mediaFile.createNewFile();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 				bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-				
+
 				try {
 					FileOutputStream fo = new FileOutputStream(mediaFile);
 					fo.write(bytes.toByteArray());
@@ -376,7 +408,7 @@ public class ImageSelectionMenu extends Activity {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 				returnUri = Uri.fromFile(mediaFile);
 
 			}

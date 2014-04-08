@@ -8,9 +8,9 @@
         android:id="@+id/filename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:hint="@string/filename_hint"
-        android:maxLength="7" >
+        android:maxLength="7"
+        android:textSize="20sp" >
     </EditText>
 
     <Button
@@ -27,9 +27,8 @@
         android:text="@string/sendToServer"
         android:textColor="@color/black"
         android:textStyle="bold" />
-    
-    
-        <Button
+
+    <Button
         android:id="@+id/receive"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -43,8 +42,26 @@
         android:text="@string/receiveFromServer"
         android:textColor="@color/black"
         android:textStyle="bold" />
-        
-        <Button
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/file_list_title"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/file_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadeScrollbars="false"
+        android:maxLines="2"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <Button
         android:id="@+id/cancel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
