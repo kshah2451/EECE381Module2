@@ -24,24 +24,33 @@
     <string name="music_volume">Music Volume</string>
     <string name="level_theme">Select Level Theme</string>
     <string name="serverOptions">SEND/RECEIVE IMAGE</string>
-    <string name="getting_started_text1">	    As of sprint 1, you should do the following:
-	    When you choose \"Take a Picture\", for best results you should set the resolution 
+    <string name="getting_started_text1">	    
+	    In SketchPlay, you draw a picture in real life, and we turn it into a game!\n\n
+        First, draw a picture on white unlined paper.  Different colours represent different
+        in-game objects.\n  Black lines represent platforms you can walk on.\n  Red lines represent
+        hazardous spikes that kill the player.\n  Blue lines represent the goal, when
+        the player comes into contact with blue, you win the game!\n\n
+        
+        When you choose \"Take a Picture\", for best results you should set the resolution 
 	    to 640x480 and take the picture in landscape/horizontal mode.\n\n
 	    When you choose \"Import a Picture\", if you are having problems, please insure the 
 	    image is 640x480 and was taken in landscape mode.  We recommend using pictures out
 	    of the \"SketchPlay\" folder that is created when you take a picture with our app.\n\n
 	    When you have the image you want, press the \"Continue\" button.\n\n
 	    Adjust the \"Saturation\" and \"Value\" sliders until the image displays as desired.\n
-	    Saturation affects the intensity of colors.\n
-	    Value affects the brightness of colors.\n\n
+	    Saturation affects the intensity of colors.  The higher the slider, the stricter you 
+	    are on what is a colour, and so less colours will display.\n
+	    Value affects the brightness of colors.  The higher the slider, the stricter you are on
+	    how bright something needs to be to not be black, and so more black will display.\n
+	    Theme chooses what textures and objects represent the colours you have drawn.
+	    Different themes make the level look aesthetically different.\n\n
 	    
 	    When you\'re ready, click \"Play Game\"\n\n
 	    
 	    The arrow keys in the bottom left control left/right movement, and the 
-	    key in the bottom right is used to jump.  At present, there is no objective.\n\n
-	    
-	    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-	    Yo Taunzu-Sama</string>
+	    key in the bottom right is used to jump.  Your objective is to avoid the spikes (red lines)
+	    and get to the goal (blue lines).\n\n
+	    </string>
     <string name="filename_hint">Enter File Name</string>
     <string name="sendToServer">Send Image to Server</string>
     <string name="receiveFromServer">Receive Image from Server</string>
