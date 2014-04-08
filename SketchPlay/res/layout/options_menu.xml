@@ -63,6 +63,11 @@
         android:id="@+id/theme_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-    
+
+    <CheckBox
+        android:id="@+id/tilt_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tilt Feature" />
 
 </LinearLayout>

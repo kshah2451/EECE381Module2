@@ -58,8 +58,7 @@ public class Game extends Activity {
 			e.printStackTrace();
 		}
 
-		setContentView(new MainGameView(this, background_bmp, saturation,
-				value, app.theme));
+		setContentView(new MainGameView(this, background_bmp, saturation, value, app.theme, app));
 	}
 
 	

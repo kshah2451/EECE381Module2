@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -22,7 +25,9 @@ public class OptionsMenu extends Activity {
 	private SeekBar soundeffects_volume;
 	private SeekBar music_volume;
 	private Spinner theme_spinner;
-	private MyApplication app;
+	private CheckBox tilt_option;
+	private MyApplication application;
+	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
@@ -30,19 +35,21 @@ public class OptionsMenu extends Activity {
 		setContentView(R.layout.options_menu);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 		
-		app = (MyApplication)getApplication();
+		application = (MyApplication)getApplication();
 		
 		theme_spinner = (Spinner)findViewById(R.id.theme_spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.theme_options_array, android.R.layout.simple_spinner_dropdown_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		theme_spinner.setAdapter(adapter);
 
-		
 		soundeffects_volume = (SeekBar) findViewById(R.id.soundeffects_volume);
-		music_volume = (SeekBar) findViewById(R.id.music_volume);
-		
-		music_volume.setProgress((int)(BackgroundMusic.getVolume()*100));
 		soundeffects_volume.setProgress((int)(SoundEffects.getVolume()*100));
+		
+		music_volume = (SeekBar) findViewById(R.id.music_volume);
+		music_volume.setProgress((int)(BackgroundMusic.getVolume()*100));
+		
+		tilt_option = (CheckBox) findViewById(R.id.tilt_option);
+		tilt_option.setChecked(application.getTilt());
 		
 		music_volume.setOnSeekBarChangeListener(
 				new OnSeekBarChangeListener() {
@@ -85,20 +92,28 @@ public class OptionsMenu extends Activity {
 				            int pos, long id) {
 				        // An item was selected. You can retrieve the selected item using
 				        // parent.getItemAtPosition(pos)
-				    	app.theme =  (String) parent.getItemAtPosition(pos);
-				    	Log.d("theme", app.theme);
+				    	application.theme =  (String) parent.getItemAtPosition(pos);
+				    	Log.d("theme", application.theme);
 				 	}
 					
 				 	@Override
 				    public void onNothingSelected(AdapterView<?> parent) {
 				        // Another interface callback
-				 		app.theme = "Forest";
-				    	Log.d("theme", app.theme);
+				 		application.theme = "Forest";
+				    	Log.d("theme", application.theme);
 
 				    }
 				 
 				 
-		});
+			 });
+		tilt_option.setOnCheckedChangeListener(
+				new OnCheckedChangeListener(){
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) {
+						application.toggleTilt(isChecked);
+					}
+				}
+		);
 				
 	}
 	
