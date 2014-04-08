@@ -14,6 +14,8 @@ int main() {
 	//1 for receiving file from middleman, 2 for sending to middleman
 	int mode;
 
+
+
 	//Num char in filename array
 	int numFileName;
 	//Num bytes in file
@@ -46,6 +48,7 @@ int main() {
 
 		printf("UART Initialization\n");
 		alt_up_rs232_dev* uart = alt_up_rs232_open_dev("/dev/rs232_0");
+
 
 		if(!alt_up_sd_card_is_FAT16()){
 			printf("SD CARD is not FAT16 Format\n");
@@ -205,6 +208,7 @@ int main() {
 							}
 							alt_up_rs232_write_data(uart, 32);
 							while(alt_up_sd_card_find_next(listName)!=-1){
+								i=0;
 								for(i = 0; listName[i] != '.'; i++){
 									alt_up_rs232_write_data(uart, listName[i]);
 								}
@@ -245,9 +249,7 @@ int main() {
 						printf("About to send %d file bytes\n", numFile);
 						while (numFile > 0) {
 
-							if(numFile % 100 == 0){
-								for(i = 0; i<12000;i++);
-							}
+							while(alt_up_rs232_get_available_space_in_write_FIFO(uart) == 0);
 
 							data = alt_up_sd_card_read(handle);
 							alt_up_rs232_write_data(uart, data);
