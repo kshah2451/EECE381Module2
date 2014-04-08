@@ -19,8 +19,7 @@ import com.orlly.sketchplay.rendering.MapRender;
 import com.orlly.sketchplay.sound.BackgroundMusic;
 import com.orlly.sketchplay.sound.SoundEffects;
 
-public class MainGameView extends SurfaceView implements
-		SurfaceHolder.Callback {
+public class MainGameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	int count_left = 1;
 	int count_right = 1;
@@ -28,30 +27,30 @@ public class MainGameView extends SurfaceView implements
 	private GameThread thread;
 	private Player player;
 	private DirectionalButton right_button, left_button, up_button;
-	
+
 	private String theme;
-	
+
 	private Bitmap bitmap;
 	private Bitmap temp_bg;
 	private Bitmap gold_texture;
 	private Bitmap victory_screen;
 	private GameLevel game_level;
-	//spawn point (starting top left corner position)
+	// spawn point (starting top left corner position)
 	int startx = 5;
 	int starty = 5;
-	
+
 	boolean game_over;
 
 	private int saturation;
 	private int value;
-	
-	/*Timer bullshit*/
+
+	/* Timer bullshit */
 	private long startTime;
 	private Paint timerText;
 	private long timeNow;
 	private long timeToGo;
 	private int second, minute;
-	
+
 	private boolean moveOkay = true;
 
 	private MapRender mapRender;
@@ -67,18 +66,18 @@ public class MainGameView extends SurfaceView implements
 	int left_button_y1;
 	int up_button_y0;
 	int up_button_y1;
-	
-	int soundIDs[];
-	//float left_volume = 1.0f;
-	//float right_volume = 1.0f;
-	Handler handler = new Handler();
-	private Runnable onEverySecond=new Runnable() {
-	    public void run() {
-	        // do real work here
 
-	        	Log.d("time", "timer exec");
-	            handler.postDelayed(onEverySecond, 1000);
-	    }
+	int soundIDs[];
+	// float left_volume = 1.0f;
+	// float right_volume = 1.0f;
+	Handler handler = new Handler();
+	private Runnable onEverySecond = new Runnable() {
+		public void run() {
+			// do real work here
+
+			Log.d("time", "timer exec");
+			handler.postDelayed(onEverySecond, 1000);
+		}
 	};
 
 	public MainGameView(Context context, Bitmap bitmap, int saturation,
@@ -90,13 +89,13 @@ public class MainGameView extends SurfaceView implements
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
-		
-		/*Game Timer initializations*/
+
+		/* Game Timer initializations */
 		this.startTime = System.currentTimeMillis();
 		this.timeNow = System.currentTimeMillis();
 		this.timerText = new Paint();
 		timerText.setColor(Color.RED);
-		timerText.setTextSize(50);
+		timerText.setTextSize(100);
 		soundIDs = new int[4];
 		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
 		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
@@ -106,14 +105,14 @@ public class MainGameView extends SurfaceView implements
 		setWillNotDraw(false);
 
 		// Create new player character
-		player = new Player(BitmapFactory.decodeResource(
-				getResources(), R.drawable.afro_man_colour_right1), startx, starty, getContext());
+		player = new Player(BitmapFactory.decodeResource(getResources(),
+				R.drawable.afro_man_colour_right1), startx, starty,
+				getContext());
 
 		// Create new thread
 		thread = new GameThread(getHolder(), this);
 
-		
-		//Create the buttons
+		// Create the buttons
 		right_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.right_arrow));
 		left_button = new DirectionalButton(BitmapFactory.decodeResource(
@@ -121,7 +120,7 @@ public class MainGameView extends SurfaceView implements
 		up_button = new DirectionalButton(BitmapFactory.decodeResource(
 				getResources(), R.drawable.up_arrow));
 
-		//set our bitmap bg as the passed in bitmap image
+		// set our bitmap bg as the passed in bitmap image
 		this.bitmap = bitmap;
 
 		// Set to true so we can interact with surface
@@ -137,25 +136,23 @@ public class MainGameView extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 
-		
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
 
-		gold_texture =Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.gold_texture), this.getWidth(),
-				this.getHeight(), true);
-		
-		victory_screen = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-				getResources(), R.drawable.victory), this.getWidth(),
-				this.getHeight(), true);
-		
-		
+		gold_texture = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+				getResources(), R.drawable.gold_texture), this.getWidth(), this
+				.getHeight(), true);
+
+		victory_screen = Bitmap.createScaledBitmap(BitmapFactory
+				.decodeResource(getResources(), R.drawable.victory), this
+				.getWidth(), this.getHeight(), true);
+
 		mapRender = new MapRender(bitmap, this.getHeight(), this.getWidth());
 
 		// Convert bitmap to black and white and return
 		temp_bg = mapRender.getMapImage(saturation, value);
-		
+
 		// create the game level image using these various parameters
 		game_level = new GameLevel(this, temp_bg, gold_texture);
 		game_level.selectImages(theme);
@@ -178,11 +175,9 @@ public class MainGameView extends SurfaceView implements
 		up_button_x1 = up_button_x0 + up_button.width;
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
-		
-		
+
 		BackgroundMusic.stop();
-		//get_BGM(theme);
-		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
+		get_BGM(theme);
 		BackgroundMusic.play();
 
 		// Start thread
@@ -194,16 +189,15 @@ public class MainGameView extends SurfaceView implements
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 
-		//Set thread flags to let it know that it needs to terminate
+		// Set thread flags to let it know that it needs to terminate
 		boolean retry = true;
 		thread.setRunning(false);
-		
-		//wait for threads to die
+
+		// wait for threads to die
 		while (retry) {
 			try {
-					thread.join();
-					retry = false;
-
+				thread.join();
+				retry = false;
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -219,22 +213,24 @@ public class MainGameView extends SurfaceView implements
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
-		
-		//Checks for the first finger down touch event
+		// Checks for the first finger down touch event
 		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-			// Call action handler to check what area of touch screen has been touched
-			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+			// Call action handler to check what area of touch screen has been
+			// touched
+			handleTouch((int) event.getX(event.getActionIndex()),
+					(int) event.getY(event.getActionIndex()));
 
 		}
-		
-		//Checks for the second finger down touch even
+
+		// Checks for the second finger down touch even
 		if (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
 
-			handleTouch((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+			handleTouch((int) event.getX(event.getActionIndex()),
+					(int) event.getY(event.getActionIndex()));
 		}
 
 		// Check to see if user lifts their finger off the screen
-		//** might have to do one for the second finger to come off
+		// ** might have to do one for the second finger to come off
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			player.setIsMoving(false);
 		}
@@ -247,14 +243,13 @@ public class MainGameView extends SurfaceView implements
 	 */
 	public void update() {
 
-		
-		/**TIMER UPDATES**/
-	    timeNow = System.currentTimeMillis();
-	    timeToGo = ((timeNow - startTime) / 1000)-10;
-	    second = (int)timeToGo % 60;
-		minute = (int)timeToGo / 60;
-		
-		/**JUMP STATE**/
+		/** TIMER UPDATES **/
+		timeNow = System.currentTimeMillis();
+		timeToGo = ((timeNow - startTime) / 1000) - 10;
+		second = (int) timeToGo % 60;
+		minute = (int) timeToGo / 60;
+
+		/** JUMP STATE **/
 		// Check to see if player is below top of screen
 		if (player.getY_top() > 0) {
 			// Check to see if player is already jumping. If so, then allow
@@ -269,9 +264,7 @@ public class MainGameView extends SurfaceView implements
 			player.setIsJumping(false);
 		}
 
-		
-		
-		/**MOVE RIGHT STATE**/
+		/** MOVE RIGHT STATE **/
 		// Check to see if player's right x position is less than right edge of
 		// screen, and if player is moving in the right direction.
 		if ((player.getX_right() <= getWidth()) && (player.getDirection() > 0)) {
@@ -282,17 +275,20 @@ public class MainGameView extends SurfaceView implements
 				for (int i = 0; i < player.getHeight(); i++) {
 					if (temp_bg.getPixel(player.getX_right() + 1,
 							player.getY_top() + i) == Color.BLACK) {
-												
-						//if the black pixel is above his feet (the top 5/6s of his body)
+
+						// if the black pixel is above his feet (the top 5/6s of
+						// his body)
 						// disallow movement
-						if (i < ((5*player.getHeight())/6)) {
+						if (i < ((5 * player.getHeight()) / 6)) {
 							this.moveOkay = false;
 						}
-					
-						//otherwise, he can walk on it and it's treated as a slope.
-						//So set his y position to the top of that black pixel
-						else{
-							player.setY_bottom((player.getY_bottom() - ((player.getHeight()-1)-i))-1);
+
+						// otherwise, he can walk on it and it's treated as a
+						// slope.
+						// So set his y position to the top of that black pixel
+						else {
+							player.setY_bottom((player.getY_bottom() - ((player
+									.getHeight() - 1) - i)) - 1);
 						}
 
 						break;
@@ -312,29 +308,30 @@ public class MainGameView extends SurfaceView implements
 
 		}
 
-		
-		/**MOVE LEFT STATE**/
+		/** MOVE LEFT STATE **/
 		// Check to see if player's left x position is greater than left edge of
 		// screen, and if player is moving in the left direction.
 		else if ((player.getX_left() > 0) && (player.getDirection() < 0)) {
 			try {
 				// If black pixel is detected to the left of the player...
-	
-				for (int i = 0; i < player.getHeight(); i++) {
-					if (temp_bg.getPixel(player.getX_left()-1, player.getY_top()
-							+ i) == Color.BLACK) {
 
-					
-						//if the black pixel is above his feet (the top 5/6s of his body)
+				for (int i = 0; i < player.getHeight(); i++) {
+					if (temp_bg.getPixel(player.getX_left() - 1,
+							player.getY_top() + i) == Color.BLACK) {
+
+						// if the black pixel is above his feet (the top 5/6s of
+						// his body)
 						// disallow movement
-						if (i < ((5*player.getHeight())/6)) {
+						if (i < ((5 * player.getHeight()) / 6)) {
 							this.moveOkay = false;
 						}
-					
-						//otherwise, he can walk on it and it's treated as a slope.
-						//So set his y position to the top of that black pixel
-						else{
-							player.setY_bottom((player.getY_bottom() - ((player.getHeight()-1)-i))-1);
+
+						// otherwise, he can walk on it and it's treated as a
+						// slope.
+						// So set his y position to the top of that black pixel
+						else {
+							player.setY_bottom((player.getY_bottom() - ((player
+									.getHeight() - 1) - i)) - 1);
 						}
 						break;
 					}
@@ -352,61 +349,62 @@ public class MainGameView extends SurfaceView implements
 
 			}
 		}
-		
 
-
-		/**DESCENDING STATE**/
+		/** DESCENDING STATE **/
 		// Check to see if player's bottom y position is less than bottom of
 		// screen
 		if (player.getY_bottom() < this.getHeight() - 2) {
 			try {
-				if (player.getIsJumping() == false) { //don't descend if he's in the middle of a jump
-					//Check if there's a black pixel below him. If there is, disallow descent
+				if (player.getIsJumping() == false) { // don't descend if he's
+														// in the middle of a
+														// jump
+					// Check if there's a black pixel below him. If there is,
+					// disallow descent
 					for (int i = 0; i < player.getWidth(); i++) {
 						if (temp_bg.getPixel(player.getX_left() + i,
 								player.getY_bottom() + 1) == Color.BLACK) {
 							this.moveOkay = false;
 						}
-						
-						/**DEATH STATE**/
-						//Check if he lands on a red/orange platform
-						else if((temp_bg.getPixel(player.getX_left() + i,
-								player.getY_bottom() + 1) == Color.RED)|| temp_bg.getPixel(player.getX_left() + i,
-										player.getY_bottom() + 1) == 0xFFFFA500){
-							SoundEffects.sp.play(soundIDs[2], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+
+						/** DEATH STATE **/
+						// Check if he lands on a red/orange platform
+						else if ((temp_bg.getPixel(player.getX_left() + i,
+								player.getY_bottom() + 1) == Color.RED)
+								|| temp_bg.getPixel(player.getX_left() + i,
+										player.getY_bottom() + 1) == 0xFFFFA500) {
+							SoundEffects.sp.play(soundIDs[2],
+									SoundEffects.getVolume(),
+									SoundEffects.getVolume(), 1, 0, 1.0f);
 							player.die(startx, starty);
 						}
-						
-						/**VICTORY STATE**/
-						//Check if he lands on a blue/cyan platform
-						else if((temp_bg.getPixel(player.getX_left() + i,
-								player.getY_bottom() + 1) == Color.BLUE)|| temp_bg.getPixel(player.getX_left() + i,
-										player.getY_bottom() + 1) == Color.CYAN){
-										end_game();
+
+						/** VICTORY STATE **/
+						// Check if he lands on a blue/cyan platform
+						else if ((temp_bg.getPixel(player.getX_left() + i,
+								player.getY_bottom() + 1) == Color.BLUE)
+								|| temp_bg.getPixel(player.getX_left() + i,
+										player.getY_bottom() + 1) == Color.CYAN) {
+							end_game();
 						}
-						
-						
+
 					}
 					if (this.moveOkay == true) {
 						player.descend();
 					}
 
-					
 					this.moveOkay = true;
 
 				}
 			} catch (IllegalStateException e) {
-			} catch (IllegalArgumentException a){
+			} catch (IllegalArgumentException a) {
 
 			}
 		}
-		
-		
-		//temporary fix for the player getting stuck on the ground
+
+		// temporary fix for the player getting stuck on the ground
 		if (player.getY_bottom() > this.getHeight() - 2) {
-			player.setY_bottom(getHeight()-3);
-			
-		
+			player.setY_bottom(getHeight() - 3);
+
 		}
 	}
 
@@ -423,18 +421,20 @@ public class MainGameView extends SurfaceView implements
 		right_button.draw(canvas, right_button_x0, right_button_y0);
 		left_button.draw(canvas, left_button_x0, left_button_y0);
 		up_button.draw(canvas, up_button_x0, up_button_y0);
-		
-	
-	    if (!game_over) {
-	    	if(second < 10) {
-	    		timeToDisplay = Integer.toString(minute) + ":" + "0" + Integer.toString(second);
-	    	}
-	    	else {
-	    		timeToDisplay = Integer.toString(minute) + ":" + Integer.toString(second);
-	    	}
-	    	canvas.drawText(timeToDisplay, (this.getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
-	    }
-		
+
+		if (!game_over) {
+			if (second < 10) {
+				timeToDisplay = Integer.toString(minute) + ":" + "0"
+						+ Integer.toString(second);
+			} else {
+				timeToDisplay = Integer.toString(minute) + ":"
+						+ Integer.toString(second);
+			}
+			canvas.drawText(timeToDisplay,
+					(this.getWidth() / 2) - (timerText.getTextSize()),
+					timerText.getTextSize(), timerText);
+		}
+
 	}
 
 	/**
@@ -449,7 +449,8 @@ public class MainGameView extends SurfaceView implements
 			if ((y > right_button_y0) && (y < right_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(player.getMoveRate());
-				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(),
+						SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_right % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_colour_right1));
@@ -464,7 +465,8 @@ public class MainGameView extends SurfaceView implements
 			if ((y > left_button_y0) && (y < left_button_y1)) {
 				player.setIsMoving(true);
 				player.setDirection(-(player.getMoveRate()));
-				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[3], SoundEffects.getVolume(),
+						SoundEffects.getVolume(), 1, 0, 1.0f);
 				if (count_left % 2 == 0) {
 					player.setBitmap(BitmapFactory.decodeResource(
 							getResources(), R.drawable.afro_man_colour_left1));
@@ -478,60 +480,49 @@ public class MainGameView extends SurfaceView implements
 		} else if ((x > up_button_x0) && (x <= up_button_x1)) { // jump
 			if ((y > up_button_y0) && (y < up_button_y1)) {
 				player.setIsJumping(true);
-				SoundEffects.sp.play(soundIDs[0], SoundEffects.getVolume(), SoundEffects.getVolume(), 1, 0, 1.0f);
+				SoundEffects.sp.play(soundIDs[0], SoundEffects.getVolume(),
+						SoundEffects.getVolume(), 1, 0, 1.0f);
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	/*
-	 
-	 public void get_BGM(String theme){
-	 
-	  
-	  if(theme.equals("Forest"){
-	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
-	  }
-	  
-	  else if(theme.equals("Desert"){
-	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
-	  }
-	  
-	  else if(theme.equals("Snow"){
-	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
-	  }
-	  
-	  else if(theme.equals("Volcano"){
-	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
-	  }
-	  
-	  else {
-	  	BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.funk);
-	  }
-	  
-	  
-	  
+
+	public void get_BGM(String theme) {
+
+		if (theme.equals("Forest")) {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.forest_theme);
+		}
+
+		else if (theme.equals("Desert")) {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.desert_theme);
+		}
+
+		else if (theme.equals("Snow")) {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.snow_theme);
+		}
+
+		else if (theme.equals("Volcano")) {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.lava_theme);
+		}
+
+		else if (theme.equals("Space")) {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.space_theme);
+		}
+
+		else {
+			BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+					R.raw.funk);
+		}
+
 	}
-	  
-	  
-	  
-	  
-	  
-	  
-	  */
-	 
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * Getter for the game over flag
+	 * 
 	 * @return
 	 */
 	public boolean isGame_over() {
@@ -542,27 +533,30 @@ public class MainGameView extends SurfaceView implements
 	 * Proceeds to end the game by setting the game over flag to true. Then it
 	 * stops and releases the in-game music, and plays the victory screen music
 	 */
-	public void end_game(){
-		
+	public void end_game() {
+
 		this.game_over = true;
 		BackgroundMusic.stop();
 		BackgroundMusic.release();
-		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(), R.raw.win);
+		BackgroundMusic.mPlayer = MediaPlayer.create(this.getContext(),
+				R.raw.win);
 		BackgroundMusic.play();
-		
 
 	}
-	
+
 	/**
 	 * Draws the victory screen
+	 * 
 	 * @param canvas
 	 */
-	public void game_over_screen(Canvas canvas){
+	public void game_over_screen(Canvas canvas) {
 		String yourTimeMessage = "Your Time: " + minute + ":" + second;
 		canvas.drawBitmap(victory_screen, 0, 0, null);
 		timerText.setTextAlign(Align.CENTER);
-		canvas.drawText(yourTimeMessage, (getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
-		
+		canvas.drawText(yourTimeMessage,
+				(getWidth() / 2) - (timerText.getTextSize()),
+				timerText.getTextSize(), timerText);
+
 	}
 
 	// Class for the buttons -- removeable if we decide to use layout buttons
