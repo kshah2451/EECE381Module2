@@ -68,8 +68,6 @@ public class MainGameView extends SurfaceView implements
 	int up_button_y0;
 	int up_button_y1;
 	
-	
-	
 	int soundIDs[];
 	//float left_volume = 1.0f;
 	//float right_volume = 1.0f;
@@ -148,7 +146,6 @@ public class MainGameView extends SurfaceView implements
 				getResources(), R.drawable.gold_texture), this.getWidth(),
 				this.getHeight(), true);
 		
-		
 		victory_screen = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
 				getResources(), R.drawable.victory), this.getWidth(),
 				this.getHeight(), true);
@@ -181,6 +178,7 @@ public class MainGameView extends SurfaceView implements
 		up_button_x1 = up_button_x0 + up_button.width;
 		up_button_y0 = getHeight() - up_button.height;
 		up_button_y1 = getHeight();
+		
 		
 		BackgroundMusic.stop();
 		//get_BGM(theme);
@@ -215,7 +213,7 @@ public class MainGameView extends SurfaceView implements
 
 		game_level.recycle_images();
 		gold_texture.recycle();
-		victory_screen.recycle();
+
 	}
 
 	@Override
@@ -428,8 +426,13 @@ public class MainGameView extends SurfaceView implements
 		
 	
 	    if (!game_over) {
-	    	timeToDisplay = Integer.toString(minute) + ":" + Integer.toString(second);
-	        canvas.drawText(timeToDisplay, (this.getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
+	    	if(second < 10) {
+	    		timeToDisplay = Integer.toString(minute) + ":" + "0" + Integer.toString(second);
+	    	}
+	    	else {
+	    		timeToDisplay = Integer.toString(minute) + ":" + Integer.toString(second);
+	    	}
+	    	canvas.drawText(timeToDisplay, (this.getWidth()/2)-(timerText.getTextSize()), timerText.getTextSize(), timerText);
 	    }
 		
 	}

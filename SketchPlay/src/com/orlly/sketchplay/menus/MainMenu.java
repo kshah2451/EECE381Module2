@@ -2,6 +2,7 @@ package com.orlly.sketchplay.menus;
 
 
 import com.orlly.sketchplay.menus.R;
+import com.orlly.sketchplay.server.ServerTransactions;
 import com.orlly.sketchplay.sound.BackgroundMusic;
 
 import android.annotation.TargetApi;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +39,22 @@ public class MainMenu extends Activity {
 	 * @param view
 	 */
 	public void toImageSelector(View view) {
+		
+		byte[] test = ServerTransactions.intToByte(16909320);
+		
+		for(int i = 0; i < test.length; i++) {
+			Log.d("test", "byte" + i + ": " + test[i]);
+		}
+		
+		int dix = test[0];
+		dix = dix <<8;
+		dix += test[1];
+		dix = dix <<8;
+		dix += test[2];
+		dix = dix <<8;
+		dix += test[3];
+		Log.d("test", "dix is" + dix);
+		
 		Intent intent = new Intent(this, ImageSelectionMenu.class);
 		startActivity(intent);
 	}

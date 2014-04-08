@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-import com.orlly.sketchplay.menus.R;
+
 import com.orlly.sketchplay.rendering.MapRender;
 
 import android.annotation.TargetApi;

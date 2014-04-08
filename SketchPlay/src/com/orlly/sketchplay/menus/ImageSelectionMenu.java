@@ -1,10 +1,13 @@
 package com.orlly.sketchplay.menus;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.TargetApi;
@@ -18,17 +21,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orlly.sketchplay.rendering.MapRender;
+import com.orlly.sketchplay.server.ReceiveObject;
 import com.orlly.sketchplay.server.ServerTransactions;
 
 public class ImageSelectionMenu extends Activity {
@@ -50,9 +58,10 @@ public class ImageSelectionMenu extends Activity {
 	private static final int CANCEL = 2;
 
 	private MapRender rendering;
-	
-	
+
 	private AlertDialog dialog;
+
+	private AlertDialog file_list_dialog;
 
 	/**
 	 * Uniform Resource Identifier - an address that identifies an abstract or
@@ -70,7 +79,6 @@ public class ImageSelectionMenu extends Activity {
 
 		// Find views by id attributes identified in XML file
 		preview = (ImageView) findViewById(R.id.img_preview);
-
 
 	}
 
@@ -258,106 +266,172 @@ public class ImageSelectionMenu extends Activity {
 	 */
 	public void serverOptions(View view) {
 
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				ImageSelectionMenu.this); // Read Update
 		LayoutInflater li = LayoutInflater.from(this);
 		View v1 = li.inflate(R.layout.dialog_layout, null);
 		builder.setTitle("Send / Receive Image From Server");
 		builder.setView(v1);
-		
+
 		dialog = builder.create();
 		dialog.show();
-		
+
 	}
-	
+
 	/**
 	 * Function called when "Send Image to Server" dialog button is pressed.
 	 * Sends an image file to the DE2 server
 	 * 
 	 * @param view
 	 */
-	public void sendToServer(View view){
-		
-		EditText filename = (EditText)dialog.findViewById(R.id.filename);
+	public void sendToServer(View view) {
+
+		EditText filename = (EditText) dialog.findViewById(R.id.filename);
 		String fileToSend = filename.getText().toString();
-		
-		if(fileToSend == null || fileToSend.trim().equals("") ){
-			Toast.makeText(this, "Please Name Your File", Toast.LENGTH_LONG).show();
+
+		if (fileToSend == null || fileToSend.trim().equals("")) {
+			Toast.makeText(this, "Please Name Your File", Toast.LENGTH_LONG)
+					.show();
 		}
-		
-		else{
-			
-			ServerTransactions server = new ServerTransactions((MyApplication)getApplication());
+
+		else {
+
+			ServerTransactions server = new ServerTransactions(
+					(MyApplication) getApplication());
 			server.connectServer();
-	
-			while(!server.isSocketConnected() && (server.isConnection_timeout()) == false);
-	
-			if(!server.isConnection_timeout()){
+
+			while (!server.isSocketConnected()
+					&& (server.isConnection_timeout()) == false)
+				;
+
+			if (!server.isConnection_timeout()) {
 				server.sendServer(bitmap, fileToSend);
 				server.setSocketConnected(false);
-			}
-			else{
-				Toast.makeText(this, "Could not connect to server", Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(this, "Could not connect to server",
+						Toast.LENGTH_LONG).show();
 				dialog.dismiss();
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	/**
-	 * Function called when "Receive Image from Server" dialog button is pressed.
-	 * Receives an image file to the DE2 server
+	 * Function called when "Receive Image from Server" dialog button is
+	 * pressed. Receives an image file to the DE2 server
 	 * 
 	 * @param view
 	 */
-	public void receiveFromServer(View view){
+	public void receiveFromServer(View view) {
+
+		EditText filename = (EditText) dialog.findViewById(R.id.filename);
+		String fileToSend = filename.getText().toString();
 		
-		
-		
-		ServerTransactions server = new ServerTransactions((MyApplication)getApplication());
+		TextView filename_list = (TextView)dialog.findViewById(R.id.file_list);
+
+		ReceiveObject retObj = new ReceiveObject();
+
+		ArrayList<String> fileList = new ArrayList<String>();
+
+		ServerTransactions server = new ServerTransactions(
+				(MyApplication) getApplication());
 		server.connectServer();
 
+		while (!server.isSocketConnected()
+				&& (server.isConnection_timeout()) == false)
+			;
 
-		while(!server.isSocketConnected() && (server.isConnection_timeout()) == false);
+		if (!server.isConnection_timeout()) {
+			retObj = server.receiveServer(fileToSend);
+			bitmap = retObj.getBitmap();
 
-		if(!server.isConnection_timeout()){
-			bitmap = server.receiveServer();
-			
-			while(server.isImageRetrieved() == false);
-			if(bitmap == null){
-				Toast.makeText(this, "Image could not be succesfully received", Toast.LENGTH_LONG).show();
+			fileList = retObj.getFilename_list();
+			if (!fileList.isEmpty()) {
+				
+				String filenames = "";
+
+				for (int i = 0; i < fileList.size(); i++) {
+					filenames += fileList.get(i);
+					filenames += "\n";
+				}
+				
+				filename_list.setMovementMethod(new ScrollingMovementMethod());
+				filename_list.setText(filenames);
+				
 				
 			}
-			else{
+
+			while (server.isImageRetrieved() == false)
+				;
+			if (bitmap == null) {
+				Toast.makeText(this, "Image could not be succesfully received",
+						Toast.LENGTH_LONG).show();
+
+			} else {
 				preview.setImageBitmap(bitmap);
-				Toast.makeText(this, "Image succesfully received", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "Image succesfully received",
+						Toast.LENGTH_LONG).show();
 				dialog.dismiss();
+
+				File mediaStorageDir = new File(
+						Environment
+								.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+						"SketchPlay/Downloads");
+
+				if (!mediaStorageDir.exists()) {
+					if (!mediaStorageDir.mkdirs()) {
+						return;
+					}
+				}
+
+				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+						.format(new Date());
+				File mediaFile = new File(mediaStorageDir.getPath()
+						+ File.separator + "IMG_" + timeStamp + ".bmp");
+
+				try {
+					mediaFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+
+				try {
+					FileOutputStream fo = new FileOutputStream(mediaFile);
+					fo.write(bytes.toByteArray());
+					fo.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				returnUri = Uri.fromFile(mediaFile);
 
 			}
 			server.setSocketConnected(false);
 			server.setImageRetrieved(false);
 
+		} else {
+			Toast.makeText(this, "Could not connect to server",
+					Toast.LENGTH_LONG).show();
+			dialog.dismiss();
 		}
-		else{
-			Toast.makeText(this, "Could not connect to server", Toast.LENGTH_LONG).show();
-			dialog.dismiss();			
-		}
-		
-		
+
 	}
 
 	/**
-	 * Function called when "Cancel" dialog button is pressed.
-	 * Cancels Dialog Box
+	 * Function called when "Cancel" dialog button is pressed. Cancels Dialog
+	 * Box
 	 * 
 	 * @param view
 	 */
-	public void cancel(View view){
+	public void cancel(View view) {
 		dialog.dismiss();
 	}
-	
 
 	/**
 	 * Function called when "Getting Started" action bar item is pressed.
@@ -391,10 +465,5 @@ public class ImageSelectionMenu extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
-
-
-
-
 
 }
