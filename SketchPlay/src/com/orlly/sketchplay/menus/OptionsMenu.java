@@ -27,6 +27,7 @@ public class OptionsMenu extends Activity {
 	private Spinner theme_spinner;
 	private CheckBox tilt_option;
 	private MyApplication application;
+	private SeekBar tilt_sensitivity;
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -50,6 +51,9 @@ public class OptionsMenu extends Activity {
 		
 		tilt_option = (CheckBox) findViewById(R.id.tilt_option);
 		tilt_option.setChecked(application.getTilt());
+		
+		tilt_sensitivity = (SeekBar) findViewById(R.id.tilt_sensitivity);
+		tilt_sensitivity.setProgress(application.getTiltSeekbar());
 		
 		music_volume.setOnSeekBarChangeListener(
 				new OnSeekBarChangeListener() {
@@ -106,6 +110,7 @@ public class OptionsMenu extends Activity {
 				 
 				 
 			 });
+		
 		tilt_option.setOnCheckedChangeListener(
 				new OnCheckedChangeListener(){
 					@Override
@@ -114,7 +119,27 @@ public class OptionsMenu extends Activity {
 					}
 				}
 		);
-				
+		
+		tilt_sensitivity.setOnSeekBarChangeListener(
+				new OnSeekBarChangeListener(){
+
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int sensitivity, boolean fromUser) {
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+					}
+
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						float new_sensitivity;
+						application.setTiltSeekbar(seekBar.getProgress());
+						new_sensitivity = (float) (125/seekBar.getProgress());
+						application.setTiltSensitivity(new_sensitivity);
+					}
+				}
+		);
 	}
 	
 

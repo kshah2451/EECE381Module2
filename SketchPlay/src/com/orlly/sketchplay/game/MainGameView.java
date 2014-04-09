@@ -66,7 +66,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	private int second, minute;
 
 	private boolean moveOkay = true;
-	private float tilt_threshold = 4.0f;
+	//private float tilt_threshold;
 
 	private MapRender mapRender;
 	int right_button_x0;
@@ -117,6 +117,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
 		this.soundIDs[2] = SoundEffects.sp.load(context, R.raw.pain, 1);
 		this.soundIDs[3] = SoundEffects.sp.load(context, R.raw.step, 1);
+		
+		//this.tilt_threshold = application.getTiltSensitivity();
 
 		setWillNotDraw(false);
 
@@ -144,6 +146,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		//Listener for player tilting the phone
 		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+		
 
 		// Set to true so we can interact with surface
 		setFocusable(true);
@@ -607,6 +610,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		boolean tilt = application.getTilt();
+		float tilt_threshold = application.getTiltSensitivity();
 		if(tilt){
 			//sensor_values[0] is X direction, sensor_values[1] is Y Direction, sensor_values[2] is Z Direction
 			float[] sensor_values = event.values;
