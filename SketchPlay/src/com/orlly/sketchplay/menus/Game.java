@@ -112,4 +112,14 @@ public class Game extends Activity {
 		inflater.inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+
+
+	@Override
+	protected void onPause() {
+		Log.d("image", "onPause in game");
+		super.onPause();
+	}
+	
+	
+	
 }

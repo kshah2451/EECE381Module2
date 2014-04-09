@@ -440,7 +440,7 @@ public class ServerTransactions {
 		@Override
 		protected Socket doInBackground(Void... voids) {
 			Socket s = null;
-			String ip = "192.168.1.144";
+			String ip = "192.168.1.143";
 			Integer port = 50002;
 
 			try {
