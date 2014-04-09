@@ -24,6 +24,8 @@
     <string name="music_volume">Music Volume</string>
     <string name="level_theme">Select Level Theme</string>
     <string name="serverOptions">SEND/RECEIVE IMAGE</string>
+    <string name="tilt_feature">Toggle Tilt</string>
+    <string name="tilt_sensitivity">Tilt Sensitivity</string>
     <string name="getting_started_text1">	    
 	    In SketchPlay, you draw a picture in real life, and we turn it into a game!\n\n
         First, draw a picture on white unlined paper.  Different colours represent different

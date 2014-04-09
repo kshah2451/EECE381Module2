@@ -63,6 +63,26 @@
         android:id="@+id/theme_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/tilt_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tilt_feature" />
     
+    <TextView
+        android:id="@+id/tilt_sensitivity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tilt_sensitivity"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/tilt_sensitivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:max="50"
+        android:progress="25" />
 
 </LinearLayout>

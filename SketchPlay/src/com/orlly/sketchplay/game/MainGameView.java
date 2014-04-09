@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.orlly.sketchplay.menus.MyApplication;
 import com.orlly.sketchplay.menus.R;
 import com.orlly.sketchplay.rendering.MapRender;
 import com.orlly.sketchplay.sound.BackgroundMusic;
@@ -31,6 +32,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	private GameThread thread;
 	private Player player;
 	private DirectionalButton right_button, left_button, up_button;
+	
+	private MyApplication application;
 
 	private String theme;
 
@@ -47,6 +50,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	int starty = 5;
 
 	boolean game_over;
+	
+	//Flag to determine if the player is falling into the sky when the phone is tilted 
+	//Prevents descend() from occurring at the same time as falling into the sky
 	private boolean fallingSky = true;
 
 	private int saturation;
@@ -60,6 +66,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	private int second, minute;
 
 	private boolean moveOkay = true;
+	//private float tilt_threshold;
 
 	private MapRender mapRender;
 	int right_button_x0;
@@ -76,8 +83,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	int up_button_y1;
 
 	int soundIDs[];
-	// float left_volume = 1.0f;
-	// float right_volume = 1.0f;
+	
 	Handler handler = new Handler();
 	private Runnable onEverySecond = new Runnable() {
 		public void run() {
@@ -88,8 +94,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		}
 	};
 
-	public MainGameView(Context context, Bitmap bitmap, int saturation,
-			int value, String theme) {
+	public MainGameView(Context context, Bitmap bitmap, int saturation,	int value, String theme, MyApplication application) {
 		super(context);
 		getHolder().addCallback(this);
 
@@ -97,6 +102,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		this.saturation = saturation;
 		this.value = value;
 		this.game_over = false;
+		this.application = application;
 
 		/* Game Timer initializations */
 		this.startTime = System.currentTimeMillis();
@@ -104,11 +110,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		this.timerText = new Paint();
 		timerText.setColor(Color.RED);
 		timerText.setTextSize(100);
+		
+		//Array for sound effects to play in soundpool
 		soundIDs = new int[4];
 		this.soundIDs[0] = SoundEffects.sp.load(context, R.raw.jump, 1);
 		this.soundIDs[1] = SoundEffects.sp.load(context, R.raw.listen, 1);
 		this.soundIDs[2] = SoundEffects.sp.load(context, R.raw.pain, 1);
 		this.soundIDs[3] = SoundEffects.sp.load(context, R.raw.step, 1);
+		
+		//this.tilt_threshold = application.getTiltSensitivity();
 
 		setWillNotDraw(false);
 
@@ -131,9 +141,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		// set our bitmap bg as the passed in bitmap image
 		this.bitmap = bitmap;
 		
+		//Sensor manager for the accelerometer
 		sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		//Listener for player tilting the phone
 		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+		
 
 		// Set to true so we can interact with surface
 		setFocusable(true);
@@ -596,23 +609,34 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		float[] sensor_values = event.values;
-		if(sensor_values[0] < -5.0f && (sensor_values[1] > 5.0f || sensor_values[1] < -5.0f)){
-			fallingSky = false;
-			handleAcceleration((int)sensor_values[0], (int)sensor_values[1]);
-		}
-		else if(sensor_values[0] < -5.0f){
-			fallingSky = false;
-			handleAcceleration((int)sensor_values[0], 0);
-		}
-		else if((sensor_values[1] > 5.0f || sensor_values[1] < -5.0f) && sensor_values[0] > -5.0f){
-			handleAcceleration(0, (int)sensor_values[1]);
+		boolean tilt = application.getTilt();
+		float tilt_threshold = application.getTiltSensitivity();
+		if(tilt){
+			//sensor_values[0] is X direction, sensor_values[1] is Y Direction, sensor_values[2] is Z Direction
+			float[] sensor_values = event.values;
+
+			//When the device is tilted forward on its side AND upright to either direction
+			if(sensor_values[0] < -tilt_threshold && (sensor_values[1] > tilt_threshold || sensor_values[1] < tilt_threshold)){
+				fallingSky = false;
+				handleAcceleration((int)sensor_values[0], (int)sensor_values[1]);
+			}
+
+			//When the device is tilted forward on its side only
+			else if(sensor_values[0] < -tilt_threshold){
+				fallingSky = false;
+				handleAcceleration((int)sensor_values[0], 0);
+			}
+
+			//When the device is upright in either direction only 
+			else if((sensor_values[1] > tilt_threshold || sensor_values[1] < -tilt_threshold) && sensor_values[0] > -tilt_threshold){
+				handleAcceleration(0, (int)sensor_values[1]);
+			}
 		}
 	}
 	
+	//Function to handle changes in device acceleration
 	public void handleAcceleration(int x, int y){
 		player.toss(x, y, this.getWidth());
-		//Log.i("sensor", "X:" + Float.toString(x) + " Y:" + Float.toString(y));
 	}
 
 }
