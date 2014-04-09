@@ -40,6 +40,10 @@ public class GameLevel extends Activity {
 
 		if (theme.equals("Forest")) {
 			// the background image
+			if(this.background != null) {
+				this.background.recycle();
+			}
+
 			this.background = Bitmap.createScaledBitmap(BitmapFactory
 					.decodeResource(surface.getResources(),
 							R.drawable.forest_bg), surface.getWidth(), surface
@@ -57,6 +61,9 @@ public class GameLevel extends Activity {
 		}
 
 		else if (theme.equals("Desert")) {
+			if(this.background != null) {
+				this.background.recycle();
+			}
 			this.background = Bitmap.createScaledBitmap(BitmapFactory
 					.decodeResource(surface.getResources(),
 							R.drawable.desert_bg), surface.getWidth(), surface
@@ -75,6 +82,9 @@ public class GameLevel extends Activity {
 
 		else if (theme.equals("Snow")) {
 			// the background image
+			if(this.background != null) {
+				this.background.recycle();
+			}
 			this.background = Bitmap.createScaledBitmap(
 					BitmapFactory.decodeResource(surface.getResources(),
 							R.drawable.snow_bg), surface.getWidth(), surface
@@ -92,6 +102,9 @@ public class GameLevel extends Activity {
 
 		else if (theme.equals("Volcano")) {
 			// the background image
+			if(this.background != null) {
+				this.background.recycle();
+			}
 			this.background = Bitmap.createScaledBitmap(BitmapFactory
 					.decodeResource(surface.getResources(),
 							R.drawable.volcano_bg), surface.getWidth(), surface
@@ -109,6 +122,9 @@ public class GameLevel extends Activity {
 		}
 
 		else if (theme.equals("Space")) {
+			if(this.background != null) {
+				this.background.recycle();
+			}
 			this.background = Bitmap.createScaledBitmap(
 					BitmapFactory.decodeResource(surface.getResources(),
 							R.drawable.space_bg), surface.getWidth(), surface
@@ -126,6 +142,9 @@ public class GameLevel extends Activity {
 		}
 
 		else {
+			if(this.background != null) {
+				this.background.recycle();
+			}
 			this.background = platform;
 			this.texture = null;
 			this.hazard = null;
@@ -402,7 +421,9 @@ public class GameLevel extends Activity {
 	}
 
 	public void recycle_images() {
-		background.recycle();
+		if(background != null) {
+			background.recycle();
+		}
 		if (texture != null) {
 			texture.recycle();
 		}

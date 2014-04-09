@@ -155,12 +155,16 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
+		Log.d("image", "surface changed");
 
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-
+		
+		Log.d("image", "surface created");
+		
+		
 		// Scale this.bitmap to android device's screen size
 		bitmap = Bitmap.createScaledBitmap(bitmap, this.getWidth(),
 				this.getHeight(), true);
@@ -213,7 +217,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-
+		
+		Log.d("image", "surface destroyed");
+		
+		
 		// Set thread flags to let it know that it needs to terminate
 		boolean retry = true;
 		thread.setRunning(false);
@@ -229,9 +236,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 
 			}
 		}
-
-		game_level.recycle_images();
-		gold_texture.recycle();
+		
+		temp_bg = null;
+		bitmap = null;
+		
+		//game_level.recycle_images();
+		//gold_texture.recycle();
 
 	}
 
