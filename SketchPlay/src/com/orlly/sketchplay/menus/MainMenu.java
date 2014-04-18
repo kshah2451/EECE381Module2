@@ -39,22 +39,6 @@ public class MainMenu extends Activity {
 	 * @param view
 	 */
 	public void toImageSelector(View view) {
-		
-		byte[] test = ServerTransactions.intToByte(16909320);
-		
-		for(int i = 0; i < test.length; i++) {
-			Log.d("test", "byte" + i + ": " + test[i]);
-		}
-		
-		int dix = test[0];
-		dix = dix <<8;
-		dix += test[1];
-		dix = dix <<8;
-		dix += test[2];
-		dix = dix <<8;
-		dix += test[3];
-		Log.d("test", "dix is" + dix);
-		
 		Intent intent = new Intent(this, ImageSelectionMenu.class);
 		startActivity(intent);
 	}
